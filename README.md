@@ -19,6 +19,18 @@ FragDB provides structured data for the fragrance industry including:
 - Perfumer information
 - Similar fragrance recommendations
 
+## Preview
+
+<p align="center">
+  <img src="assets/table_view.webp" alt="FragDB Table View" width="45%">
+  &nbsp;&nbsp;
+  <img src="assets/detail_view.webp" alt="FragDB Detail View" width="45%">
+</p>
+
+<p align="center">
+  <em>Table View</em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Detail View</em>
+</p>
+
 ## Quick Start
 
 ### Python
