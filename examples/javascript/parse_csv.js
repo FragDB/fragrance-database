@@ -1,28 +1,42 @@
 /**
- * FragDB - Parse CSV Example
+ * FragDB - Parse CSV Example (v2.0)
  *
- * Demonstrates how to load and parse the FragDB fragrance database in Node.js.
+ * Demonstrates how to load and parse the FragDB multi-file database in Node.js.
  */
 
 const fs = require('fs');
+const path = require('path');
 const { parse } = require('csv-parse/sync');
 
 /**
- * Load the FragDB database from CSV file.
- * @param {string} filepath - Path to the CSV file
- * @returns {Array<Object>} Array of fragrance records
+ * Load a CSV file from the samples directory.
+ * @param {string} filename - Name of the CSV file
+ * @param {string} samplesDir - Path to samples directory
+ * @returns {Array<Object>} Array of records
  */
-function loadFragDB(filepath = '../../SAMPLE.csv') {
+function loadCSV(filename, samplesDir = '../../samples') {
+  const filepath = path.join(samplesDir, filename);
   const content = fs.readFileSync(filepath, 'utf-8');
 
-  const records = parse(content, {
+  return parse(content, {
     columns: true,
     delimiter: '|',
     skip_empty_lines: true,
     trim: true
   });
+}
 
-  return records;
+/**
+ * Load all FragDB database files.
+ * @param {string} samplesDir - Path to samples directory
+ * @returns {Object} Object with fragrances, brands, and perfumers arrays
+ */
+function loadFragDB(samplesDir = '../../samples') {
+  return {
+    fragrances: loadCSV('fragrances.csv', samplesDir),
+    brands: loadCSV('brands.csv', samplesDir),
+    perfumers: loadCSV('perfumers.csv', samplesDir)
+  };
 }
 
 /**
@@ -60,29 +74,82 @@ function parseRating(ratingStr) {
 }
 
 /**
- * Parse the brand field.
- * @param {string} brandStr - Raw brand string (format: name;url;logo)
+ * Parse the brand field (v2.0 format).
+ * @param {string} brandStr - Raw brand string (format: name;brand_id)
  * @returns {Object} Parsed brand info
  */
 function parseBrand(brandStr) {
-  if (!brandStr) return { name: '', url: '', logo: '' };
+  if (!brandStr) return { name: '', id: '' };
 
-  const [name, url, logo] = brandStr.split(';');
-  return { name: name || '', url: url || '', logo: logo || '' };
+  const [name, id] = brandStr.split(';');
+  return { name: name || '', id: id || '' };
+}
+
+/**
+ * Parse the perfumers field (v2.0 format).
+ * @param {string} perfumersStr - Raw perfumers string (format: name1;id1;name2;id2;...)
+ * @returns {Array<Object>} Array of perfumer objects
+ */
+function parsePerfumers(perfumersStr) {
+  if (!perfumersStr) return [];
+
+  const parts = perfumersStr.split(';');
+  const perfumers = [];
+
+  for (let i = 0; i < parts.length; i += 2) {
+    if (i + 1 < parts.length) {
+      perfumers.push({
+        name: parts[i],
+        id: parts[i + 1]
+      });
+    }
+  }
+
+  return perfumers;
+}
+
+/**
+ * Create lookup maps for brands and perfumers.
+ * @param {Object} db - Database object from loadFragDB()
+ * @returns {Object} Object with brandsMap and perfumersMap
+ */
+function createLookupMaps(db) {
+  return {
+    brandsMap: new Map(db.brands.map(b => [b.id, b])),
+    perfumersMap: new Map(db.perfumers.map(p => [p.id, p]))
+  };
+}
+
+/**
+ * Get full brand details for a fragrance.
+ * @param {Object} fragrance - Fragrance record
+ * @param {Map} brandsMap - Brands lookup map
+ * @returns {Object} Brand details
+ */
+function getBrandDetails(fragrance, brandsMap) {
+  const { id } = parseBrand(fragrance.brand);
+  return brandsMap.get(id) || { name: parseBrand(fragrance.brand).name };
 }
 
 // Main execution
 function main() {
   // Load database
-  const fragrances = loadFragDB();
-  console.log(`Loaded ${fragrances.length} fragrances\n`);
+  const db = loadFragDB();
+  const { fragrances, brands, perfumers } = db;
+  const { brandsMap, perfumersMap } = createLookupMaps(db);
 
-  // Display sample
+  console.log('=== FragDB v2.0 Database ===\n');
+  console.log(`Fragrances: ${fragrances.length} records`);
+  console.log(`Brands: ${brands.length} records`);
+  console.log(`Perfumers: ${perfumers.length} records\n`);
+
+  // Display sample fragrances
   console.log('=== Sample Fragrances ===\n');
   fragrances.slice(0, 5).forEach(f => {
     const brand = parseBrand(f.brand);
     const rating = parseRating(f.rating);
     console.log(`${f.name} by ${brand.name}`);
+    console.log(`  Brand ID: ${brand.id} (lookup in brands.csv)`);
     console.log(`  Year: ${f.year}, Gender: ${f.gender}`);
     console.log(`  Rating: ${rating.average.toFixed(2)} (${rating.votes.toLocaleString()} votes)`);
     console.log();
@@ -95,6 +162,32 @@ function main() {
   console.log(`Top accords for ${firstFragrance.name}:`);
   accords.slice(0, 5).forEach(a => {
     console.log(`  ${a.name}: ${a.percentage}%`);
+  });
+  console.log();
+
+  // Example: Join with brand details
+  console.log('=== Brand Details (from brands.csv) ===\n');
+  const brandDetails = getBrandDetails(firstFragrance, brandsMap);
+  if (brandDetails.country) {
+    console.log(`Brand: ${brandDetails.name}`);
+    console.log(`Country: ${brandDetails.country}`);
+    console.log(`Website: ${brandDetails.website}`);
+    console.log(`Fragrances: ${brandDetails.brand_count}`);
+  }
+  console.log();
+
+  // Display sample brands
+  console.log('=== Sample Brands ===\n');
+  brands.slice(0, 3).forEach(b => {
+    console.log(`${b.id}: ${b.name} (${b.country}) - ${b.brand_count} fragrances`);
+  });
+  console.log();
+
+  // Display sample perfumers
+  console.log('=== Sample Perfumers ===\n');
+  perfumers.slice(0, 3).forEach(p => {
+    console.log(`${p.id}: ${p.name} - ${p.company || 'Independent'}`);
+    console.log(`  Fragrances: ${p.perfumes_count}`);
   });
 }
 

@@ -10,6 +10,8 @@ FragDB is a comprehensive fragrance database containing detailed information on 
 
 The free sample on GitHub includes:
 - 10 fragrance records with all 28 data fields
+- 7 brand profiles (matching fragrances)
+- 15 perfumer profiles (matching fragrances)
 - Complete documentation and data dictionary
 - Code examples in Python, JavaScript, SQL, and R
 - Integration guides and use cases
@@ -23,7 +25,12 @@ Visit [fragdb.net](https://fragdb.net) to purchase:
 
 ### What file format is the database?
 
-The database is provided as a pipe-delimited (`|`) CSV file with UTF-8 encoding. This format was chosen because:
+The database consists of 3 pipe-delimited (`|`) CSV files with UTF-8 encoding:
+- `fragrances.csv` - Main fragrance data (28 fields)
+- `brands.csv` - Brand/designer profiles (10 fields)
+- `perfumers.csv` - Perfumer (nose) profiles (11 fields)
+
+This format was chosen because:
 - Pipe characters rarely appear in fragrance data
 - Easy to import into any database or programming language
 - Human-readable and easy to inspect
@@ -45,9 +52,10 @@ Fragrance descriptions and other text fields frequently contain commas. Using pi
 
 Many fields contain structured data with their own delimiters. See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for complete parsing instructions. Quick examples:
 
-**Brand** (`;` separated):
+**Brand** (`;` separated, v2.0 format):
 ```python
-name, url, logo = row['brand'].split(';')
+name, brand_id = row['brand'].split(';')
+# Look up full details in brands.csv using brand_id
 ```
 
 **Rating** (`;` separated):
@@ -104,7 +112,7 @@ Note: Excel has a row limit of ~1 million rows, which is sufficient for the full
 
 ### What fields are included?
 
-28 fields per fragrance:
+**49 total fields** across 3 files. Fragrances have 28 fields:
 - Basic: `pid`, `url`, `brand`, `name`, `year`, `gender`, `collection`
 - Media: `main_photo`, `info_card`, `user_photoes`
 - Composition: `accords`, `notes_pyramid`, `perfumers`, `description`
