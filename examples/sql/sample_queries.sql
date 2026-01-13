@@ -1,4 +1,4 @@
--- FragDB Sample SQL Queries
+-- FragDB v2.0 Sample SQL Queries
 --
 -- These queries work with both PostgreSQL and MySQL schemas.
 -- Adjust syntax as needed for your specific database.
@@ -17,7 +17,7 @@ SELECT pid, name, brand_name, year
 FROM fragrances
 WHERE LOWER(name) LIKE '%aventus%';
 
--- Filter by brand
+-- Filter by brand (using denormalized brand_name)
 SELECT pid, name, year, gender, rating_average
 FROM fragrances
 WHERE brand_name = 'Chanel'
@@ -34,6 +34,46 @@ SELECT pid, name, brand_name, year, rating_average
 FROM fragrances
 WHERE year BETWEEN 2020 AND 2026
 ORDER BY rating_average DESC;
+
+-- =============================================================================
+-- JOIN QUERIES (v2.0 - using brands and perfumers tables)
+-- =============================================================================
+
+-- Get fragrances with full brand details
+SELECT f.pid, f.name, b.name AS brand, b.country, b.website, b.parent_company
+FROM fragrances f
+JOIN brands b ON f.brand_id = b.id
+LIMIT 50;
+
+-- Filter by brand country
+SELECT f.pid, f.name, f.year, b.name AS brand, b.country
+FROM fragrances f
+JOIN brands b ON f.brand_id = b.id
+WHERE b.country = 'France'
+ORDER BY f.rating_average DESC
+LIMIT 20;
+
+-- Filter by parent company (e.g., all LVMH brands)
+SELECT f.pid, f.name, b.name AS brand, f.rating_average
+FROM fragrances f
+JOIN brands b ON f.brand_id = b.id
+WHERE b.parent_company LIKE '%LVMH%'
+ORDER BY f.rating_average DESC;
+
+-- Get fragrances with perfumer details
+SELECT f.pid, f.name, p.name AS perfumer, p.company, p.status
+FROM fragrances f
+JOIN fragrance_perfumers fp ON f.pid = fp.fragrance_id
+JOIN perfumers p ON fp.perfumer_id = p.id
+LIMIT 50;
+
+-- Filter by perfumer company
+SELECT f.pid, f.name, f.year, p.name AS perfumer
+FROM fragrances f
+JOIN fragrance_perfumers fp ON f.pid = fp.fragrance_id
+JOIN perfumers p ON fp.perfumer_id = p.id
+WHERE p.company = 'Firmenich'
+ORDER BY f.year DESC;
 
 -- =============================================================================
 -- TOP RATED QUERIES
@@ -61,6 +101,58 @@ WHERE gender = 'for men'
   AND rating_votes >= 500
 ORDER BY rating_average DESC
 LIMIT 10;
+
+-- =============================================================================
+-- BRAND STATISTICS (v2.0)
+-- =============================================================================
+
+-- Top brands by fragrance count
+SELECT b.id, b.name, b.country, b.brand_count
+FROM brands b
+ORDER BY b.brand_count DESC
+LIMIT 20;
+
+-- Brands by country
+SELECT b.country, COUNT(*) AS brand_count, SUM(b.brand_count) AS total_fragrances
+FROM brands b
+WHERE b.country IS NOT NULL
+GROUP BY b.country
+ORDER BY total_fragrances DESC;
+
+-- Top brands by average rating
+SELECT b.name, b.country,
+       COUNT(*) AS fragrance_count,
+       ROUND(AVG(f.rating_average), 2) AS avg_rating
+FROM brands b
+JOIN fragrances f ON b.id = f.brand_id
+WHERE f.rating_average IS NOT NULL
+GROUP BY b.id, b.name, b.country
+HAVING COUNT(*) >= 10
+ORDER BY avg_rating DESC
+LIMIT 20;
+
+-- =============================================================================
+-- PERFUMER STATISTICS (v2.0)
+-- =============================================================================
+
+-- Top perfumers by creation count
+SELECT p.id, p.name, p.company, p.status, p.perfumes_count
+FROM perfumers p
+ORDER BY p.perfumes_count DESC
+LIMIT 20;
+
+-- Perfumers by company
+SELECT p.company, COUNT(*) AS perfumer_count, SUM(p.perfumes_count) AS total_fragrances
+FROM perfumers p
+WHERE p.company IS NOT NULL
+GROUP BY p.company
+ORDER BY total_fragrances DESC;
+
+-- Master Perfumers
+SELECT p.name, p.company, p.perfumes_count
+FROM perfumers p
+WHERE p.status = 'Master Perfumer'
+ORDER BY p.perfumes_count DESC;
 
 -- =============================================================================
 -- ACCORD QUERIES
@@ -158,92 +250,47 @@ HAVING COUNT(*) >= 10
 ORDER BY avg_rating DESC
 LIMIT 20;
 
--- Rating distribution
-SELECT
-    CASE
-        WHEN rating_average >= 4.5 THEN '4.5-5.0 (Excellent)'
-        WHEN rating_average >= 4.0 THEN '4.0-4.5 (Very Good)'
-        WHEN rating_average >= 3.5 THEN '3.5-4.0 (Good)'
-        WHEN rating_average >= 3.0 THEN '3.0-3.5 (Average)'
-        ELSE 'Below 3.0'
-    END AS rating_tier,
-    COUNT(*) AS fragrance_count
-FROM fragrances
-WHERE rating_average IS NOT NULL
-GROUP BY rating_tier
-ORDER BY rating_tier DESC;
-
--- =============================================================================
--- LONGEVITY & SILLAGE QUERIES
--- =============================================================================
-
--- Fragrances with "eternal" longevity rating
-SELECT f.pid, f.name, f.brand_name, fl.percentage AS eternal_percentage
-FROM fragrances f
-JOIN fragrance_longevity fl ON f.pid = fl.fragrance_id
-WHERE fl.category = 'eternal'
-  AND fl.percentage >= 30
-ORDER BY fl.percentage DESC
-LIMIT 20;
-
--- Strong sillage fragrances
-SELECT f.pid, f.name, f.brand_name, fs.percentage AS strong_percentage
-FROM fragrances f
-JOIN fragrance_sillage fs ON f.pid = fs.fragrance_id
-WHERE fs.category = 'enormous'
-  AND fs.percentage >= 20
-ORDER BY fs.percentage DESC
-LIMIT 20;
-
 -- =============================================================================
 -- PERFUMER QUERIES
 -- =============================================================================
 
 -- Fragrances by specific perfumer
-SELECT f.pid, f.name, f.brand_name, f.year
+SELECT f.pid, f.name, f.brand_name, f.year, p.status
 FROM fragrances f
 JOIN fragrance_perfumers fp ON f.pid = fp.fragrance_id
 JOIN perfumers p ON fp.perfumer_id = p.id
-WHERE p.name LIKE '%Jacques Polge%'
+WHERE p.name LIKE '%Alberto Morillas%'
 ORDER BY f.year DESC;
 
--- Most prolific perfumers
-SELECT p.name, COUNT(*) AS fragrance_count
+-- Most prolific perfumers (calculated from junction table)
+SELECT p.name, p.company, COUNT(*) AS fragrance_count
 FROM perfumers p
 JOIN fragrance_perfumers fp ON p.id = fp.perfumer_id
-GROUP BY p.id, p.name
+GROUP BY p.id, p.name, p.company
 ORDER BY fragrance_count DESC
 LIMIT 20;
 
--- =============================================================================
--- RELATED FRAGRANCES QUERIES
--- =============================================================================
-
--- Find "also like" fragrances (users who like this also like...)
-SELECT f2.pid, f2.name, f2.brand_name
-FROM fragrances f1
-JOIN fragrance_also_like fal ON f1.pid = fal.fragrance_id
-JOIN fragrances f2 ON fal.related_fragrance_id = f2.pid
-WHERE f1.name = 'Aventus'
-LIMIT 10;
-
--- Find "reminds of" fragrances (this fragrance reminds users of...)
-SELECT f2.pid, f2.name, f2.brand_name
-FROM fragrances f1
-JOIN fragrance_reminds_of fro ON f1.pid = fro.fragrance_id
-JOIN fragrances f2 ON fro.related_fragrance_id = f2.pid
-WHERE f1.name = 'Aventus'
-LIMIT 10;
+-- Perfumer collaborations (fragrances with multiple perfumers)
+SELECT f.pid, f.name,
+       GROUP_CONCAT(p.name ORDER BY p.name SEPARATOR ', ') AS perfumers
+FROM fragrances f
+JOIN fragrance_perfumers fp ON f.pid = fp.fragrance_id
+JOIN perfumers p ON fp.perfumer_id = p.id
+GROUP BY f.pid, f.name
+HAVING COUNT(*) > 1
+ORDER BY COUNT(*) DESC
+LIMIT 20;
 
 -- =============================================================================
 -- COMPLEX / RECOMMENDATION QUERIES
 -- =============================================================================
 
 -- Find highly-rated fragrances similar to user preferences
--- (woody accords, for men, good longevity)
-SELECT DISTINCT f.pid, f.name, f.brand_name,
+-- (woody accords, for men, good longevity, French brand)
+SELECT DISTINCT f.pid, f.name, f.brand_name, b.country,
        f.rating_average, f.rating_votes
 FROM fragrances f
+JOIN brands b ON f.brand_id = b.id
 JOIN fragrance_accords fa ON f.pid = fa.fragrance_id
 JOIN accords a ON fa.accord_id = a.id
 JOIN fragrance_longevity fl ON f.pid = fl.fragrance_id
@@ -251,22 +298,35 @@ WHERE f.gender = 'for men'
   AND a.name = 'woody'
   AND fa.percentage >= 20
   AND fl.category IN ('long lasting', 'very long lasting', 'eternal')
-  AND fl.percentage >= 30
+  AND fl.votes >= 30
   AND f.rating_average >= 4.0
   AND f.rating_votes >= 100
+  AND b.country = 'France'
 ORDER BY f.rating_average DESC
 LIMIT 20;
 
--- Niche vs Designer comparison
+-- Find fragrances by Master Perfumers from specific company
+SELECT f.pid, f.name, f.brand_name, f.year,
+       p.name AS perfumer, p.company
+FROM fragrances f
+JOIN fragrance_perfumers fp ON f.pid = fp.fragrance_id
+JOIN perfumers p ON fp.perfumer_id = p.id
+WHERE p.status = 'Master Perfumer'
+  AND p.company = 'Firmenich'
+  AND f.rating_average >= 4.0
+ORDER BY f.rating_average DESC
+LIMIT 20;
+
+-- Compare niche vs designer brands
 SELECT
     CASE
-        WHEN brand_name IN ('Creed', 'Tom Ford', 'Byredo', 'Le Labo', 'Amouage', 'Xerjoff')
-        THEN 'Niche'
-        ELSE 'Designer'
+        WHEN b.parent_company IS NULL OR b.parent_company = '' THEN 'Niche/Independent'
+        ELSE 'Designer/Corporate'
     END AS category,
     COUNT(*) AS fragrance_count,
-    ROUND(AVG(rating_average), 2) AS avg_rating,
-    ROUND(AVG(rating_votes), 0) AS avg_votes
-FROM fragrances
-WHERE brand_name IS NOT NULL
+    ROUND(AVG(f.rating_average), 2) AS avg_rating,
+    ROUND(AVG(f.rating_votes), 0) AS avg_votes
+FROM fragrances f
+JOIN brands b ON f.brand_id = b.id
+WHERE f.rating_average IS NOT NULL
 GROUP BY category;

@@ -1,16 +1,18 @@
 /**
- * FragDB - Search Example
+ * FragDB - Search Example (v2.0)
  *
  * Demonstrates how to search and filter fragrances in Node.js.
  */
 
 const fs = require('fs');
+const path = require('path');
 const { parse } = require('csv-parse/sync');
 
 /**
- * Load the FragDB database from CSV file.
+ * Load a CSV file.
  */
-function loadFragDB(filepath = '../../SAMPLE.csv') {
+function loadCSV(filename, samplesDir = '../../samples') {
+  const filepath = path.join(samplesDir, filename);
   const content = fs.readFileSync(filepath, 'utf-8');
   return parse(content, {
     columns: true,
@@ -18,6 +20,17 @@ function loadFragDB(filepath = '../../SAMPLE.csv') {
     skip_empty_lines: true,
     trim: true
   });
+}
+
+/**
+ * Load all FragDB database files.
+ */
+function loadFragDB(samplesDir = '../../samples') {
+  return {
+    fragrances: loadCSV('fragrances.csv', samplesDir),
+    brands: loadCSV('brands.csv', samplesDir),
+    perfumers: loadCSV('perfumers.csv', samplesDir)
+  };
 }
 
 /**
@@ -32,6 +45,7 @@ function searchByName(fragrances, query) {
 
 /**
  * Search fragrances by brand name.
+ * Brand field format (v2.0): brand_name;brand_id
  */
 function searchByBrand(fragrances, brand) {
   const lowerBrand = brand.toLowerCase();
@@ -39,6 +53,16 @@ function searchByBrand(fragrances, brand) {
     if (!f.brand) return false;
     const brandName = f.brand.split(';')[0].toLowerCase();
     return brandName.includes(lowerBrand);
+  });
+}
+
+/**
+ * Search fragrances by brand ID.
+ */
+function searchByBrandId(fragrances, brandId) {
+  return fragrances.filter(f => {
+    if (!f.brand) return false;
+    return f.brand.endsWith(`;${brandId}`);
   });
 }
 
@@ -95,22 +119,52 @@ function searchByAccord(fragrances, accord) {
 }
 
 /**
- * Helper to format brand name.
+ * Search fragrances by country (requires joining with brands).
+ */
+function searchByCountry(fragrances, brands, country) {
+  // Create brand ID to country map
+  const brandCountryMap = new Map(
+    brands.map(b => [b.id, b.country])
+  );
+
+  return fragrances.filter(f => {
+    if (!f.brand) return false;
+    const brandId = f.brand.split(';')[1];
+    const brandCountry = brandCountryMap.get(brandId);
+    return brandCountry && brandCountry.toLowerCase().includes(country.toLowerCase());
+  });
+}
+
+/**
+ * Helper to get brand name from brand field.
+ * Brand field format (v2.0): brand_name;brand_id
  */
 function getBrandName(brandStr) {
   if (!brandStr) return '';
   return brandStr.split(';')[0];
 }
 
+/**
+ * Helper to get brand ID from brand field.
+ */
+function getBrandId(brandStr) {
+  if (!brandStr) return '';
+  const parts = brandStr.split(';');
+  return parts[1] || '';
+}
+
 // Main execution
 function main() {
-  const fragrances = loadFragDB();
-  console.log(`Loaded ${fragrances.length} fragrances\n`);
+  const db = loadFragDB();
+  const { fragrances, brands, perfumers } = db;
+
+  console.log('=== FragDB v2.0 Search Examples ===\n');
+  console.log(`Loaded ${fragrances.length} fragrances, ${brands.length} brands, ${perfumers.length} perfumers\n`);
 
   // Search by name
   console.log('=== Search by Name ===');
-  const nameResults = searchByName(fragrances, 'eau');
-  console.log(`Found ${nameResults.length} fragrances with "eau" in name:`);
+  const nameResults = searchByName(fragrances, 'black');
+  console.log(`Found ${nameResults.length} fragrances with "black" in name:`);
   nameResults.slice(0, 3).forEach(f => {
     console.log(`  - ${f.name} by ${getBrandName(f.brand)}`);
   });
@@ -143,6 +197,15 @@ function main() {
   console.log('=== Search by Accord ===');
   const woodyFragrances = searchByAccord(fragrances, 'woody');
   console.log(`Found ${woodyFragrances.length} fragrances with woody accords`);
+  console.log();
+
+  // v2.0 feature: Search by country
+  console.log('=== Search by Country (v2.0 feature) ===');
+  const frenchBrandFragrances = searchByCountry(fragrances, brands, 'France');
+  console.log(`Found ${frenchBrandFragrances.length} fragrances from French brands:`);
+  frenchBrandFragrances.slice(0, 3).forEach(f => {
+    console.log(`  - ${f.name} by ${getBrandName(f.brand)}`);
+  });
 }
 
 main();

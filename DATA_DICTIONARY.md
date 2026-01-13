@@ -1,511 +1,788 @@
 # FragDB Database - Data Dictionary
 
-Generated: 2026-01-06 11:27
+Complete field documentation for all three database files.
 
 ## Overview
 
-- **Total fragrances**: 119,376
-- **Unique brands**: 7,202
-- **Unique collections**: 5,680
-- **Unique accords**: 92
-- **Unique notes**: 2,440
-- **Total images**: 550,551
-  - Main photos: 119,376
-  - Info cards: 79,125
-  - User photos: 352,050
-- **Total description words**: 9,399,732
-- **Total gender votes**: 7,239,723
-- **Total ownership votes**: 11,737,650
-- **Years range**: 1533 - 2026
+| File | Records | Fields | Primary Key |
+|------|---------|--------|-------------|
+| `fragrances.csv` | 119,000+ | 28 | `pid` |
+| `brands.csv` | 7,200+ | 10 | `id` |
+| `perfumers.csv` | 2,700+ | 11 | `id` |
+
+### Database Statistics
+
+- **Total Fragrances**: 119,000+
+- **Unique Brands**: 7,200+
+- **Unique Perfumers**: 2,700+
+- **Unique Collections**: 5,700+
+- **Unique Accords**: 92
+- **Unique Notes**: 2,400+
+- **Years Range**: 1533 - 2026
 
 ## File Format
 
-- **Format**: CSV with pipe `|` separator
-- **Encoding**: UTF-8
-- **Quote character**: `"` (for fields containing newlines or separators)
+All files share the same format:
 
-## Fields
+| Property | Value |
+|----------|-------|
+| **Format** | CSV |
+| **Separator** | Pipe `\|` |
+| **Encoding** | UTF-8 |
+| **Quote Character** | `"` (double quote) |
+| **Line Ending** | Unix (LF) |
+| **Header** | Yes (first row) |
 
-### pid
+---
+
+# fragrances.csv
+
+Main fragrance database with 28 fields per record.
+
+## pid
 
 **Description**: Unique perfume identifier
 
-**Format**: Integer
+**Type**: Integer
 
 **Example**: `9828`
 
-**Notes**: Primary key
+**Notes**: Primary key, never empty. Use for cross-references in `by_designer`, `in_collection`, `reminds_of`, `also_like` fields.
 
-### url
+---
+
+## url
 
 **Description**: Direct link to the fragrance page on Fragrantica
 
-**Format**: URL string
+**Type**: URL
 
 **Example**: `https://www.fragrantica.com/perfume/Creed/Aventus-9828.html`
 
-**Notes**: Contains pid between last '-' and '.html'
+**Notes**: Contains pid between last `-` and `.html`.
 
-### brand
+---
 
-**Description**: Perfume house / brand name with page URL and logo URL
+## brand
 
-**Format**: brand_name;brand_page_url;brand_logo_url
+**Description**: Brand name with ID reference for joining with brands.csv
 
-**Example**: `Creed;https://www.fragrantica.com/designers/Creed.html;https://fimgs.net/mdimg/dizajneri/o.37.jpg`
+**Type**: String
 
-**Notes**: Brand information including name, profile page URL, and logo image URL.
+**Format**: `brand_name;brand_id`
 
-**Structure:**
-- `brand_name` - brand/designer name (e.g., Creed, Chanel)
-- `brand_page_url` - link to brand's profile page on Fragrantica
-- `brand_logo_url` - link to brand's logo image
+**Example**: `Creed;b1`
 
-**Parsing example (Python):**
+**Parsing (Python)**:
 ```python
 parts = value.split(';')
 brand_name = parts[0]
-brand_page_url = parts[1] if len(parts) > 1 else ''
-brand_logo_url = parts[2] if len(parts) > 2 else ''
+brand_id = parts[1] if len(parts) > 1 else ''
+# Use brand_id to join with brands.csv
 ```
 
-**Note**: URLs may not be available for all brands.
+**Notes**: Brand name is never empty. Use `brand_id` to look up full brand details (logo, country, website, etc.) in `brands.csv`.
 
-### name
+---
+
+## name
 
 **Description**: Fragrance name
 
-**Format**: Text
+**Type**: String
 
 **Example**: `Aventus`
 
-### year
+**Notes**: Never empty.
+
+---
+
+## year
 
 **Description**: Release year
 
-**Format**: Integer or empty
+**Type**: Integer or empty
 
 **Example**: `2010`
 
-### gender
+**Notes**: May be empty if release year is unknown.
+
+---
+
+## gender
 
 **Description**: Target gender
 
-**Format**: One of: 'for men', 'for women', 'for women and men', or empty
+**Type**: String
+
+**Values**: `for men`, `for women`, `for women and men`, or empty
 
 **Example**: `for men`
 
-### collection
+---
+
+## collection
 
 **Description**: Collection name within the brand
 
-**Format**: Text or empty
+**Type**: String or empty
 
 **Example**: `Aventus`
 
-### main_photo
+**Notes**: Brand's product line or collection. May be empty.
+
+---
+
+## main_photo
 
 **Description**: Main product photo of the fragrance bottle
 
-**Format**: URL or empty
+**Type**: URL or empty
 
 **Example**: `https://fimgs.net/mdimg/perfume/375x500.9828.jpg`
 
 **Notes**: Single URL to the main fragrance bottle image.
 
-### info_card
+---
+
+## info_card
 
 **Description**: Social card image with fragrance summary
 
-**Format**: URL or empty
+**Type**: URL or empty
 
 **Example**: `https://www.fragrantica.com/mdimg/perfume-social-cards/en-p_c_9828.jpeg`
 
-**Notes**: URL to an image containing general fragrance information (social media card).
+**Notes**: Optimized for social media sharing.
 
-### user_photoes
+---
+
+## user_photoes
 
 **Description**: User-submitted photos of the fragrance
 
-**Format**: Semicolon-separated URLs or empty
+**Type**: Semicolon-separated URLs or empty
 
 **Example**: `https://fimgs.net/photogram/p1200/zs/st/7orHFuKl1uqAYhBM.jpg;https://fimgs.net/photogram/p1200/yb/dz/AQh7prYtQAGQVDAI.jpg`
 
-### accords
+**Parsing (Python)**:
+```python
+photos = value.split(';') if value else []
+```
+
+---
+
+## accords
 
 **Description**: Main fragrance accords with strength percentage and display colors
 
-**Format**: Semicolon-separated list of accords. Each accord: name:percentage:bg_color:text_color
+**Type**: String or empty
+
+**Format**: `accord_name:percentage:bg_color:text_color;...`
 
 **Example**: `fruity:100:#FC4B29:#000000;sweet:68:#EE363B:#FFFFFF;woody:67:#774414:#FFFFFF`
 
-**Notes**: Sorted by strength (percentage) descending.
-
-**Structure of each accord:**
-- `name` - accord name (e.g., fruity, woody, citrus)
-- `percentage` - strength from 0 to 100
-- `bg_color` - background/bar color in HEX (e.g., #FC4B29)
-- `text_color` - text color in HEX (#000000 for dark, #FFFFFF for light)
-
-**Parsing example (Python):**
+**Parsing (Python)**:
 ```python
-accords = value.split(';')
-for accord in accords:
-    name, pct, bg, text = accord.split(':')
-    print(f"{name}: {pct}%")
+accords = []
+for item in value.split(';'):
+    name, pct, bg_color, text_color = item.split(':')
+    accords.append({
+        'name': name,
+        'percentage': int(pct),
+        'bg_color': bg_color,
+        'text_color': text_color
+    })
 ```
 
-### notes_pyramid
+**Notes**: Sorted by percentage descending. Use colors for visualization.
 
-**Description**: Fragrance notes pyramid with page URLs and image URLs
+---
 
-**Format**: level(note,url,img;note,url,img)level(...) - levels concatenated without separator
+## notes_pyramid
+
+**Description**: Fragrance notes organized by pyramid level
+
+**Type**: String or empty
+
+**Format**: `level(note,url,img;...)level(...)`
 
 **Example**: `top(Bergamot,https://www.fragrantica.com/notes/Bergamot-75.html,https://fimgs.net/mdimg/sastojci/t.75.jpg;Lemon,url,img)middle(...)base(...)`
 
-**Notes**: Contains fragrance notes organized by pyramid level.
+**Structure**:
+- **With levels**: `top(...)middle(...)base(...)`
+- **Flat list**: `notes(...)`
 
-**Two formats:**
-1. **With levels** (traditional pyramid): `top(...)middle(...)base(...)`
-2. **Without levels** (flat list): `notes(...)`
-
-**Structure:**
-- Level names: `top`, `middle`, `base`, or `notes` (for flat list)
-- Each level contains notes in parentheses
-- Notes separated by `;`
-- Each note: `name,page_url,image_url`
-
-**Parsing example (Python):**
+**Parsing (Python)**:
 ```python
 import re
 levels = re.findall(r'(\w+)\(([^)]+)\)', value)
 for level_name, notes_str in levels:
-    notes = notes_str.split(';')
-    for note in notes:
+    for note in notes_str.split(';'):
         name, url, img = note.split(',')
         print(f"{level_name}: {name}")
 ```
 
-### perfumers
+---
+
+## perfumers
 
 **Description**: Perfumers (noses) who created the fragrance
 
-**Format**: Semicolon-separated perfumer entries. Each entry: name,page_url,photo_url
+**Type**: String or empty
 
-**Example**: `Erwin Creed,https://www.fragrantica.com/noses/Erwin_Creed.html,https://frgs.me/mdimg/nosevi/fit.865.jpg`
+**Format**: `name1;id1;name2;id2;...`
 
-**Notes**: Perfumers who created or collaborated on this fragrance.
+**Example**: `Erwin Creed;p1;Jean-Claude Ellena;p5`
 
-**Structure:**
-- Multiple perfumers separated by `;`
-- Each perfumer: `name,page_url,photo_url`
-  - `name` - perfumer's full name
-  - `page_url` - link to perfumer's profile page
-  - `photo_url` - link to perfumer's photo
-
-**Parsing example (Python):**
+**Parsing (Python)**:
 ```python
 perfumers = []
-for entry in value.split(';'):
-    name, page_url, photo_url = entry.split(',')
-    perfumers.append({'name': name, 'page': page_url, 'photo': photo_url})
+parts = value.split(';')
+for i in range(0, len(parts), 2):
+    if i + 1 < len(parts):
+        perfumers.append({
+            'name': parts[i],
+            'id': parts[i + 1]
+        })
+# Use id to join with perfumers.csv
 ```
 
-### description
+**Notes**: Use perfumer `id` to look up full details in `perfumers.csv`.
 
-**Description**: Fragrance description text with HTML markup
+---
 
-**Format**: HTML text or empty
+## description
+
+**Description**: Fragrance description text
+
+**Type**: HTML or empty
 
 **Example**: `<p>Aventus by Creed is a Chypre Fruity fragrance for men...</p>`
 
-**Notes**: Contains HTML tags like <p>, <br>.
+**Notes**: Contains HTML tags (`<p>`, `<br>`). Sanitize before rendering.
 
-### rating
+---
+
+## rating
 
 **Description**: Overall fragrance rating
 
-**Format**: average_rating;vote_count
+**Type**: String or empty
+
+**Format**: `average_rating;vote_count`
 
 **Example**: `4.33;24561`
 
-**Notes**: Aggregated user rating for the fragrance.
-
-**Structure:**
-- First value: average rating (typically 1.0 to 5.0 scale)
-- Second value: total number of votes
-
-**Parsing example (Python):**
+**Parsing (Python)**:
 ```python
-avg_rating, vote_count = value.split(';')
-rating = float(avg_rating)
-votes = int(vote_count)
-# rating = 4.33, votes = 24561
+avg, votes = value.split(';')
+rating = float(avg)
+vote_count = int(votes)
 ```
 
-### appreciation
+---
 
-**Description**: User votes on fragrance appreciation
+## appreciation
 
-**Format**: Semicolon-separated relative values. Each entry: category:value
+**Description**: User appreciation votes (relative values)
+
+**Type**: String or empty
+
+**Format**: `category:value;...`
 
 **Example**: `love:100;like:42.23;ok:11.85;dislike:11.15;hate:3.64`
 
-**Notes**: User-submitted votes on how much they like the fragrance.
+**Categories**: `love`, `like`, `ok`, `dislike`, `hate`
 
-**Categories:**
-- `love` - strongly appreciate
-- `like` - moderately appreciate
-- `ok` - neutral opinion
-- `dislike` - moderately dislike
-- `hate` - strongly dislike
+**Notes**: Values are relative (highest = 100).
 
-**Values are relative**: the category with the most votes is set to 100, others are scaled proportionally.
+---
 
-**Parsing example (Python):**
-```python
-ratings = {}
-for entry in value.split(';'):
-    category, val = entry.split(':')
-    ratings[category] = float(val)
-# ratings = {'love': 100, 'like': 42.23, 'ok': 11.85, ...}
-```
+## price_value
 
-### price_value
+**Description**: Price/value perception votes (absolute counts)
 
-**Description**: User votes on fragrance price/value perception
+**Type**: String or empty
 
-**Format**: Semicolon-separated vote counts. Each entry: category:count
+**Format**: `category:count;...`
 
 **Example**: `way_overpriced:6658;overpriced:2844;ok:1360;good_value:337;great_value:378`
 
-**Notes**: User-submitted votes on perceived value for money.
+**Categories**: `way_overpriced`, `overpriced`, `ok`, `good_value`, `great_value`
 
-**Categories:**
-- `way_overpriced` - significantly overpriced
-- `overpriced` - somewhat overpriced
-- `ok` - fair price
-- `good_value` - good value for money
-- `great_value` - excellent value for money
+---
 
-**Vote count** represents the number of users who selected that category.
+## ownership
 
-**Parsing example (Python):**
-```python
-price = {}
-for entry in value.split(';'):
-    category, count = entry.split(':')
-    price[category] = int(count)
-# price = {'way_overpriced': 6658, 'overpriced': 2844, ...}
-```
+**Description**: Ownership status votes (percentages)
 
-### ownership
+**Type**: String or empty
 
-**Description**: User votes on fragrance ownership status
-
-**Format**: Semicolon-separated percentages. Each entry: category:percentage
+**Format**: `category:percentage;...`
 
 **Example**: `have_it:52.82;had_it:12.32;want_it:34.86`
 
-**Notes**: User-submitted votes on their ownership status of the fragrance.
+**Categories**: `have_it`, `had_it`, `want_it`
 
-**Categories:**
-- `have_it` - currently own this fragrance
-- `had_it` - previously owned but no longer have
-- `want_it` - wish to acquire this fragrance
+---
 
-**Percentage** represents the proportion of voters who selected that category (values sum to ~100%).
+## gender_votes
 
-**Parsing example (Python):**
-```python
-ownership = {}
-for entry in value.split(';'):
-    category, pct = entry.split(':')
-    ownership[category] = float(pct)
-# ownership = {'have_it': 52.82, 'had_it': 12.32, 'want_it': 34.86}
-```
+**Description**: Gender suitability votes (absolute counts)
 
-### gender_votes
+**Type**: String or empty
 
-**Description**: User votes on fragrance gender suitability
-
-**Format**: Semicolon-separated vote counts. Each entry: category:count
+**Format**: `category:count;...`
 
 **Example**: `female:149;more_female:44;unisex:866;more_male:2687;male:7977`
 
-**Notes**: User-submitted votes on who the fragrance is best suited for.
+**Categories**: `female`, `more_female`, `unisex`, `more_male`, `male`
 
-**Categories:**
-- `female` - strictly for women
-- `more_female` - leans feminine
-- `unisex` - suitable for any gender
-- `more_male` - leans masculine
-- `male` - strictly for men
+---
 
-**Vote count** represents the number of users who selected that category.
+## longevity
 
-**Parsing example (Python):**
-```python
-votes = {}
-for entry in value.split(';'):
-    category, count = entry.split(':')
-    votes[category] = int(count)
-# votes = {'female': 149, 'more_female': 44, 'unisex': 866, ...}
-```
+**Description**: Longevity/lasting power votes (absolute counts)
 
-### longevity
+**Type**: String or empty
 
-**Description**: User votes on fragrance longevity/lasting power
-
-**Format**: Semicolon-separated vote counts. Each entry: category:count
+**Format**: `category:count;...`
 
 **Example**: `very_weak:784;weak:1459;moderate:5869;long_lasting:5726;eternal:1614`
 
-**Notes**: User-submitted votes on how long the fragrance lasts.
+**Categories**: `very_weak`, `weak`, `moderate`, `long_lasting`, `eternal`
 
-**Categories:**
-- `very_weak` - lasts less than 1 hour
-- `weak` - lasts 1-2 hours
-- `moderate` - lasts 3-5 hours
-- `long_lasting` - lasts 6-12 hours
-- `eternal` - lasts more than 12 hours
+---
 
-**Vote count** represents the number of users who selected that category.
+## sillage
 
-**Parsing example (Python):**
-```python
-longevity = {}
-for entry in value.split(';'):
-    category, count = entry.split(':')
-    longevity[category] = int(count)
-# longevity = {'very_weak': 784, 'weak': 1459, 'moderate': 5869, ...}
-```
+**Description**: Sillage/projection votes (absolute counts)
 
-### sillage
+**Type**: String or empty
 
-**Description**: User votes on fragrance sillage (projection/trail)
-
-**Format**: Semicolon-separated vote counts. Each entry: category:count
+**Format**: `category:count;...`
 
 **Example**: `intimate:1816;moderate:8139;strong:4289;enormous:1267`
 
-**Notes**: User-submitted votes on how far the fragrance projects.
+**Categories**: `intimate`, `moderate`, `strong`, `enormous`
 
-**Categories:**
-- `intimate` - close to skin, barely noticeable
-- `moderate` - arm's length projection
-- `strong` - noticeable from a distance
-- `enormous` - fills the room
+---
 
-**Vote count** represents the number of users who selected that category.
+## season
 
-**Parsing example (Python):**
-```python
-sillage = {}
-for entry in value.split(';'):
-    category, count = entry.split(':')
-    sillage[category] = int(count)
-# sillage = {'intimate': 1816, 'moderate': 8139, ...}
-```
+**Description**: Seasonal suitability votes (relative values)
 
-### season
+**Type**: String or empty
 
-**Description**: User votes on best seasons to wear the fragrance
-
-**Format**: Semicolon-separated relative values. Each entry: season:value
+**Format**: `season:value;...`
 
 **Example**: `winter:44.39;spring:97.60;summer:99.48;fall:74.81`
 
-**Notes**: User-submitted votes on seasonal suitability.
+**Seasons**: `winter`, `spring`, `summer`, `fall`
 
-**Seasons:**
-- `winter` - cold weather
-- `spring` - mild warming weather
-- `summer` - hot weather
-- `fall` - mild cooling weather
+**Notes**: Values are relative (highest = 100).
 
-**Values are relative**: the season with the most votes is set to 100, others are scaled proportionally.
+---
 
-**Parsing example (Python):**
-```python
-seasons = {}
-for entry in value.split(';'):
-    season, val = entry.split(':')
-    seasons[season] = float(val)
-# seasons = {'winter': 44.39, 'spring': 97.60, ...}
-```
+## time_of_day
 
-### time_of_day
+**Description**: Day/night suitability votes (relative values)
 
-**Description**: User votes on best time of day to wear the fragrance
+**Type**: String or empty
 
-**Format**: Semicolon-separated relative values. Each entry: time:value
+**Format**: `time:value;...`
 
 **Example**: `day:100.00;night:68.93`
 
-**Notes**: User-submitted votes on time-of-day suitability.
+**Times**: `day`, `night`
 
-**Times:**
-- `day` - daytime wear
-- `night` - evening/nighttime wear
+---
 
-**Values are relative**: the time with the most votes is set to 100, others are scaled proportionally.
+## by_designer
 
-**Parsing example (Python):**
-```python
-times = {}
-for entry in value.split(';'):
-    time, val = entry.split(':')
-    times[time] = float(val)
-# times = {'day': 100.00, 'night': 68.93}
-```
+**Description**: Other fragrances from the same brand
 
-### by_designer
-
-**Description**: Other fragrances from the same brand/designer (PIDs)
-
-**Format**: Semicolon-separated integers or empty
+**Type**: Semicolon-separated integers or empty
 
 **Example**: `3805;4262;472;468;111224;12317`
 
-**Notes**: List of PID references to other fragrances by the same brand.
+**Notes**: List of `pid` values. Use for "More from this brand" features.
 
-### in_collection
+---
 
-**Description**: Other fragrances from the same collection
+## in_collection
 
-**Format**: Semicolon-separated PIDs or empty
+**Description**: Other fragrances in the same collection
 
-**Example**: `9828;12345;67890`
-
-**Notes**: List of PID references to fragrances in the same collection.
-
-### reminds_of
-
-**Description**: Fragrances this one reminds users of
-
-**Format**: Semicolon-separated PIDs or empty
+**Type**: Semicolon-separated integers or empty
 
 **Example**: `9828;12345;67890`
 
-**Notes**: List of PID references to fragrances that users find similar.
+---
 
-### also_like
+## reminds_of
+
+**Description**: Similar fragrances (user-voted)
+
+**Type**: Semicolon-separated integers or empty
+
+**Example**: `9828;12345;67890`
+
+**Notes**: Use for "Similar to" recommendations.
+
+---
+
+## also_like
 
 **Description**: Fragrances liked by people who like this one
 
-**Format**: Semicolon-separated PIDs or empty
+**Type**: Semicolon-separated integers or empty
 
 **Example**: `9828;12345;67890`
 
-**Notes**: List of PID references to fragrances that appeal to the same audience.
+**Notes**: Collaborative filtering suggestions. Use for "You might also like" features.
 
-### news_ids
+---
 
-**Description**: News IDs - references to news articles mentioning this fragrance
+## news_ids
 
-**Format**: Semicolon-separated integers or empty
+**Description**: Related news article IDs
+
+**Type**: Semicolon-separated integers or empty
 
 **Example**: `23884;23818;23650;23579`
 
-**Notes**: News article reference IDs.
+**Notes**: News URL format: `https://www.fragrantica.com/news/x-{news_id}.html`
+
+---
+
+# brands.csv
+
+Brand/designer reference table with 10 fields per record.
+
+## id
+
+**Description**: Unique brand identifier
+
+**Type**: String
+
+**Format**: `bN` (e.g., `b1`, `b42`, `b1503`)
+
+**Example**: `b1`
+
+**Notes**: Primary key. Use to join with `brand` field in fragrances.csv.
+
+---
+
+## name
+
+**Description**: Brand name
+
+**Type**: String
+
+**Example**: `Creed`
+
+**Notes**: Never empty.
+
+---
+
+## url
+
+**Description**: Fragrantica brand page URL
+
+**Type**: URL or empty
+
+**Example**: `https://www.fragrantica.com/designers/Creed.html`
+
+---
+
+## logo_url
+
+**Description**: Brand logo image URL
+
+**Type**: URL or empty
+
+**Example**: `https://fimgs.net/mdimg/designers/g195.png`
+
+**Notes**: PNG format, suitable for display.
+
+---
+
+## country
+
+**Description**: Country of origin
+
+**Type**: String or empty
+
+**Example**: `France`
+
+---
+
+## main_activity
+
+**Description**: Primary business activity
+
+**Type**: String or empty
+
+**Example**: `Fragrance house`
+
+**Common values**: `Fragrance house`, `Fashion house`, `Celebrity`, `Niche`, `Designer`
+
+---
+
+## website
+
+**Description**: Official brand website
+
+**Type**: URL or empty
+
+**Example**: `https://www.creed.com`
+
+---
+
+## parent_company
+
+**Description**: Parent company or conglomerate
+
+**Type**: String or empty
+
+**Example**: `Kering`
+
+**Common values**: `LVMH`, `Estée Lauder`, `Coty`, `Puig`, `L'Oréal`
+
+---
+
+## description
+
+**Description**: Brand description/history
+
+**Type**: HTML or empty
+
+**Example**: `<p>Creed is a French fragrance house founded in 1760...</p>`
+
+**Notes**: Contains HTML tags. Sanitize before rendering.
+
+---
+
+## brand_count
+
+**Description**: Number of fragrances by this brand
+
+**Type**: Integer
+
+**Example**: `847`
+
+**Notes**: Count of fragrances in the database from this brand.
+
+---
+
+# perfumers.csv
+
+Perfumer (nose) reference table with 11 fields per record.
+
+## id
+
+**Description**: Unique perfumer identifier
+
+**Type**: String
+
+**Format**: `pN` (e.g., `p1`, `p42`, `p865`)
+
+**Example**: `p1`
+
+**Notes**: Primary key. Use to join with `perfumers` field in fragrances.csv.
+
+---
+
+## name
+
+**Description**: Perfumer full name
+
+**Type**: String
+
+**Example**: `Alberto Morillas`
+
+**Notes**: Never empty.
+
+---
+
+## url
+
+**Description**: Fragrantica perfumer page URL
+
+**Type**: URL or empty
+
+**Example**: `https://www.fragrantica.com/noses/Alberto_Morillas.html`
+
+---
+
+## photo_url
+
+**Description**: Perfumer portrait photo URL
+
+**Type**: URL or empty
+
+**Example**: `https://fimgs.net/mdimg/nosevi/fit.123.jpg`
+
+---
+
+## status
+
+**Description**: Professional status/title
+
+**Type**: String or empty
+
+**Example**: `Master Perfumer`
+
+**Common values**: `Master Perfumer`, `Senior Perfumer`, `Perfumer`, `Independent Perfumer`
+
+---
+
+## company
+
+**Description**: Current employer
+
+**Type**: String or empty
+
+**Example**: `Firmenich`
+
+**Common values**: `Firmenich`, `Givaudan`, `IFF`, `Symrise`, `Takasago`
+
+---
+
+## also_worked
+
+**Description**: Previous employers
+
+**Type**: String or empty
+
+**Example**: `Quest International, Givaudan`
+
+**Notes**: Comma-separated list of companies.
+
+---
+
+## education
+
+**Description**: Educational background
+
+**Type**: String or empty
+
+**Example**: `ISIPCA`
+
+**Common values**: `ISIPCA`, `Givaudan Perfumery School`, `GIP`
+
+---
+
+## web
+
+**Description**: Personal/professional website
+
+**Type**: URL or empty
+
+**Example**: `https://www.perfumer.com`
+
+---
+
+## perfumes_count
+
+**Description**: Number of fragrances created
+
+**Type**: Integer
+
+**Example**: `538`
+
+**Notes**: Count of fragrances in the database by this perfumer.
+
+---
+
+## biography
+
+**Description**: Perfumer biography
+
+**Type**: HTML or empty
+
+**Example**: `<p>Alberto Morillas is a Spanish perfumer known for...</p>`
+
+**Notes**: Contains HTML tags. Sanitize before rendering.
+
+---
+
+# Joining Tables
+
+## Python Example
+
+```python
+import pandas as pd
+
+# Load all three files
+fragrances = pd.read_csv('fragrances.csv', sep='|', encoding='utf-8')
+brands = pd.read_csv('brands.csv', sep='|', encoding='utf-8')
+perfumers = pd.read_csv('perfumers.csv', sep='|', encoding='utf-8')
+
+# Extract brand_id
+fragrances['brand_id'] = fragrances['brand'].str.split(';').str[1]
+
+# Join fragrances with brands
+df = fragrances.merge(
+    brands,
+    left_on='brand_id',
+    right_on='id',
+    how='left',
+    suffixes=('', '_brand')
+)
+
+# Now access brand details
+print(df[['name', 'name_brand', 'country', 'website']].head())
+```
+
+## SQL Example
+
+```sql
+-- PostgreSQL
+SELECT
+    f.pid,
+    f.name AS fragrance,
+    b.name AS brand,
+    b.country,
+    b.website
+FROM fragrances f
+LEFT JOIN brands b ON SPLIT_PART(f.brand, ';', 2) = b.id
+WHERE f.name ILIKE '%aventus%';
+```
+
+## JavaScript Example
+
+```javascript
+// Create lookup maps
+const brandsMap = new Map(brands.map(b => [b.id, b]));
+const perfumersMap = new Map(perfumers.map(p => [p.id, p]));
+
+// Get brand details
+function getBrand(fragrance) {
+    const [name, id] = fragrance.brand.split(';');
+    return brandsMap.get(id) || { name };
+}
+
+// Get all perfumers for a fragrance
+function getPerfumers(fragrance) {
+    if (!fragrance.perfumers) return [];
+    const parts = fragrance.perfumers.split(';');
+    const result = [];
+    for (let i = 0; i < parts.length; i += 2) {
+        const id = parts[i + 1];
+        result.push(perfumersMap.get(id) || { name: parts[i], id });
+    }
+    return result;
+}
+```
+
+---
+
+# Version History
+
+- **v2.0.0** (2026-01-14): Multi-file structure with brands.csv and perfumers.csv
+- **v1.0.0** (2026-01-07): Initial release with single fragrances.csv
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history.

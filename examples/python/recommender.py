@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FragDB - Simple Recommender Example
+FragDB - Simple Recommender Example (v2.0)
 
 Demonstrates how to build a basic fragrance recommendation system.
 """
@@ -8,7 +8,7 @@ Demonstrates how to build a basic fragrance recommendation system.
 import pandas as pd
 from typing import List, Dict
 from load_database import load_fragdb
-from parse_fields import parse_accords, parse_percentage_field
+from parse_fields import parse_accords, parse_percentage_field, parse_brand
 
 
 def get_fragrance_profile(row: pd.Series) -> Dict[str, float]:
@@ -75,9 +75,14 @@ def find_similar(df: pd.DataFrame, target_name: str, n: int = 5) -> List[Dict]:
 
         profile = get_fragrance_profile(row)
         sim = cosine_similarity(target_profile, profile)
+
+        # Extract brand name from brand field (v2.0 format: name;id)
+        brand_info = parse_brand(row["brand"])
+
         similarities.append({
             "name": row["name"],
-            "brand": row["brand"].split(";")[0] if row["brand"] else "",
+            "brand": brand_info["name"],
+            "brand_id": brand_info["id"],
             "similarity": sim
         })
 
@@ -104,9 +109,13 @@ def recommend_by_accords(df: pd.DataFrame, preferred_accords: List[str], n: int 
                 if accord["name"].lower() in [p.lower() for p in preferred_accords]:
                     score += accord["percentage"]
 
+            # Extract brand name (v2.0 format: name;id)
+            brand_info = parse_brand(row["brand"])
+
             scores.append({
                 "name": row["name"],
-                "brand": row["brand"].split(";")[0] if row["brand"] else "",
+                "brand": brand_info["name"],
+                "brand_id": brand_info["id"],
                 "matches": matches,
                 "score": score
             })
@@ -116,24 +125,67 @@ def recommend_by_accords(df: pd.DataFrame, preferred_accords: List[str], n: int 
     return scores[:n]
 
 
+def recommend_by_perfumer(
+    fragrances: pd.DataFrame,
+    perfumers: pd.DataFrame,
+    perfumer_name: str,
+    n: int = 5
+) -> List[Dict]:
+    """Recommend fragrances by a specific perfumer.
+
+    Uses perfumers.csv to find fragrances created by a perfumer.
+    """
+    # Find perfumer ID
+    perfumer_mask = perfumers["name"].str.lower().str.contains(perfumer_name.lower(), na=False)
+    if not perfumer_mask.any():
+        print(f"Perfumer '{perfumer_name}' not found")
+        return []
+
+    perfumer_row = perfumers[perfumer_mask].iloc[0]
+    perfumer_id = perfumer_row["id"]
+
+    # Find fragrances by this perfumer
+    results = []
+    for idx, row in fragrances.iterrows():
+        perfumers_field = row.get("perfumers", "")
+        if perfumers_field and f";{perfumer_id}" in perfumers_field:
+            brand_info = parse_brand(row["brand"])
+            results.append({
+                "name": row["name"],
+                "brand": brand_info["name"],
+                "year": row["year"]
+            })
+
+    return results[:n]
+
+
 def main():
     # Load database
-    df = load_fragdb()
+    db = load_fragdb()
+    fragrances = db["fragrances"]
+    perfumers = db["perfumers"]
 
-    print("=== FragDB Simple Recommender ===\n")
+    print("=== FragDB v2.0 Recommender ===\n")
 
     # Find similar to a fragrance
-    print("Fragrances similar to 'Aventus':")
-    similar = find_similar(df, "Aventus", n=3)
+    print("Fragrances similar to 'Light Blue':")
+    similar = find_similar(fragrances, "Light Blue", n=3)
     for item in similar:
         print(f"  {item['name']} by {item['brand']} (similarity: {item['similarity']:.2f})")
     print()
 
     # Recommend by preferred accords
     print("Fragrances with fruity and sweet accords:")
-    recommendations = recommend_by_accords(df, ["fruity", "sweet"], n=5)
+    recommendations = recommend_by_accords(fragrances, ["fruity", "sweet"], n=5)
     for item in recommendations:
         print(f"  {item['name']} by {item['brand']} (score: {item['score']})")
+    print()
+
+    # Recommend by perfumer (v2.0 feature)
+    print("Fragrances by Alberto Morillas:")
+    by_perfumer = recommend_by_perfumer(fragrances, perfumers, "Alberto Morillas", n=5)
+    for item in by_perfumer:
+        print(f"  {item['name']} by {item['brand']} ({item['year']})")
 
 
 if __name__ == "__main__":

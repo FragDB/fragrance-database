@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-FragDB - Parse Complex Fields Example
+FragDB - Parse Complex Fields Example (v2.0)
 
-Demonstrates how to parse complex fields like accords and notes_pyramid.
+Demonstrates how to parse complex fields like accords, notes_pyramid, and perfumers.
 """
 
 import re
@@ -76,25 +76,48 @@ def parse_rating(rating_str: str) -> Dict[str, float]:
 
 
 def parse_brand(brand_str: str) -> Dict[str, str]:
-    """Parse the brand field into name, url, and logo.
+    """Parse the brand field into name and ID.
 
-    Format: name;url;logo_url
+    Format (v2.0): brand_name;brand_id
+    Example: Dior;b3
     """
     if not brand_str or pd.isna(brand_str):
-        return {"name": "", "url": "", "logo": ""}
+        return {"name": "", "id": ""}
 
     parts = brand_str.split(";")
     return {
         "name": parts[0] if len(parts) > 0 else "",
-        "url": parts[1] if len(parts) > 1 else "",
-        "logo": parts[2] if len(parts) > 2 else ""
+        "id": parts[1] if len(parts) > 1 else ""
     }
 
 
-def parse_percentage_field(field_str: str) -> Dict[str, int]:
+def parse_perfumers(perfumers_str: str) -> List[Dict[str, str]]:
+    """Parse the perfumers field into a list of dictionaries.
+
+    Format (v2.0): name1;id1;name2;id2;...
+    Example: Erwin Creed;p1;Jean-Claude Ellena;p5
+    """
+    if not perfumers_str or pd.isna(perfumers_str):
+        return []
+
+    parts = perfumers_str.split(";")
+    perfumers = []
+
+    for i in range(0, len(parts), 2):
+        if i + 1 < len(parts):
+            perfumers.append({
+                "name": parts[i],
+                "id": parts[i + 1]
+            })
+
+    return perfumers
+
+
+def parse_percentage_field(field_str: str) -> Dict[str, float]:
     """Parse any percentage-based field.
 
-    Format: category:percentage;category:percentage;...
+    Format: category:value;category:value;...
+    Note: Values may be integers (vote counts) or floats (percentages)
     """
     if not field_str or pd.isna(field_str):
         return {}
@@ -103,7 +126,10 @@ def parse_percentage_field(field_str: str) -> Dict[str, int]:
     for item in field_str.split(";"):
         parts = item.split(":")
         if len(parts) >= 2:
-            result[parts[0]] = int(parts[1]) if parts[1].isdigit() else 0
+            try:
+                result[parts[0]] = float(parts[1])
+            except ValueError:
+                result[parts[0]] = 0.0
     return result
 
 
@@ -111,6 +137,7 @@ def parse_id_list(ids_str: str) -> List[int]:
     """Parse semicolon-separated ID list.
 
     Format: id;id;id;...
+    Used for: by_designer, in_collection, reminds_of, also_like, news_ids
     """
     if not ids_str or pd.isna(ids_str):
         return []
@@ -120,11 +147,16 @@ def parse_id_list(ids_str: str) -> List[int]:
 
 def main():
     # Load database
-    df = load_fragdb()
+    db = load_fragdb()
+    fragrances = db["fragrances"]
+    brands = db["brands"]
+    perfumers = db["perfumers"]
 
     # Get first fragrance for examples
-    row = df.iloc[0]
-    print(f"Parsing fields for: {row['name']} by {parse_brand(row['brand'])['name']}")
+    row = fragrances.iloc[0]
+    brand_info = parse_brand(row["brand"])
+    print(f"Parsing fields for: {row['name']} by {brand_info['name']}")
+    print(f"Brand ID: {brand_info['id']} (use to lookup in brands.csv)")
     print()
 
     # Parse accords
@@ -141,6 +173,13 @@ def main():
         print(f"  {layer.upper()}: {', '.join(n['name'] for n in note_list[:3])}")
     print()
 
+    # Parse perfumers (v2.0 format)
+    print("=== Perfumers ===")
+    perfumer_list = parse_perfumers(row.get("perfumers", ""))
+    for p in perfumer_list:
+        print(f"  {p['name']} (ID: {p['id']} - lookup in perfumers.csv)")
+    print()
+
     # Parse rating
     print("=== Rating ===")
     rating = parse_rating(row["rating"])
@@ -149,9 +188,21 @@ def main():
 
     # Parse longevity
     print("=== Longevity ===")
-    longevity = parse_percentage_field(row["longevity"])
-    for category, percentage in longevity.items():
-        print(f"  {category}: {percentage}%")
+    longevity = parse_percentage_field(row.get("longevity", ""))
+    for category, value in longevity.items():
+        print(f"  {category}: {value:.0f}")
+    print()
+
+    # Example: Look up brand details from brands.csv
+    print("=== Brand Details (from brands.csv) ===")
+    brand_id = brand_info["id"]
+    brand_row = brands[brands["id"] == brand_id]
+    if not brand_row.empty:
+        b = brand_row.iloc[0]
+        print(f"  Name: {b['name']}")
+        print(f"  Country: {b['country']}")
+        print(f"  Website: {b['website']}")
+        print(f"  Fragrances: {b['brand_count']}")
 
 
 if __name__ == "__main__":
