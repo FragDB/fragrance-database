@@ -284,6 +284,8 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 ## Links
 
 - **Website**: [fragdb.net](https://fragdb.net)
+- **Kaggle**: [kaggle.com/datasets/eriklindqvist/fragdb-fragrance-database](https://www.kaggle.com/datasets/eriklindqvist/fragdb-fragrance-database)
+- **Hugging Face**: [huggingface.co/datasets/FragDBnet/fragrance-database](https://huggingface.co/datasets/FragDBnet/fragrance-database)
 - **Documentation**: [DATA_DICTIONARY.md](DATA_DICTIONARY.md)
 - **Issues**: [GitHub Issues](../../issues)
 
