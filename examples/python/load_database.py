@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-FragDB - Load Database Example (v2.0)
+FragDB - Load Database Example (v3.0)
 
 Demonstrates how to load the FragDB multi-file database using pandas.
+Now includes 5 CSV files: fragrances, brands, perfumers, notes, accords.
 """
 
 import pandas as pd
@@ -16,7 +17,7 @@ def load_fragrances(filepath: str = "../../samples/fragrances.csv") -> pd.DataFr
         filepath: Path to the fragrances CSV file (pipe-delimited)
 
     Returns:
-        DataFrame with fragrance data
+        DataFrame with fragrance data (30 fields)
     """
     df = pd.read_csv(
         filepath,
@@ -28,6 +29,7 @@ def load_fragrances(filepath: str = "../../samples/fragrances.csv") -> pd.DataFr
     # Convert numeric fields
     df["pid"] = pd.to_numeric(df["pid"], errors="coerce")
     df["year"] = pd.to_numeric(df["year"], errors="coerce")
+    df["reviews_count"] = pd.to_numeric(df["reviews_count"], errors="coerce")
 
     return df
 
@@ -39,7 +41,7 @@ def load_brands(filepath: str = "../../samples/brands.csv") -> pd.DataFrame:
         filepath: Path to the brands CSV file (pipe-delimited)
 
     Returns:
-        DataFrame with brand data
+        DataFrame with brand data (10 fields)
     """
     df = pd.read_csv(
         filepath,
@@ -61,7 +63,7 @@ def load_perfumers(filepath: str = "../../samples/perfumers.csv") -> pd.DataFram
         filepath: Path to the perfumers CSV file (pipe-delimited)
 
     Returns:
-        DataFrame with perfumer data
+        DataFrame with perfumer data (11 fields)
     """
     df = pd.read_csv(
         filepath,
@@ -76,6 +78,50 @@ def load_perfumers(filepath: str = "../../samples/perfumers.csv") -> pd.DataFram
     return df
 
 
+def load_notes(filepath: str = "../../samples/notes.csv") -> pd.DataFrame:
+    """Load the notes reference table (NEW in v3.0).
+
+    Args:
+        filepath: Path to the notes CSV file (pipe-delimited)
+
+    Returns:
+        DataFrame with note data (10 fields)
+    """
+    df = pd.read_csv(
+        filepath,
+        delimiter="|",
+        encoding="utf-8",
+        dtype=str
+    )
+
+    # Convert numeric fields
+    df["fragrance_count"] = pd.to_numeric(df["fragrance_count"], errors="coerce")
+
+    return df
+
+
+def load_accords(filepath: str = "../../samples/accords.csv") -> pd.DataFrame:
+    """Load the accords reference table (NEW in v3.0).
+
+    Args:
+        filepath: Path to the accords CSV file (pipe-delimited)
+
+    Returns:
+        DataFrame with accord data (5 fields)
+    """
+    df = pd.read_csv(
+        filepath,
+        delimiter="|",
+        encoding="utf-8",
+        dtype=str
+    )
+
+    # Convert numeric fields
+    df["fragrance_count"] = pd.to_numeric(df["fragrance_count"], errors="coerce")
+
+    return df
+
+
 def load_fragdb(samples_dir: str = "../../samples") -> dict:
     """Load all FragDB database files.
 
@@ -83,13 +129,15 @@ def load_fragdb(samples_dir: str = "../../samples") -> dict:
         samples_dir: Directory containing the CSV files
 
     Returns:
-        Dictionary with 'fragrances', 'brands', and 'perfumers' DataFrames
+        Dictionary with 'fragrances', 'brands', 'perfumers', 'notes', 'accords' DataFrames
     """
     base = Path(samples_dir)
     return {
         "fragrances": load_fragrances(str(base / "fragrances.csv")),
         "brands": load_brands(str(base / "brands.csv")),
-        "perfumers": load_perfumers(str(base / "perfumers.csv"))
+        "perfumers": load_perfumers(str(base / "perfumers.csv")),
+        "notes": load_notes(str(base / "notes.csv")),
+        "accords": load_accords(str(base / "accords.csv"))
     }
 
 
@@ -124,17 +172,21 @@ def main():
     fragrances = db["fragrances"]
     brands = db["brands"]
     perfumers = db["perfumers"]
+    notes = db["notes"]
+    accords = db["accords"]
 
     # Display basic info
-    print("=== FragDB v2.0 Database ===\n")
+    print("=== FragDB v3.0 Database ===\n")
     print(f"Fragrances: {len(fragrances)} records, {len(fragrances.columns)} fields")
     print(f"Brands: {len(brands)} records, {len(brands.columns)} fields")
     print(f"Perfumers: {len(perfumers)} records, {len(perfumers.columns)} fields")
+    print(f"Notes: {len(notes)} records, {len(notes.columns)} fields")
+    print(f"Accords: {len(accords)} records, {len(accords.columns)} fields")
     print()
 
     # Show sample fragrances
     print("Sample fragrances:")
-    print(fragrances[["name", "brand", "year", "gender"]].head())
+    print(fragrances[["name", "brand", "year", "gender", "reviews_count"]].head())
     print()
 
     # Show sample brands
@@ -145,6 +197,16 @@ def main():
     # Show sample perfumers
     print("Sample perfumers:")
     print(perfumers[["id", "name", "company", "perfumes_count"]].head())
+    print()
+
+    # Show sample notes (NEW in v3.0)
+    print("Sample notes:")
+    print(notes[["id", "name", "group", "fragrance_count"]].head())
+    print()
+
+    # Show sample accords (NEW in v3.0)
+    print("Sample accords:")
+    print(accords[["id", "name", "bar_color", "fragrance_count"]].head())
     print()
 
     # Example: Join fragrances with brands
