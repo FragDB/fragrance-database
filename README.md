@@ -1,4 +1,4 @@
-# FragDB - Fragrance Database
+# FragDB - Fragrantica Fragrance Database
 
 The most comprehensive fragrance database available, containing **133,000+ records** across five interconnected CSV files.
 
