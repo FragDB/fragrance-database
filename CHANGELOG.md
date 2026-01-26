@@ -5,6 +5,53 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-01-26
+
+### Breaking Changes
+- **Voting field format changed**: All voting fields now use `category:votes:percent` format instead of just percentages or counts
+- **`accords` field format changed**: Now contains `accord_id:percent` pairs, use accords.csv for names and colors
+- **`notes_pyramid` field format changed**: Now includes `opacity` and `weight` attributes for each note
+- **`reminds_of` field format changed**: Now contains `pid:likes:dislikes` instead of just PIDs
+- **Database structure**: Now consists of 5 CSV files instead of 3
+
+### Added
+- **New file: `notes.csv`** with 11 fields per note (2,448 records)
+  - `id`, `name`, `url`, `latin_name`, `other_names` (Identity)
+  - `group`, `odor_profile` (Description)
+  - `main_icon`, `alt_icons`, `background`, `fragrance_count` (Media)
+- **New file: `accords.csv`** with 5 fields per accord (92 records)
+  - `id`, `name` (Identity)
+  - `bar_color`, `font_color`, `fragrance_count` (Style)
+- **New field: `reviews_count`** — Total number of user reviews per fragrance
+- **New field: `pros_cons`** — AI-generated pros and cons with user voting
+
+### Changed
+- All voting fields now include absolute vote counts AND percentages:
+  - `appreciation`: `love:12:13.19;like:48:52.75;...`
+  - `price_value`: `way_overpriced:0:0;overpriced:2:29;...`
+  - `ownership`: `have_it:68:22;had_it:102:33;want_it:137:45`
+  - `gender_votes`: `female:5:63;more_female:1:13;unisex:2:25;...`
+  - `longevity`: `very_weak:4:18;weak:4:18;moderate:8:36;...`
+  - `sillage`: `intimate:5:19;moderate:11:42;strong:5:19;...`
+  - `season`: `winter:8:18;spring:15:33;summer:30:67;fall:12:27`
+  - `time_of_day`: `day:45:100;night:5:11`
+- `notes_pyramid` now includes note ID, opacity (0-1), and weight (visual size)
+- `accords` now references accords.csv via ID instead of inline colors
+
+### Database Statistics
+- **Total Records**: 133,522 (across 5 files)
+- **Fragrances**: 120,871 in `fragrances.csv` (+1,871)
+- **Brands**: 7,296 in `brands.csv` (+91)
+- **Perfumers**: 2,815 in `perfumers.csv` (+110)
+- **Notes**: 2,448 in `notes.csv` (NEW, 11 fields)
+- **Accords**: 92 in `accords.csv` (NEW)
+- **Total Data Fields**: 67 (30 + 10 + 11 + 11 + 5)
+
+### Migration Guide
+See [docs/VERSION_3.0_RELEASE.md](docs/VERSION_3.0_RELEASE.md) for detailed migration instructions.
+
+---
+
 ## [2.0.0] - 2026-01-14
 
 ### Breaking Changes

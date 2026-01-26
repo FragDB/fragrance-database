@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FragDB - Search Fragrances Example (v2.0)
+FragDB - Search Fragrances Example (v3.0)
 
 Demonstrates how to search and filter fragrances in the database.
 """
@@ -75,7 +75,7 @@ def main():
     brands = db["brands"]
 
     # Search examples
-    print("=== Search Examples (FragDB v2.0) ===\n")
+    print("=== Search Examples (FragDB v3.0) ===\n")
 
     # Search by name
     print("Fragrances with 'Poison' in name:")

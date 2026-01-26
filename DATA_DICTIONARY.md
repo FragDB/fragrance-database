@@ -1,24 +1,27 @@
 # FragDB Database - Data Dictionary
 
-Complete field documentation for all three database files.
+Complete field documentation for all five database files.
 
 ## Overview
 
 | File | Records | Fields | Primary Key |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 119,000+ | 28 | `pid` |
-| `brands.csv` | 7,200+ | 10 | `id` |
-| `perfumers.csv` | 2,700+ | 11 | `id` |
+| `fragrances.csv` | 120,871 | 30 | `pid` |
+| `brands.csv` | 7,296 | 10 | `id` |
+| `perfumers.csv` | 2,815 | 11 | `id` |
+| `notes.csv` | 2,448 | 11 | `id` |
+| `accords.csv` | 92 | 5 | `id` |
 
 ### Database Statistics
 
-- **Total Fragrances**: 119,000+
-- **Unique Brands**: 7,200+
-- **Unique Perfumers**: 2,700+
-- **Unique Collections**: 5,700+
+- **Total Fragrances**: 120,871
+- **Unique Brands**: 7,296
+- **Unique Perfumers**: 2,815
+- **Unique Notes**: 2,448
 - **Unique Accords**: 92
-- **Unique Notes**: 2,400+
+- **Unique Collections**: 5,700+
 - **Years Range**: 1533 - 2026
+- **Total Data Fields**: 67
 
 ## File Format
 
@@ -37,7 +40,7 @@ All files share the same format:
 
 # fragrances.csv
 
-Main fragrance database with 28 fields per record.
+Main fragrance database with 30 fields per record.
 
 ## pid
 
@@ -174,44 +177,50 @@ photos = value.split(';') if value else []
 
 ## accords
 
-**Description**: Main fragrance accords with strength percentage and display colors
+**Description**: Main fragrance accords with intensity percentages
 
 **Type**: String or empty
 
-**Format**: `accord_name:percentage:bg_color:text_color;...`
+**Format**: `accord_id:percent;...`
 
-**Example**: `fruity:100:#FC4B29:#000000;sweet:68:#EE363B:#FFFFFF;woody:67:#774414:#FFFFFF`
+**Example**: `a24:100;a34:64;a38:60;a75:54`
 
 **Parsing (Python)**:
 ```python
 accords = []
 for item in value.split(';'):
-    name, pct, bg_color, text_color = item.split(':')
+    accord_id, pct = item.split(':')
     accords.append({
-        'name': name,
-        'percentage': int(pct),
-        'bg_color': bg_color,
-        'text_color': text_color
+        'id': accord_id,
+        'percentage': int(pct)
     })
+# Use accord_id to join with accords.csv for name and colors
 ```
 
-**Notes**: Sorted by percentage descending. Use colors for visualization.
+**Notes**: Sorted by percentage descending. Use `accord_id` to look up name, `bar_color`, and `font_color` in `accords.csv`.
 
 ---
 
 ## notes_pyramid
 
-**Description**: Fragrance notes organized by pyramid level
+**Description**: Fragrance notes organized by pyramid level with significance data
 
 **Type**: String or empty
 
-**Format**: `level(note,url,img;...)level(...)`
+**Format**: `level(name,note_id,img,opacity,weight;...)level(...)`
 
-**Example**: `top(Bergamot,https://www.fragrantica.com/notes/Bergamot-75.html,https://fimgs.net/mdimg/sastojci/t.75.jpg;Lemon,url,img)middle(...)base(...)`
+**Example**: `top(Orange,n80,https://fimgs.net/mdimg/sastojci/t.80.jpg,1.0,5.0;Bergamot,n75,img.jpg,0.95,3.65)middle(...)base(...)`
 
 **Structure**:
 - **With levels**: `top(...)middle(...)base(...)`
 - **Flat list**: `notes(...)`
+
+**Fields per note**:
+- `name` — Note name
+- `note_id` — ID for joining with notes.csv (e.g., n80, n75)
+- `img` — Note icon URL
+- `opacity` — Note dominance (0.0-1.0, higher = more prominent)
+- `weight` — Visual size in rem (2.5-5.0)
 
 **Parsing (Python)**:
 ```python
@@ -219,9 +228,14 @@ import re
 levels = re.findall(r'(\w+)\(([^)]+)\)', value)
 for level_name, notes_str in levels:
     for note in notes_str.split(';'):
-        name, url, img = note.split(',')
-        print(f"{level_name}: {name}")
+        parts = note.split(',')
+        name, note_id, img = parts[0], parts[1], parts[2]
+        opacity = float(parts[3]) if len(parts) > 3 else 1.0
+        weight = float(parts[4]) if len(parts) > 4 else 5.0
+        print(f"{level_name}: {name} (id={note_id}, opacity={opacity})")
 ```
+
+**Notes**: Use `note_id` to join with `notes.csv` for full note details (latin name, group, odor profile).
 
 ---
 
@@ -283,31 +297,53 @@ vote_count = int(votes)
 
 ---
 
+## reviews_count
+
+**Description**: Total number of user reviews for this fragrance
+
+**Type**: Integer or empty
+
+**Example**: `793`
+
+**Notes**: Indicates fragrance popularity and data reliability. Higher count = more reliable ratings.
+
+---
+
 ## appreciation
 
-**Description**: User appreciation votes (relative values)
+**Description**: User appreciation votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:value;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `love:100;like:42.23;ok:11.85;dislike:11.15;hate:3.64`
+**Example**: `love:12:13.19;like:48:52.75;ok:1:1.1;dislike:28:30.77;hate:2:2.2`
 
 **Categories**: `love`, `like`, `ok`, `dislike`, `hate`
 
-**Notes**: Values are relative (highest = 100).
+**Parsing (Python)**:
+```python
+def parse_votes(value):
+    result = {}
+    for item in value.split(';'):
+        cat, votes, pct = item.split(':')
+        result[cat] = {'votes': int(votes), 'percent': float(pct)}
+    return result
+```
+
+**Notes**: Format is `category:votes:percent`. Use votes for statistical analysis, percent for display.
 
 ---
 
 ## price_value
 
-**Description**: Price/value perception votes (absolute counts)
+**Description**: Price/value perception votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:count;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `way_overpriced:6658;overpriced:2844;ok:1360;good_value:337;great_value:378`
+**Example**: `way_overpriced:0:0;overpriced:2:29;ok:2:29;good_value:2:29;great_value:1:14`
 
 **Categories**: `way_overpriced`, `overpriced`, `ok`, `good_value`, `great_value`
 
@@ -315,13 +351,13 @@ vote_count = int(votes)
 
 ## ownership
 
-**Description**: Ownership status votes (percentages)
+**Description**: Ownership status votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:percentage;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `have_it:52.82;had_it:12.32;want_it:34.86`
+**Example**: `have_it:68:22;had_it:102:33;want_it:137:45`
 
 **Categories**: `have_it`, `had_it`, `want_it`
 
@@ -329,13 +365,13 @@ vote_count = int(votes)
 
 ## gender_votes
 
-**Description**: Gender suitability votes (absolute counts)
+**Description**: Gender suitability votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:count;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `female:149;more_female:44;unisex:866;more_male:2687;male:7977`
+**Example**: `female:5:63;more_female:1:13;unisex:2:25;more_male:0:0;male:0:0`
 
 **Categories**: `female`, `more_female`, `unisex`, `more_male`, `male`
 
@@ -343,13 +379,13 @@ vote_count = int(votes)
 
 ## longevity
 
-**Description**: Longevity/lasting power votes (absolute counts)
+**Description**: Longevity/lasting power votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:count;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `very_weak:784;weak:1459;moderate:5869;long_lasting:5726;eternal:1614`
+**Example**: `very_weak:4:18;weak:4:18;moderate:8:36;long_lasting:3:14;eternal:3:14`
 
 **Categories**: `very_weak`, `weak`, `moderate`, `long_lasting`, `eternal`
 
@@ -357,13 +393,13 @@ vote_count = int(votes)
 
 ## sillage
 
-**Description**: Sillage/projection votes (absolute counts)
+**Description**: Sillage/projection votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `category:count;...`
+**Format**: `category:votes:percent;...`
 
-**Example**: `intimate:1816;moderate:8139;strong:4289;enormous:1267`
+**Example**: `intimate:5:19;moderate:11:42;strong:5:19;enormous:5:19`
 
 **Categories**: `intimate`, `moderate`, `strong`, `enormous`
 
@@ -371,31 +407,56 @@ vote_count = int(votes)
 
 ## season
 
-**Description**: Seasonal suitability votes (relative values)
+**Description**: Seasonal suitability votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `season:value;...`
+**Format**: `season:votes:percent;...`
 
-**Example**: `winter:44.39;spring:97.60;summer:99.48;fall:74.81`
+**Example**: `winter:8:18;spring:15:33;summer:30:67;fall:12:27`
 
 **Seasons**: `winter`, `spring`, `summer`, `fall`
 
-**Notes**: Values are relative (highest = 100).
+**Notes**: Percentages may sum to more than 100% as users can select multiple seasons.
 
 ---
 
 ## time_of_day
 
-**Description**: Day/night suitability votes (relative values)
+**Description**: Day/night suitability votes with counts and percentages
 
 **Type**: String or empty
 
-**Format**: `time:value;...`
+**Format**: `time:votes:percent;...`
 
-**Example**: `day:100.00;night:68.93`
+**Example**: `day:45:100;night:5:11`
 
 **Times**: `day`, `night`
+
+---
+
+## pros_cons
+
+**Description**: AI-generated pros and cons with user voting
+
+**Type**: String or empty
+
+**Format**: `pros(text,likes,dislikes;...)cons(text,likes,dislikes;...)`
+
+**Example**: `pros(Long-lasting,149,3;Elegant,141,11)cons(Overpriced,92,20;Batch variations,45,12)`
+
+**Parsing (Python)**:
+```python
+import re
+sections = re.findall(r'(pros|cons)\(([^)]+)\)', value)
+for section_type, items_str in sections:
+    for item in items_str.split(';'):
+        parts = item.rsplit(',', 2)
+        text, likes, dislikes = parts[0], int(parts[1]), int(parts[2])
+        print(f"{section_type}: {text} (+{likes}/-{dislikes})")
+```
+
+**Notes**: AI-generated summary of fragrance pros and cons, validated by user votes. May be empty for older fragrances.
 
 ---
 
@@ -423,13 +484,25 @@ vote_count = int(votes)
 
 ## reminds_of
 
-**Description**: Similar fragrances (user-voted)
+**Description**: Similar fragrances with user voting
 
-**Type**: Semicolon-separated integers or empty
+**Type**: String or empty
 
-**Example**: `9828;12345;67890`
+**Format**: `pid:likes:dislikes;...`
 
-**Notes**: Use for "Similar to" recommendations.
+**Example**: `7025:5:4;9:2:0;1928:1:0`
+
+**Parsing (Python)**:
+```python
+similar = []
+for item in value.split(';'):
+    pid, likes, dislikes = item.split(':')
+    similar.append({'pid': int(pid), 'likes': int(likes), 'dislikes': int(dislikes)})
+# Sort by likes descending for best recommendations
+similar.sort(key=lambda x: x['likes'], reverse=True)
+```
+
+**Notes**: Use for "Similar to" recommendations. Sort by likes for best matches.
 
 ---
 
@@ -780,8 +853,193 @@ function getPerfumers(fragrance) {
 
 ---
 
+# notes.csv
+
+Note reference table with 11 fields per record (2,448 notes).
+
+## id
+
+**Description**: Unique note identifier
+
+**Type**: String
+
+**Format**: `nN` (e.g., `n1`, `n80`, `n2448`)
+
+**Example**: `n80`
+
+**Notes**: Primary key. Use to join with `notes_pyramid` field in fragrances.csv.
+
+---
+
+## name
+
+**Description**: Note name
+
+**Type**: String
+
+**Example**: `Orange`
+
+---
+
+## url
+
+**Description**: Fragrantica note page URL
+
+**Type**: URL or empty
+
+**Example**: `https://www.fragrantica.com/notes/Orange-80.html`
+
+---
+
+## latin_name
+
+**Description**: Latin/botanical name
+
+**Type**: String or empty
+
+**Example**: `Citrus sinensis`
+
+---
+
+## other_names
+
+**Description**: Alternative names for the note
+
+**Type**: String or empty
+
+**Example**: `Sweet Orange, Naranja`
+
+---
+
+## group
+
+**Description**: Note category/group
+
+**Type**: String or empty
+
+**Example**: `Citrus smells`
+
+**Common values**: `Flowers`, `Woods and mosses`, `Citrus smells`, `Musk amber animalic smells`, `Spices`, `Fruits vegetables and nuts`
+
+---
+
+## odor_profile
+
+**Description**: Detailed description of the scent
+
+**Type**: String or empty
+
+**Example**: `Fresh, sweet, zesty citrus scent with juicy undertones`
+
+---
+
+## main_icon
+
+**Description**: Primary note icon URL
+
+**Type**: URL or empty
+
+**Example**: `https://fimgs.net/mdimg/sastojci/t.80.jpg`
+
+---
+
+## alt_icons
+
+**Description**: Alternative note icon URLs
+
+**Type**: Semicolon-separated URLs or empty
+
+**Example**: `https://fimgs.net/mdimg/sastojci/m.80.jpg;https://fimgs.net/mdimg/sastojci/o.80.jpg`
+
+---
+
+## background
+
+**Description**: Full-size background image URL
+
+**Type**: URL or empty
+
+**Example**: `https://fimgs.net/mdimg/sastojci/splash.80.jpg`
+
+**Notes**: Large splash image suitable for detail pages.
+
+---
+
+## fragrance_count
+
+**Description**: Number of fragrances containing this note
+
+**Type**: Integer
+
+**Example**: `12847`
+
+---
+
+# accords.csv
+
+Accord reference table with 5 fields per record (92 accords).
+
+## id
+
+**Description**: Unique accord identifier
+
+**Type**: String
+
+**Format**: `aN` (e.g., `a1`, `a24`, `a92`)
+
+**Example**: `a24`
+
+**Notes**: Primary key. Use to join with `accords` field in fragrances.csv.
+
+---
+
+## name
+
+**Description**: Accord name
+
+**Type**: String
+
+**Example**: `fruity`
+
+---
+
+## bar_color
+
+**Description**: Background color for visualization (hex)
+
+**Type**: String
+
+**Example**: `#FC4B29`
+
+**Notes**: Use as background color for accord bars in visualizations.
+
+---
+
+## font_color
+
+**Description**: Text color for visualization (hex)
+
+**Type**: String
+
+**Example**: `#000000`
+
+**Notes**: Use for text on top of bar_color background. Either `#000000` (black) or `#FFFFFF` (white) for readability.
+
+---
+
+## fragrance_count
+
+**Description**: Number of fragrances containing this accord
+
+**Type**: Integer
+
+**Example**: `45821`
+
+---
+
 # Version History
 
+- **v3.0.0** (2026-01-26): Added notes.csv, accords.csv, new voting format, reviews_count, pros_cons
 - **v2.0.0** (2026-01-14): Multi-file structure with brands.csv and perfumers.csv
 - **v1.0.0** (2026-01-07): Initial release with single fragrances.csv
 

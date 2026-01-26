@@ -1,11 +1,11 @@
 # FragDB - Fragrance Database
 
-The most comprehensive fragrance database available, containing **129,000+ records** across three interconnected CSV files.
+The most comprehensive fragrance database available, containing **133,000+ records** across five interconnected CSV files.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-129%2C000%2B-blue)](https://fragdb.net)
-[![Fields](https://img.shields.io/badge/Data%20Fields-49-green)](DATA_DICTIONARY.md)
-[![Files](https://img.shields.io/badge/CSV%20Files-3-orange)](docs/VERSION_2.0_RELEASE.md)
+[![Records](https://img.shields.io/badge/Records-133%2C000%2B-blue)](https://fragdb.net)
+[![Fields](https://img.shields.io/badge/Data%20Fields-67-green)](DATA_DICTIONARY.md)
+[![Files](https://img.shields.io/badge/CSV%20Files-5-orange)](docs/VERSION_3.0_RELEASE.md)
 
 ## Overview
 
@@ -13,9 +13,11 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 119,000+ | 28 | Main fragrance database |
-| `brands.csv` | 7,200+ | 10 | Brand/designer profiles |
-| `perfumers.csv` | 2,700+ | 11 | Perfumer (nose) profiles |
+| `fragrances.csv` | 120,871 | 30 | Main fragrance database |
+| `brands.csv` | 7,296 | 10 | Brand/designer profiles |
+| `perfumers.csv` | 2,815 | 11 | Perfumer (nose) profiles |
+| `notes.csv` | 2,448 | 11 | Fragrance notes reference |
+| `accords.csv` | 92 | 5 | Accords with colors |
 
 ### Key Features
 
@@ -23,6 +25,8 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company
 - **Perfumer profiles** — Photo, status, company, education, biography
+- **Notes reference** — Latin names, groups, odor profiles, images
+- **Accords reference** — Display colors for visualizations
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
 
 ## Preview
@@ -35,12 +39,20 @@ FragDB provides structured data for the fragrance industry:
   <img src="assets/detail_view.webp" alt="FragDB Fragrance Detail" width="45%">
 </p>
 
-### Brands & Perfumers (v2.0)
+### Brands & Perfumers
 
 <p align="center">
   <img src="assets/brands_table.webp" alt="FragDB Brands Table" width="45%">
   &nbsp;&nbsp;
   <img src="assets/perfumers_table.webp" alt="FragDB Perfumers Table" width="45%">
+</p>
+
+### Notes (v3.0)
+
+<p align="center">
+  <img src="assets/notes_table.webp" alt="FragDB Notes Table" width="45%">
+  &nbsp;&nbsp;
+  <img src="assets/notes_detail.webp" alt="FragDB Note Detail" width="45%">
 </p>
 
 ## Quick Start
@@ -50,16 +62,24 @@ FragDB provides structured data for the fragrance industry:
 ```python
 import pandas as pd
 
-# Load all three files
+# Load all five files
 fragrances = pd.read_csv('fragrances.csv', sep='|', encoding='utf-8')
 brands = pd.read_csv('brands.csv', sep='|', encoding='utf-8')
 perfumers = pd.read_csv('perfumers.csv', sep='|', encoding='utf-8')
+notes = pd.read_csv('notes.csv', sep='|', encoding='utf-8')
+accords = pd.read_csv('accords.csv', sep='|', encoding='utf-8')
 
 # Extract brand_id from brand field
 fragrances['brand_id'] = fragrances['brand'].str.split(';').str[1]
 
 # Join with brand details
 df = fragrances.merge(brands, left_on='brand_id', right_on='id', suffixes=('', '_brand'))
+
+# Parse voting field (new format: category:votes:percent)
+def parse_votes(value):
+    if not value: return {}
+    return {p.split(':')[0]: {'votes': int(p.split(':')[1]), 'pct': float(p.split(':')[2])}
+            for p in value.split(';') if ':' in p}
 
 # Search by name
 results = df[df['name'].str.contains('Aventus', case=False, na=False)]
@@ -72,14 +92,26 @@ print(results[['name', 'name_brand', 'country', 'year']])
 const { parse } = require('csv-parse/sync');
 const fs = require('fs');
 
-// Load all files
+// Load all five files
 const fragrances = parse(fs.readFileSync('fragrances.csv', 'utf-8'), { columns: true, delimiter: '|' });
 const brands = parse(fs.readFileSync('brands.csv', 'utf-8'), { columns: true, delimiter: '|' });
 const perfumers = parse(fs.readFileSync('perfumers.csv', 'utf-8'), { columns: true, delimiter: '|' });
+const notes = parse(fs.readFileSync('notes.csv', 'utf-8'), { columns: true, delimiter: '|' });
+const accords = parse(fs.readFileSync('accords.csv', 'utf-8'), { columns: true, delimiter: '|' });
 
 // Create lookup maps
 const brandsMap = new Map(brands.map(b => [b.id, b]));
 const perfumersMap = new Map(perfumers.map(p => [p.id, p]));
+const notesMap = new Map(notes.map(n => [n.id, n]));
+const accordsMap = new Map(accords.map(a => [a.id, a]));
+
+// Parse voting field (new format: category:votes:percent)
+const parseVotes = (value) => Object.fromEntries(
+  (value || '').split(';').filter(p => p.includes(':')).map(p => {
+    const [cat, votes, pct] = p.split(':');
+    return [cat, { votes: +votes, pct: +pct }];
+  })
+);
 
 // Get brand details for a fragrance
 const fragrance = fragrances[0];
@@ -96,21 +128,34 @@ CREATE TABLE fragrances (
     pid INTEGER PRIMARY KEY,
     name VARCHAR(500),
     brand VARCHAR(500),  -- format: brand_name;brand_id
+    reviews_count INTEGER,
     -- ... see full schema in examples/sql/
 );
 
 CREATE TABLE brands (
     id VARCHAR(20) PRIMARY KEY,  -- format: b1, b2, ...
     name VARCHAR(500),
-    country VARCHAR(100),
-    -- ... see full schema in examples/sql/
+    country VARCHAR(100)
 );
 
 CREATE TABLE perfumers (
     id VARCHAR(20) PRIMARY KEY,  -- format: p1, p2, ...
     name VARCHAR(500),
-    company VARCHAR(200),
-    -- ... see full schema in examples/sql/
+    company VARCHAR(200)
+);
+
+CREATE TABLE notes (
+    id VARCHAR(20) PRIMARY KEY,  -- format: n1, n2, ...
+    name VARCHAR(200),
+    latin_name VARCHAR(200),
+    "group" VARCHAR(100)
+);
+
+CREATE TABLE accords (
+    id VARCHAR(20) PRIMARY KEY,  -- format: a1, a2, ...
+    name VARCHAR(100),
+    bar_color VARCHAR(10),
+    font_color VARCHAR(10)
 );
 
 -- Join fragrances with brands
@@ -123,7 +168,7 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 
 ## Data Structure
 
-### fragrances.csv (28 fields)
+### fragrances.csv (30 fields)
 
 #### Identity & Basic Info
 | Field | Description | Format |
@@ -146,30 +191,32 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 #### Composition
 | Field | Description | Format |
 |-------|-------------|--------|
-| `accords` | Scent accords with strength & colors | `fruity:100:#FC4B29:#000;woody:67:#774414:#FFF` |
-| `notes_pyramid` | Notes by layer (top/middle/base) | `top(Bergamot,url,img;...)middle(...)base(...)` |
+| `accords` | Scent accords with intensity | `a24:100;a34:64;a38:60` (join with accords.csv) |
+| `notes_pyramid` | Notes by layer with significance | `top(name,id,img,opacity,weight;...)middle(...)base(...)` |
 | `perfumers` | Perfumer names and ID references | `Erwin Creed;p1;Olivier Creed;p2` |
 | `description` | Fragrance description | HTML text |
 
-#### Ratings & Votes
+#### Ratings & Votes (format: `category:votes:percent`)
 | Field | Description | Format |
 |-------|-------------|--------|
 | `rating` | Average rating & vote count | `4.33;24561` |
-| `appreciation` | Love/like/ok/dislike/hate | `love:100;like:42.23;ok:11.85;...` |
-| `price_value` | Price perception votes | `way_overpriced:6658;overpriced:2844;...` |
-| `ownership` | Ownership status | `have_it:52.82;had_it:12.32;want_it:34.86` |
-| `gender_votes` | Gender suitability votes | `female:149;unisex:866;male:7977;...` |
-| `longevity` | Duration votes | `very_weak:784;weak:1459;moderate:5869;...` |
-| `sillage` | Projection votes | `intimate:1816;moderate:8139;strong:4289;...` |
-| `season` | Seasonal suitability | `winter:44.39;spring:97.60;summer:99.48;fall:74.81` |
-| `time_of_day` | Day/night suitability | `day:100.00;night:68.93` |
+| `reviews_count` | Total number of reviews | Integer: `793` |
+| `appreciation` | Love/like/ok/dislike/hate | `love:12:13;like:48:53;ok:1:1;...` |
+| `price_value` | Price perception votes | `way_overpriced:0:0;overpriced:2:29;...` |
+| `ownership` | Ownership status | `have_it:68:22;had_it:102:33;want_it:137:45` |
+| `gender_votes` | Gender suitability votes | `female:5:63;unisex:2:25;male:0:0;...` |
+| `longevity` | Duration votes | `very_weak:4:18;moderate:8:36;long_lasting:3:14;...` |
+| `sillage` | Projection votes | `intimate:5:19;moderate:11:42;strong:5:19;...` |
+| `season` | Seasonal suitability | `winter:8:18;spring:15:33;summer:30:67;fall:12:27` |
+| `time_of_day` | Day/night suitability | `day:45:100;night:5:11` |
 
-#### Related Fragrances
+#### Related & AI
 | Field | Description | Format |
 |-------|-------------|--------|
+| `pros_cons` | AI-generated pros/cons | `pros(text,likes,dislikes;...)cons(...)` |
 | `by_designer` | Same brand fragrances | Semicolon-separated PIDs |
 | `in_collection` | Same collection fragrances | Semicolon-separated PIDs |
-| `reminds_of` | Similar fragrances | Semicolon-separated PIDs |
+| `reminds_of` | Similar fragrances with votes | `pid:likes:dislikes;...` |
 | `also_like` | Recommended fragrances | Semicolon-separated PIDs |
 | `news_ids` | Related news article IDs | Semicolon-separated IDs |
 
@@ -204,17 +251,44 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 | `perfumes_count` | Number of fragrances | `538` |
 | `biography` | Biography | HTML text |
 
+### notes.csv (11 fields)
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `id` | Unique note identifier | `n80` |
+| `name` | Note name | `Orange` |
+| `url` | Fragrantica note page | URL |
+| `latin_name` | Latin/scientific name | `Citrus sinensis` |
+| `other_names` | Alternative names | `Sweet Orange, Naranja` |
+| `group` | Note category | `Citrus smells` |
+| `odor_profile` | Odor description | Text |
+| `main_icon` | Note icon URL | URL |
+| `alt_icons` | Alternative icons | Semicolon-separated URLs |
+| `fragrance_count` | Fragrances with this note | `12847` |
+
+### accords.csv (5 fields)
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `id` | Unique accord identifier | `a24` |
+| `name` | Accord name | `fruity` |
+| `bar_color` | Background color (hex) | `#FC4B29` |
+| `font_color` | Text color (hex) | `#000000` |
+| `fragrance_count` | Fragrances with this accord | `45821` |
+
 **[View complete data dictionary with parsing examples →](DATA_DICTIONARY.md)**
 
 ## Sample Data
 
-The free sample includes **10 fragrances** with related brands and perfumers:
+The free sample includes **10 records per file** across all five CSV files:
 
 | File | Records | Description |
 |------|---------|-------------|
 | [fragrances.csv](samples/fragrances.csv) | 10 | Iconic fragrances |
-| [brands.csv](samples/brands.csv) | 7 | Related brand profiles |
-| [perfumers.csv](samples/perfumers.csv) | 15 | Related perfumer profiles |
+| [brands.csv](samples/brands.csv) | 10 | Brand profiles |
+| [perfumers.csv](samples/perfumers.csv) | 10 | Perfumer profiles |
+| [notes.csv](samples/notes.csv) | 10 | Fragrance notes (11 fields) |
+| [accords.csv](samples/accords.csv) | 10 | Accords with colors |
 
 Preview: [SAMPLE_PREVIEW.md](SAMPLE_PREVIEW.md)
 
@@ -245,25 +319,19 @@ Preview: [SAMPLE_PREVIEW.md](SAMPLE_PREVIEW.md)
 
 ## Full Database
 
-The free sample contains 10 fragrances with related data. The full FragDB database includes:
+The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 119,000+ |
-| Brands | 7 | 7,200+ |
-| Perfumers | 15 | 2,700+ |
-| Total Records | 32 | 129,000+ |
-| Data Fields | 49 | 49 |
+| Fragrances | 10 | 120,871 |
+| Brands | 10 | 7,296 |
+| Perfumers | 10 | 2,815 |
+| Notes | 10 | 2,448 |
+| Accords | 10 | 92 |
+| Total Records | 50 | 133,522 |
+| Data Fields | 67 | 67 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
-
-### Pricing
-
-| Plan | Price | Includes |
-|------|-------|----------|
-| One-Time Purchase | $200 | Complete database, 6 downloads, 3-day access |
-| Annual Subscription | $1,000/year | 3 updates per month, always latest data |
-| Lifetime Access | $2,000 | Unlimited updates forever, priority support |
 
 **[Purchase at fragdb.net →](https://fragdb.net)**
 
