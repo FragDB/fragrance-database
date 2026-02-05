@@ -34,7 +34,7 @@ All code examples in the `examples/` directory are provided under the MIT Licens
 
 ## Full Database
 
-The full FragDB fragrance database (119,000+ records) is a commercial product and is NOT covered by the MIT License.
+The full FragDB fragrance database (121,000+ records) is a commercial product and is NOT covered by the MIT License.
 
 ### Commercial License Terms
 

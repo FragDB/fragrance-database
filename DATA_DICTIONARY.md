@@ -857,7 +857,7 @@ function getPerfumers(fragrance) {
 
 # notes.csv
 
-Note reference table with 11 fields per record (2,448 notes).
+Note reference table with 11 fields per record (2,453 notes).
 
 ## id
 
