@@ -1,18 +1,20 @@
 # Sample Data Preview
 
-This document previews the FragDB v2.0 sample data. The sample files are interconnected—brands and perfumers match those referenced in the fragrances.
+Preview of the FragDB v3.1 sample data. All files are interconnected via IDs.
 
 ## Files Overview
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| [fragrances.csv](samples/fragrances.csv) | 10 | 28 | Iconic fragrances with all fields |
-| [brands.csv](samples/brands.csv) | 7 | 10 | Brands referenced in fragrances.csv |
-| [perfumers.csv](samples/perfumers.csv) | 15 | 11 | Perfumers referenced in fragrances.csv |
+| [fragrances.csv](samples/fragrances.csv) | 10 | 30 | Top-rated fragrances |
+| [brands.csv](samples/brands.csv) | 10 | 10 | Brand profiles |
+| [perfumers.csv](samples/perfumers.csv) | 10 | 11 | Perfumer profiles |
+| [notes.csv](samples/notes.csv) | 10 | 11 | Fragrance notes |
+| [accords.csv](samples/accords.csv) | 10 | 5 | Accords with colors |
 
 ---
 
-## fragrances.csv Preview
+## fragrances.csv
 
 ### Key Fields
 
@@ -29,132 +31,141 @@ This document previews the FragDB v2.0 sample data. The sample files are interco
 | 25324 | Black Opium | Yves Saint Laurent;b15 | 2014 | for women |
 | 31861 | Sauvage | Dior;b3 | 2015 | for men |
 
-### Brand Field Format (v2.0)
+### Field Reference (30 fields)
 
-The `brand` field now contains `brand_name;brand_id`:
+| Category | Fields |
+|----------|--------|
+| Identity | `pid`, `url`, `brand`, `name`, `year`, `gender`, `collection` |
+| Media | `main_photo`, `info_card`, `user_photoes`, `video_url` |
+| Composition | `accords`, `notes_pyramid`, `perfumers`, `description` |
+| Ratings | `rating`, `reviews_count`, `appreciation`, `price_value` |
+| Votes | `gender_votes`, `longevity`, `sillage`, `season`, `time_of_day` |
+| Related | `pros_cons`, `by_designer`, `in_collection`, `reminds_of`, `also_like`, `news_ids` |
+
+### Brand Field Format
 
 ```
-Dior;b3
+brand_name;brand_id
 ```
 
-Use `brand_id` (e.g., `b3`) to look up full brand details in `brands.csv`.
+Example: `Dior;b3` — use `b3` to join with brands.csv
 
-### Accords Example (Hypnotic Poison)
+### Accords Field Format (v3.0+)
 
 ```
-vanilla:100:#FFFEC0:#000000;sweet:86:#EE363B:#FFFFFF;almond:85:#F1E3C5:#000000;...
+accord_id:percentage;...
 ```
 
-| Accord | Percentage | Background | Text |
-|--------|------------|------------|------|
-| vanilla | 100% | #FFFEC0 | #000000 |
-| sweet | 86% | #EE363B | #FFFFFF |
-| almond | 85% | #F1E3C5 | #000000 |
-| fruity | 74% | #FC4B29 | #000000 |
-| nutty | 69% | #B4955F | #FFFFFF |
+Example: `a2:100;a6:86;a1:71`
 
-### Notes Pyramid Example (Hypnotic Poison)
+Use accord IDs to join with accords.csv for names and colors.
 
-- **Top**: Coconut, Plum, Apricot
-- **Middle**: Brazilian Rosewood, Jasmine, Tuberose, Caraway, Rose, Lily-of-the-Valley
-- **Base**: Vanilla, Almond, Sandalwood, Musk
+### Voting Fields Format
+
+All voting fields use: `category:votes:percent;...`
+
+Example (appreciation):
+```
+love:6380:22.04;like:14455:49.93;ok:4039:13.95;dislike:3271:11.3;hate:808:2.79
+```
 
 ---
 
-## brands.csv Preview
+## brands.csv
 
-Brands referenced in the sample fragrances.
+| ID | Name | Country |
+|----|------|---------|
+| b3 | Dior | France |
+| b6 | Chanel | France |
+| b15 | Yves Saint Laurent | France |
+| b31 | Lancôme | France |
+| b72 | Dolce&Gabbana | Italy |
+| b92 | Mugler | France |
+| b139 | Tom Ford | United States |
 
-| ID | Name | Country | Fragrances |
-|----|------|---------|------------|
-| b3 | Dior | France | 309 |
-| b6 | Chanel | France | 150 |
-| b15 | Yves Saint Laurent | France | 275 |
-| b31 | Lancôme | France | 202 |
-| b72 | Dolce&Gabbana | Italy | 139 |
-| b92 | Mugler | France | 173 |
-| b139 | Tom Ford | United States | 138 |
-
-### All Brand Fields
-
-| Field | Description |
-|-------|-------------|
-| `id` | Unique identifier (b1, b2, ...) |
-| `name` | Brand name |
-| `url` | Fragrantica brand page |
-| `logo_url` | Brand logo image |
-| `country` | Country of origin |
-| `main_activity` | Primary business (Fragrances, Cosmetics, Fashion) |
-| `website` | Official website |
-| `parent_company` | Parent company (LVMH, Coty, etc.) |
-| `description` | Brand description (HTML) |
-| `brand_count` | Number of fragrances in database |
+**Fields**: `id`, `name`, `url`, `logo_url`, `country`, `main_activity`, `website`, `parent_company`, `description`, `brand_count`
 
 ---
 
-## perfumers.csv Preview
+## perfumers.csv
 
-Perfumers (noses) referenced in the sample fragrances.
+| ID | Name | Company |
+|----|------|---------|
+| p9 | Olivier Cresp | Firmenich |
+| p24 | Jacques Cavallier | Louis Vuitton |
+| p43 | Annick Menardo | Firmenich |
+| p73 | Olivier Polge | Chanel |
+| p186 | Dominique Ropion | IFF |
 
-| ID | Name | Status | Company | Fragrances |
-|----|------|--------|---------|------------|
-| p2 | Dominique Ropion | Master Perfumer | IFF | 411 |
-| p23 | Olivier Polge | In-House Perfumer | Chanel | 167 |
-| p25 | Nathalie Lorson | Master Perfumer | Firmenich | 350 |
-| p39 | Olivier Cresp | Master Perfumer | Firmenich | 433 |
-| p69 | Annick Menardo | Master Perfumer | Symrise | 126 |
-| p77 | Jacques Polge | Perfumer | Chanel | 75 |
-| p118 | Anne Flipo | Master Perfumer | IFF | 253 |
-| p164 | Honorine Blanc | Master Perfumer | Firmenich | 183 |
-| p187 | François Demachy | Former in-house | Dior | 211 |
-| p203 | Marie Salamagne | Principal Perfumer | Firmenich | 226 |
-
-### All Perfumer Fields
-
-| Field | Description |
-|-------|-------------|
-| `id` | Unique identifier (p1, p2, ...) |
-| `name` | Perfumer full name |
-| `url` | Fragrantica perfumer page |
-| `photo_url` | Portrait photo |
-| `status` | Professional title (Master Perfumer, Perfumer, etc.) |
-| `company` | Current employer |
-| `also_worked` | Previous companies |
-| `education` | Educational background |
-| `web` | Personal/professional website |
-| `perfumes_count` | Number of fragrances created |
-| `biography` | Biography (HTML) |
+**Fields**: `id`, `name`, `url`, `photo_url`, `status`, `company`, `also_worked`, `education`, `web`, `perfumes_count`, `biography`
 
 ---
 
-## File Format
+## notes.csv
 
-All three files share the same format:
+| ID | Name | Group |
+|----|------|-------|
+| n3 | Vanilla | Musk amber animalic smells |
+| n8 | Sandalwood | Woods and mosses |
+| n10 | Musk | Musk amber animalic smells |
+| n26 | Jasmine | Flowers |
+| n80 | Orange | Citrus smells |
 
-| Property | Value |
-|----------|-------|
-| **Format** | CSV |
-| **Separator** | Pipe `\|` |
-| **Encoding** | UTF-8 |
-| **Quote Character** | `"` (double quote) |
-| **Line Ending** | Unix (LF) |
-| **Header** | Yes (first row) |
+**Fields**: `id`, `name`, `url`, `latin_name`, `other_names`, `group`, `odor_profile`, `main_icon`, `alt_icons`, `background`, `fragrance_count`
 
 ---
 
-## Full Database
+## accords.csv
 
-This sample demonstrates the data structure. The full FragDB database includes:
+| ID | Name | Bar Color | Font Color |
+|----|------|-----------|------------|
+| a1 | amber | #FEAD4C | #000000 |
+| a2 | vanilla | #FFFEC0 | #000000 |
+| a6 | sweet | #EE363B | #FFFFFF |
+| a24 | fruity | #FC4B29 | #000000 |
+| a34 | citrus | #F7E733 | #000000 |
 
-| | Sample | Full Database |
-|-|--------|---------------|
-| Fragrances | 10 | 119,000+ |
-| Brands | 7 | 7,200+ |
-| Perfumers | 15 | 2,700+ |
-| **Total Records** | **32** | **129,000+** |
-| **Data Fields** | **49** | **49** |
+**Fields**: `id`, `name`, `bar_color`, `font_color`, `fragrance_count`
 
-[Purchase at fragdb.net](https://fragdb.net)
+---
+
+## Joining Tables
+
+### Python
+
+```python
+import pandas as pd
+
+# Load files
+fragrances = pd.read_csv('samples/fragrances.csv', sep='|')
+brands = pd.read_csv('samples/brands.csv', sep='|')
+accords = pd.read_csv('samples/accords.csv', sep='|')
+
+# Extract brand_id
+fragrances['brand_id'] = fragrances['brand'].str.split(';').str[1]
+
+# Join with brands
+df = fragrances.merge(brands, left_on='brand_id', right_on='id', suffixes=('', '_brand'))
+print(df[['name', 'name_brand', 'country']])
+```
+
+### JavaScript
+
+```javascript
+const brandsMap = new Map(brands.map(b => [b.id, b]));
+const accordsMap = new Map(accords.map(a => [a.id, a]));
+
+// Get brand for fragrance
+const [brandName, brandId] = fragrance.brand.split(';');
+const brand = brandsMap.get(brandId);
+
+// Parse accords with colors
+const accordsList = fragrance.accords.split(';').map(a => {
+  const [id, pct] = a.split(':');
+  const accord = accordsMap.get(id);
+  return { name: accord?.name, percentage: +pct, color: accord?.bar_color };
+});
+```
 
 ---
 
