@@ -47,7 +47,7 @@ FragDB provides structured data for the fragrance industry:
   <img src="assets/perfumers_table.webp" alt="FragDB Perfumers Table" width="45%">
 </p>
 
-### Notes (v3.0)
+### Notes
 
 <p align="center">
   <img src="assets/notes_table.webp" alt="FragDB Notes Table" width="45%">
