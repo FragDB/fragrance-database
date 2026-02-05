@@ -6,21 +6,20 @@ Complete field documentation for all five database files.
 
 | File | Records | Fields | Primary Key |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 120,871 | 30 | `pid` |
-| `brands.csv` | 7,296 | 10 | `id` |
-| `perfumers.csv` | 2,815 | 11 | `id` |
-| `notes.csv` | 2,448 | 11 | `id` |
+| `fragrances.csv` | 121,539 | 30 | `pid` |
+| `brands.csv` | 7,316 | 10 | `id` |
+| `perfumers.csv` | 2,828 | 11 | `id` |
+| `notes.csv` | 2,453 | 11 | `id` |
 | `accords.csv` | 92 | 5 | `id` |
 
 ### Database Statistics
 
-- **Total Fragrances**: 120,871
-- **Unique Brands**: 7,296
-- **Unique Perfumers**: 2,815
-- **Unique Notes**: 2,448
+- **Total Fragrances**: 121,539
+- **Unique Brands**: 7,316
+- **Unique Perfumers**: 2,828
+- **Unique Notes**: 2,453
 - **Unique Accords**: 92
-- **Unique Collections**: 5,700+
-- **Years Range**: 1533 - 2026
+- **Unique Collections**: 5,747
 - **Total Data Fields**: 67
 
 ## File Format
@@ -172,6 +171,23 @@ brand_id = parts[1] if len(parts) > 1 else ''
 ```python
 photos = value.split(';') if value else []
 ```
+
+---
+
+## video_url
+
+**Description**: YouTube video URLs related to the fragrance
+
+**Type**: Semicolon-separated URLs or empty
+
+**Example**: `https://www.youtube.com/watch?v=I-7qaA6I7OE`
+
+**Parsing (Python)**:
+```python
+videos = value.split(';') if value else []
+```
+
+**Notes**: YouTube videos about the fragrance. May contain multiple URLs separated by semicolons. Empty for most fragrances.
 
 ---
 
@@ -346,20 +362,6 @@ def parse_votes(value):
 **Example**: `way_overpriced:0:0;overpriced:2:29;ok:2:29;good_value:2:29;great_value:1:14`
 
 **Categories**: `way_overpriced`, `overpriced`, `ok`, `good_value`, `great_value`
-
----
-
-## ownership
-
-**Description**: Ownership status votes with counts and percentages
-
-**Type**: String or empty
-
-**Format**: `category:votes:percent;...`
-
-**Example**: `have_it:68:22;had_it:102:33;want_it:137:45`
-
-**Categories**: `have_it`, `had_it`, `want_it`
 
 ---
 
@@ -1039,6 +1041,7 @@ Accord reference table with 5 fields per record (92 accords).
 
 # Version History
 
+- **v3.1.0** (2026-02-05): Added video_url field, removed ownership field
 - **v3.0.0** (2026-01-26): Added notes.csv, accords.csv, new voting format, reviews_count, pros_cons
 - **v2.0.0** (2026-01-14): Multi-file structure with brands.csv and perfumers.csv
 - **v1.0.0** (2026-01-07): Initial release with single fragrances.csv

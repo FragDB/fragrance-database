@@ -1,9 +1,9 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **133,000+ records** across five interconnected CSV files.
+The most comprehensive fragrance database available, containing **134,000+ records** across five interconnected CSV files.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-133%2C000%2B-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-134%2C000%2B-blue)](https://fragdb.net)
 [![Fields](https://img.shields.io/badge/Data%20Fields-67-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-5-orange)](docs/VERSION_3.0_RELEASE.md)
 
@@ -13,10 +13,10 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 120,871 | 30 | Main fragrance database |
-| `brands.csv` | 7,296 | 10 | Brand/designer profiles |
-| `perfumers.csv` | 2,815 | 11 | Perfumer (nose) profiles |
-| `notes.csv` | 2,448 | 11 | Fragrance notes reference |
+| `fragrances.csv` | 121,539 | 30 | Main fragrance database |
+| `brands.csv` | 7,316 | 10 | Brand/designer profiles |
+| `perfumers.csv` | 2,828 | 11 | Perfumer (nose) profiles |
+| `notes.csv` | 2,453 | 11 | Fragrance notes reference |
 | `accords.csv` | 92 | 5 | Accords with colors |
 
 ### Key Features
@@ -187,6 +187,7 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 | `main_photo` | Main bottle photo URL | URL |
 | `info_card` | Social card image URL | URL |
 | `user_photoes` | User-submitted photos | Semicolon-separated URLs |
+| `video_url` | YouTube video URLs | Semicolon-separated URLs |
 
 #### Composition
 | Field | Description | Format |
@@ -203,7 +204,6 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 | `reviews_count` | Total number of reviews | Integer: `793` |
 | `appreciation` | Love/like/ok/dislike/hate | `love:12:13;like:48:53;ok:1:1;...` |
 | `price_value` | Price perception votes | `way_overpriced:0:0;overpriced:2:29;...` |
-| `ownership` | Ownership status | `have_it:68:22;had_it:102:33;want_it:137:45` |
 | `gender_votes` | Gender suitability votes | `female:5:63;unisex:2:25;male:0:0;...` |
 | `longevity` | Duration votes | `very_weak:4:18;moderate:8:36;long_lasting:3:14;...` |
 | `sillage` | Projection votes | `intimate:5:19;moderate:11:42;strong:5:19;...` |
@@ -323,12 +323,12 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 120,871 |
-| Brands | 10 | 7,296 |
-| Perfumers | 10 | 2,815 |
-| Notes | 10 | 2,448 |
+| Fragrances | 10 | 121,539 |
+| Brands | 10 | 7,316 |
+| Perfumers | 10 | 2,828 |
+| Notes | 10 | 2,453 |
 | Accords | 10 | 92 |
-| Total Records | 50 | 133,522 |
+| Total Records | 50 | 134,228 |
 | Data Fields | 67 | 67 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |

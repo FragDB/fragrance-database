@@ -5,6 +5,26 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-02-05
+
+### Added
+- **New field: `video_url`** — YouTube video URLs related to the fragrance (semicolon-separated)
+
+### Removed
+- **Field: `ownership`** — Ownership status votes (have_it/had_it/want_it) - data no longer available
+
+### Database Statistics
+- **Total Records**: 134,228 (across 5 files)
+- **Fragrances**: 121,539 in `fragrances.csv` (+668)
+- **Brands**: 7,316 in `brands.csv` (+20)
+- **Perfumers**: 2,828 in `perfumers.csv` (+13)
+- **Notes**: 2,453 in `notes.csv` (+5)
+- **Accords**: 92 in `accords.csv`
+- **Fragrances with videos**: 1,591
+- **Total Data Fields**: 67 (30 + 10 + 11 + 11 + 5)
+
+---
+
 ## [3.0.0] - 2026-01-26
 
 ### Breaking Changes
