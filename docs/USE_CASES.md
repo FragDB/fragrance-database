@@ -327,7 +327,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 **Data Used**:
 - `pid`, `name`, `brand` - Unique identification
-- `rating`, `ownership` - Popularity and rarity indicators
+- `rating`, `reviews_count` - Popularity and rarity indicators
 - `year` - Age determination
 
 ---

@@ -1,10 +1,10 @@
--- FragDB v3.0 PostgreSQL Schema
+-- FragDB v3.1 PostgreSQL Schema
 --
 -- This schema demonstrates how to import and structure the FragDB
 -- multi-file fragrance database in PostgreSQL.
 --
 -- Files: fragrances.csv, brands.csv, perfumers.csv, notes.csv, accords.csv
--- For the full database with 133,000+ records, visit https://fragdb.net
+-- For the full database with 134,000+ records, visit https://fragdb.net
 
 -- =============================================================================
 -- REFERENCE TABLES (from CSV files)
@@ -88,6 +88,7 @@ CREATE TABLE fragrances (
     description TEXT,
     main_photo TEXT,
     info_card TEXT,
+    video_url TEXT,  -- YouTube video URLs (semicolon-separated)
 
     -- Brand reference (uses brand_id from brands table)
     brand_id VARCHAR(20) REFERENCES brands(id),
@@ -180,15 +181,6 @@ CREATE TABLE fragrance_price_votes (
 
 -- Appreciation votes (from appreciation field)
 CREATE TABLE fragrance_appreciation (
-    fragrance_id INTEGER REFERENCES fragrances(pid) ON DELETE CASCADE,
-    category VARCHAR(50) NOT NULL,
-    votes INTEGER DEFAULT 0,
-    percent DECIMAL(5,2) DEFAULT 0,
-    PRIMARY KEY (fragrance_id, category)
-);
-
--- Ownership votes (from ownership field)
-CREATE TABLE fragrance_ownership (
     fragrance_id INTEGER REFERENCES fragrances(pid) ON DELETE CASCADE,
     category VARCHAR(50) NOT NULL,
     votes INTEGER DEFAULT 0,

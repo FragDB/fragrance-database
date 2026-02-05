@@ -4,14 +4,16 @@
 
 ### What is FragDB?
 
-FragDB is a comprehensive fragrance database containing detailed information on 119,000+ perfumes, colognes, and other fragrances. It includes data on brands, notes, accords, ratings, and much more.
+FragDB is a comprehensive fragrance database containing detailed information on 121,000+ perfumes, colognes, and other fragrances. It includes data on brands, perfumers, notes, accords, ratings, and much more.
 
 ### What's included in the free sample?
 
 The free sample on GitHub includes:
-- 10 fragrance records with all 28 data fields
-- 7 brand profiles (matching fragrances)
-- 15 perfumer profiles (matching fragrances)
+- 10 fragrance records with all 30 data fields
+- 10 brand profiles
+- 10 perfumer profiles
+- 10 notes
+- 10 accords with display colors
 - Complete documentation and data dictionary
 - Code examples in Python, JavaScript, SQL, and R
 - Integration guides and use cases
@@ -19,16 +21,17 @@ The free sample on GitHub includes:
 ### How do I get the full database?
 
 Visit [fragdb.net](https://fragdb.net) to purchase:
-- **One-Time Purchase**: $200 - Complete database, 6 downloads, 3-day access
-- **Annual Subscription**: $1,000/year - 3 updates per month (36 total)
-- **Lifetime Access**: $2,000 - Unlimited updates forever, priority support
+- **One-Time Purchase**: $500 - Complete database download
+- **Annual Subscription**: $2,000/year - Regular updates throughout the year
 
 ### What file format is the database?
 
-The database consists of 3 pipe-delimited (`|`) CSV files with UTF-8 encoding:
-- `fragrances.csv` - Main fragrance data (28 fields)
+The database consists of 5 pipe-delimited (`|`) CSV files with UTF-8 encoding:
+- `fragrances.csv` - Main fragrance data (30 fields)
 - `brands.csv` - Brand/designer profiles (10 fields)
 - `perfumers.csv` - Perfumer (nose) profiles (11 fields)
+- `notes.csv` - Fragrance notes reference (11 fields)
+- `accords.csv` - Accords with colors (5 fields)
 
 This format was chosen because:
 - Pipe characters rarely appear in fragrance data
@@ -52,7 +55,7 @@ Fragrance descriptions and other text fields frequently contain commas. Using pi
 
 Many fields contain structured data with their own delimiters. See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for complete parsing instructions. Quick examples:
 
-**Brand** (`;` separated, v2.0 format):
+**Brand** (`;` separated):
 ```python
 name, brand_id = row['brand'].split(';')
 # Look up full details in brands.csv using brand_id
@@ -63,10 +66,11 @@ name, brand_id = row['brand'].split(';')
 average, votes = row['rating'].split(';')
 ```
 
-**Accords** (`;` for items, `:` for properties):
+**Accords** (`;` for items, `:` for id:percent):
 ```python
 for accord in row['accords'].split(';'):
-    name, percentage, bg_color, text_color = accord.split(':')
+    accord_id, percentage = accord.split(':')
+    # Look up name and colors in accords.csv using accord_id
 ```
 
 **Notes Pyramid** (regex pattern):
@@ -112,12 +116,13 @@ Note: Excel has a row limit of ~1 million rows, which is sufficient for the full
 
 ### What fields are included?
 
-**49 total fields** across 3 files. Fragrances have 28 fields:
+**67 total fields** across 5 files. Fragrances have 30 fields:
 - Basic: `pid`, `url`, `brand`, `name`, `year`, `gender`, `collection`
-- Media: `main_photo`, `info_card`, `user_photoes`
+- Media: `main_photo`, `info_card`, `user_photoes`, `video_url`
 - Composition: `accords`, `notes_pyramid`, `perfumers`, `description`
-- Ratings: `rating`, `appreciation`, `price_value`, `ownership`
+- Ratings: `rating`, `reviews_count`, `appreciation`, `price_value`
 - Characteristics: `gender_votes`, `longevity`, `sillage`, `season`, `time_of_day`
+- AI: `pros_cons`
 - Related: `by_designer`, `in_collection`, `reminds_of`, `also_like`, `news_ids`
 
 See [DATA_DICTIONARY.md](../DATA_DICTIONARY.md) for complete field documentation.
@@ -129,6 +134,10 @@ Image URLs are included in the database. The actual image files are not included
 - `info_card` - Information card image (social media preview)
 - `user_photoes` - Community-submitted photos (semicolon-separated)
 
+### Are videos included?
+
+YouTube video URLs are included in the `video_url` field for fragrances that have related videos.
+
 ### Is the data accurate?
 
 The data is aggregated from public sources and community contributions. While we strive for accuracy:
@@ -139,13 +148,13 @@ The data is aggregated from public sources and community contributions. While we
 
 ### What time period does the database cover?
 
-The database includes fragrances from 1900 to present, with the majority from 1990 onwards. The distribution roughly mirrors industry growth.
+The database includes fragrances from 1533 to present, with the majority from 1990 onwards. The distribution roughly mirrors industry growth.
 
 ### Does the database include older/vintage fragrances?
 
-Yes! The database includes fragrances from 1900 to present. Older fragrances are identified by their `year` field and can be researched using:
+Yes! The database includes fragrances from 1533 to present. Older fragrances are identified by their `year` field and can be researched using:
 - `year` - Release year for historical analysis
-- `rating`, `ownership` - Community engagement metrics
+- `rating`, `reviews_count` - Community engagement metrics
 - `notes_pyramid`, `accords` - Composition details
 
 ---
