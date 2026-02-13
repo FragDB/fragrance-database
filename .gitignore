@@ -57,3 +57,13 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+
+# Claude Code / AI tools
+.claude/
+claude.md
+CLAUDE.md
+
+# Internal / credentials
+*.local.json
+*.credentials
+*.secret
