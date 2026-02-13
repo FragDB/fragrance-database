@@ -185,26 +185,26 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 | Field | Description | Format |
 |-------|-------------|--------|
 | `main_photo` | Main bottle photo URL | URL |
-| `info_card` | Social card image URL | URL |
-| `user_photoes` | User-submitted photos | Semicolon-separated URLs |
+| `info_card` | Perfume Card | URL |
+| `user_photoes` | Fragram Photos | Semicolon-separated URLs |
 | `video_url` | YouTube video URLs | Semicolon-separated URLs |
 
 #### Composition
 | Field | Description | Format |
 |-------|-------------|--------|
-| `accords` | Scent accords with intensity | `a24:100;a34:64;a38:60` (join with accords.csv) |
-| `notes_pyramid` | Notes by layer with significance | `top(name,id,img,opacity,weight;...)middle(...)base(...)` |
+| `accords` | Main accords | `a24:100;a34:64;a38:60` (join with accords.csv) |
+| `notes_pyramid` | Fragrance Notes | `top(name,id,img,opacity,weight;...)middle(...)base(...)` |
 | `perfumers` | Perfumer names and ID references | `Erwin Creed;p1;Olivier Creed;p2` |
 | `description` | Fragrance description | HTML text |
 
 #### Ratings & Votes (format: `category:votes:percent`)
 | Field | Description | Format |
 |-------|-------------|--------|
-| `rating` | Average rating & vote count | `4.33;24561` |
+| `rating` | Perfume rating | `4.33;24561` |
 | `reviews_count` | Total number of reviews | Integer: `793` |
-| `appreciation` | Love/like/ok/dislike/hate | `love:12:13;like:48:53;ok:1:1;...` |
-| `price_value` | Price perception votes | `way_overpriced:0:0;overpriced:2:29;...` |
-| `gender_votes` | Gender suitability votes | `female:5:63;unisex:2:25;male:0:0;...` |
+| `appreciation` | Rating votes with counts | `love:12:13;like:48:53;ok:1:1;...` |
+| `price_value` | Price value votes with counts | `way_overpriced:0:0;overpriced:2:29;...` |
+| `gender_votes` | Gender votes with counts | `female:5:63;unisex:2:25;male:0:0;...` |
 | `longevity` | Duration votes | `very_weak:4:18;moderate:8:36;long_lasting:3:14;...` |
 | `sillage` | Projection votes | `intimate:5:19;moderate:11:42;strong:5:19;...` |
 | `season` | Seasonal suitability | `winter:8:18;spring:15:33;summer:30:67;fall:12:27` |
@@ -213,11 +213,11 @@ See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
 #### Related & AI
 | Field | Description | Format |
 |-------|-------------|--------|
-| `pros_cons` | AI-generated pros/cons | `pros(text,likes,dislikes;...)cons(...)` |
+| `pros_cons` | What People Say | `pros(text,likes,dislikes;...)cons(...)` |
 | `by_designer` | Same brand fragrances | Semicolon-separated PIDs |
 | `in_collection` | Same collection fragrances | Semicolon-separated PIDs |
-| `reminds_of` | Similar fragrances with votes | `pid:likes:dislikes;...` |
-| `also_like` | Recommended fragrances | Semicolon-separated PIDs |
+| `reminds_of` | This perfume reminds me of | `pid:likes:dislikes;...` |
+| `also_like` | People who like this also like | Semicolon-separated PIDs |
 | `news_ids` | Related news article IDs | Semicolon-separated IDs |
 
 ### brands.csv (10 fields)

@@ -174,7 +174,7 @@ Total number of user reviews for the fragrance.
 
 ### pros_cons
 
-AI-generated pros and cons with user voting.
+What People Say — pros and cons with user voting.
 
 | Property | Value |
 |----------|-------|

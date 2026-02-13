@@ -149,7 +149,7 @@ brand_id = parts[1] if len(parts) > 1 else ''
 
 ## info_card
 
-**Description**: Social card image with fragrance summary
+**Description**: Perfume Card
 
 **Type**: URL or empty
 
@@ -161,7 +161,7 @@ brand_id = parts[1] if len(parts) > 1 else ''
 
 ## user_photoes
 
-**Description**: User-submitted photos of the fragrance
+**Description**: Fragram Photos
 
 **Type**: Semicolon-separated URLs or empty
 
@@ -193,7 +193,7 @@ videos = value.split(';') if value else []
 
 ## accords
 
-**Description**: Main fragrance accords with intensity percentages
+**Description**: Main accords
 
 **Type**: String or empty
 
@@ -219,7 +219,7 @@ for item in value.split(';'):
 
 ## notes_pyramid
 
-**Description**: Fragrance notes organized by pyramid level with significance data
+**Description**: Fragrance Notes
 
 **Type**: String or empty
 
@@ -296,7 +296,7 @@ for i in range(0, len(parts), 2):
 
 ## rating
 
-**Description**: Overall fragrance rating
+**Description**: Perfume rating
 
 **Type**: String or empty
 
@@ -327,7 +327,7 @@ vote_count = int(votes)
 
 ## appreciation
 
-**Description**: User appreciation votes with counts and percentages
+**Description**: Rating votes with counts
 
 **Type**: String or empty
 
@@ -353,7 +353,7 @@ def parse_votes(value):
 
 ## price_value
 
-**Description**: Price/value perception votes with counts and percentages
+**Description**: Price value votes with counts
 
 **Type**: String or empty
 
@@ -367,7 +367,7 @@ def parse_votes(value):
 
 ## gender_votes
 
-**Description**: Gender suitability votes with counts and percentages
+**Description**: Gender votes with counts
 
 **Type**: String or empty
 
@@ -439,7 +439,7 @@ def parse_votes(value):
 
 ## pros_cons
 
-**Description**: AI-generated pros and cons with user voting
+**Description**: What People Say
 
 **Type**: String or empty
 
@@ -458,7 +458,7 @@ for section_type, items_str in sections:
         print(f"{section_type}: {text} (+{likes}/-{dislikes})")
 ```
 
-**Notes**: AI-generated summary of fragrance pros and cons, validated by user votes. May be empty for older fragrances.
+**Notes**: What People Say — community-generated pros and cons, validated by user votes. May be empty for older fragrances.
 
 ---
 
@@ -486,7 +486,7 @@ for section_type, items_str in sections:
 
 ## reminds_of
 
-**Description**: Similar fragrances with user voting
+**Description**: This perfume reminds me of
 
 **Type**: String or empty
 
@@ -516,7 +516,7 @@ similar.sort(key=lambda x: x['likes'], reverse=True)
 
 **Example**: `9828;12345;67890`
 
-**Notes**: Collaborative filtering suggestions. Use for "You might also like" features.
+**Notes**: Collaborative filtering suggestions. Use for "People who like this also like" features.
 
 ---
 

@@ -60,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `id`, `name` (Identity)
   - `bar_color`, `font_color`, `fragrance_count` (Style)
 - **New field: `reviews_count`** — Total number of user reviews per fragrance
-- **New field: `pros_cons`** — AI-generated pros and cons with user voting
+- **New field: `pros_cons`** — What People Say (pros and cons with user voting)
 
 ### Changed
 - All voting fields now include absolute vote counts AND percentages:
