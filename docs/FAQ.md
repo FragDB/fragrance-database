@@ -4,7 +4,7 @@
 
 ### What is FragDB?
 
-FragDB is a comprehensive fragrance database containing detailed information on 121,000+ perfumes, colognes, and other fragrances. It includes data on brands, perfumers, notes, accords, ratings, and much more.
+FragDB is a comprehensive fragrance database containing detailed information on 122,000+ perfumes, colognes, and other fragrances. It includes data on brands, perfumers, notes, accords, ratings, and much more.
 
 ### What's included in the free sample?
 

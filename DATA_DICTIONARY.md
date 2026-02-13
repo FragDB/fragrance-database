@@ -6,20 +6,20 @@ Complete field documentation for all five database files.
 
 | File | Records | Fields | Primary Key |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 121,539 | 30 | `pid` |
-| `brands.csv` | 7,316 | 10 | `id` |
-| `perfumers.csv` | 2,828 | 11 | `id` |
-| `notes.csv` | 2,453 | 11 | `id` |
+| `fragrances.csv` | 122,367 | 30 | `pid` |
+| `brands.csv` | 7,344 | 10 | `id` |
+| `perfumers.csv` | 2,825 | 11 | `id` |
+| `notes.csv` | 2,459 | 11 | `id` |
 | `accords.csv` | 92 | 5 | `id` |
 
 ### Database Statistics
 
-- **Total Fragrances**: 121,539
-- **Unique Brands**: 7,316
-- **Unique Perfumers**: 2,828
-- **Unique Notes**: 2,453
+- **Total Fragrances**: 122,367
+- **Unique Brands**: 7,344
+- **Unique Perfumers**: 2,825
+- **Unique Notes**: 2,459
 - **Unique Accords**: 92
-- **Unique Collections**: 5,747
+- **Unique Collections**: 5,781
 - **Total Data Fields**: 67
 
 ## File Format
@@ -857,7 +857,7 @@ function getPerfumers(fragrance) {
 
 # notes.csv
 
-Note reference table with 11 fields per record (2,453 notes).
+Note reference table with 11 fields per record (2,459 notes).
 
 ## id
 
@@ -1041,6 +1041,7 @@ Accord reference table with 5 fields per record (92 accords).
 
 # Version History
 
+- **v4.2.0** (2026-02-12): Data update — 122,367 fragrances, 7,344 brands, 2,825 perfumers, 2,459 notes
 - **v3.1.0** (2026-02-05): Added video_url field, removed ownership field
 - **v3.0.0** (2026-01-26): Added notes.csv, accords.csv, new voting format, reviews_count, pros_cons
 - **v2.0.0** (2026-01-14): Multi-file structure with brands.csv and perfumers.csv

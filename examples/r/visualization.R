@@ -1,7 +1,7 @@
 # FragDB - R Visualization Example
 #
 # Demonstrates how to create visualizations from the FragDB fragrance database.
-# For the full database with 119,000+ fragrances, visit https://fragdb.net
+# For the full database with 122,000+ fragrances, visit https://fragdb.net
 
 # Load required libraries
 library(tidyverse)
