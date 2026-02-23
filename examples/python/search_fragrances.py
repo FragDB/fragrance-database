@@ -75,7 +75,7 @@ def main():
     brands = db["brands"]
 
     # Search examples
-    print("=== Search Examples (FragDB v3.0) ===\n")
+    print("=== Search Examples (FragDB v4.3) ===\n")
 
     # Search by name
     print("Fragrances with 'Poison' in name:")

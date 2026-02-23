@@ -85,7 +85,7 @@ def load_notes(filepath: str = "../../samples/notes.csv") -> pd.DataFrame:
         filepath: Path to the notes CSV file (pipe-delimited)
 
     Returns:
-        DataFrame with note data (10 fields)
+        DataFrame with note data (11 fields)
     """
     df = pd.read_csv(
         filepath,
@@ -176,7 +176,7 @@ def main():
     accords = db["accords"]
 
     # Display basic info
-    print("=== FragDB v3.0 Database ===\n")
+    print("=== FragDB v4.3 Database ===\n")
     print(f"Fragrances: {len(fragrances)} records, {len(fragrances.columns)} fields")
     print(f"Brands: {len(brands)} records, {len(brands.columns)} fields")
     print(f"Perfumers: {len(perfumers)} records, {len(perfumers.columns)} fields")

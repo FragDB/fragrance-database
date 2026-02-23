@@ -56,7 +56,7 @@ All examples should:
 
 ## Pull Request Process
 
-1. Ensure your code works with SAMPLE.csv
+1. Ensure your code works with the sample files in `samples/`
 2. Update documentation if needed
 3. Describe your changes clearly
 4. Reference any related issues

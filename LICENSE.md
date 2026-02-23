@@ -1,8 +1,8 @@
 # License
 
-## Sample Data (SAMPLE.csv)
+## Sample Data
 
-The sample data file (`SAMPLE.csv`) containing 10 fragrance records is provided under the MIT License:
+The sample data files in `samples/` containing 10 records each are provided under the MIT License:
 
 ```
 MIT License

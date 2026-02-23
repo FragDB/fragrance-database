@@ -504,7 +504,7 @@ app.get('/api/accords/:id', (req, res) => {
 // Start server
 loadDatabase();
 app.listen(PORT, () => {
-  console.log(`FragDB v3.0 API running at http://localhost:${PORT}`);
+  console.log(`FragDB v4.3 API running at http://localhost:${PORT}`);
   console.log('\nEndpoints:');
   console.log('  GET /api/fragrances      - List fragrances (with filters)');
   console.log('  GET /api/fragrances/:id  - Get single fragrance');

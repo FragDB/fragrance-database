@@ -1,5 +1,5 @@
 /**
- * FragDB - Search Example (v2.0)
+ * FragDB - Search Example (v4.3)
  *
  * Demonstrates how to search and filter fragrances in Node.js.
  */
@@ -158,7 +158,7 @@ function main() {
   const db = loadFragDB();
   const { fragrances, brands, perfumers } = db;
 
-  console.log('=== FragDB v2.0 Search Examples ===\n');
+  console.log('=== FragDB v4.3 Search Examples ===\n');
   console.log(`Loaded ${fragrances.length} fragrances, ${brands.length} brands, ${perfumers.length} perfumers\n`);
 
   // Search by name

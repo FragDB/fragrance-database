@@ -237,4 +237,4 @@ Our team continuously monitors the fragrance industry for new releases and updat
 
 ---
 
-Ready to get started? [Purchase FragDB](https://fragdb.net) or explore the [free sample](../SAMPLE.csv).
+Ready to get started? [Purchase FragDB](https://fragdb.net) or explore the [free sample](samples/).

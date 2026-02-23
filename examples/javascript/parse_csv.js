@@ -194,7 +194,7 @@ function main() {
   const { fragrances, brands, perfumers, notes, accords } = db;
   const { brandsMap, perfumersMap, notesMap, accordsMap } = createLookupMaps(db);
 
-  console.log('=== FragDB v3.0 Database ===\n');
+  console.log('=== FragDB v4.3 Database ===\n');
   console.log(`Fragrances: ${fragrances.length} records`);
   console.log(`Brands: ${brands.length} records`);
   console.log(`Perfumers: ${perfumers.length} records`);

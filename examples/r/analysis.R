@@ -1,8 +1,8 @@
-# FragDB - R Analysis Example (v3.0)
+# FragDB - R Analysis Example (v4.3)
 #
 # Demonstrates how to load and analyze the FragDB fragrance database in R.
 # Now includes 5 CSV files: fragrances, brands, perfumers, notes, accords.
-# For the full database with 133,000+ fragrances, visit https://fragdb.net
+# For the full database with 123,000+ fragrances, visit https://fragdb.net
 
 # Load required libraries
 library(tidyverse)
@@ -280,7 +280,7 @@ search_by_name <- function(df, query) {
 # =============================================================================
 
 main <- function() {
-  cat("=== FragDB v3.0 R Analysis Example ===\n\n")
+  cat("=== FragDB v4.3 R Analysis Example ===\n\n")
 
   # Load data
   cat("Loading database (5 files)...\n")

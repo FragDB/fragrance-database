@@ -12,7 +12,7 @@ A clear description of the bug.
 
 ## Affected File(s)
 
-- [ ] SAMPLE.csv
+- [ ] Sample CSV files
 - [ ] Python examples
 - [ ] JavaScript examples
 - [ ] SQL examples
