@@ -381,7 +381,8 @@ The free sample contains 10 rows. The full FragDB database includes:
 - Regular updates
 
 **Purchase Options**:
-- One-Time Purchase: $500
-- Annual Subscription: $2,000/year
+- One-Time Purchase: $200
+- Annual Subscription: $1,000/year
+- Lifetime Access: $2,000
 
 Visit [fragdb.net](https://fragdb.net) to purchase.

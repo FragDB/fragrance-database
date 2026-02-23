@@ -42,8 +42,9 @@ To use the full database, you must purchase a license:
 
 | License Type | Price | Terms |
 |-------------|-------|-------|
-| One-Time Purchase | $500 USD | Complete database download |
-| Annual Subscription | $2,000 USD/year | Regular updates throughout the year |
+| One-Time Purchase | $200 USD | Single download, 6 downloads per link, 3-day access |
+| Annual Subscription | $1,000 USD/year | 3 updates per month (36 total), always latest data |
+| Lifetime Access | $2,000 USD | Unlimited updates forever, priority support |
 
 ### Permitted Uses (with valid license)
 
