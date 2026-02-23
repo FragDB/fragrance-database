@@ -375,14 +375,13 @@ ORDER BY year;
 
 The free sample contains 10 rows. The full FragDB database includes:
 
-- **122,000+** fragrances
+- **123,000+** fragrances
 - **7,300+** brands
 - **67** data fields across 5 files
 - Regular updates
 
 **Purchase Options**:
-- One-Time Purchase: $200
-- Annual Subscription: $1,000/year
-- Lifetime Access: $2,000
+- One-Time Purchase: $500
+- Annual Subscription: $2,000/year
 
 Visit [fragdb.net](https://fragdb.net) to purchase.

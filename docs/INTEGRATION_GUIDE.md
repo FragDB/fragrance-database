@@ -426,7 +426,7 @@ type Query {
 1. **Parse complex fields once** - Store parsed data in separate columns/tables
 2. **Index frequently searched fields** - name, brand, year, gender, accords
 3. **Implement caching** - Cache parsed results and search queries
-4. **Use pagination** - Never load all 122,000+ records at once
+4. **Use pagination** - Never load all 123,000+ records at once
 5. **Validate data** - Some fields may be empty or malformed
 
 ## Support

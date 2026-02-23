@@ -1,6 +1,6 @@
 # Sample Data Preview
 
-Preview of the FragDB v4.2 sample data. All files are interconnected via IDs.
+Preview of the FragDB v4.3 sample data. All files are interconnected via IDs.
 
 ## Files Overview
 

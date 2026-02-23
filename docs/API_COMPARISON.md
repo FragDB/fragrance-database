@@ -6,12 +6,12 @@ This document compares FragDB to other fragrance data sources to help you choose
 
 | Feature | FragDB | Fragrantica API | Custom Scraping |
 |---------|--------|----------------|-----------------|
-| Data Volume | 122,000+ fragrances | Limited/Unofficial | Varies |
+| Data Volume | 123,000+ fragrances | Limited/Unofficial | Varies |
 | Data Ownership | Full ownership | Terms restricted | Legal concerns |
 | Offline Access | Yes | No | Limited |
 | Update Frequency | Regular updates | Real-time* | Manual |
 | Support | Included | None | None |
-| Price | $200-$2000 | Free* | Development cost |
+| Price | $500-$2,000 | Free* | Development cost |
 | Commercial Use | Licensed | Prohibited | Risky |
 
 *Unofficial/third-party APIs may violate terms of service
@@ -115,7 +115,7 @@ This document compares FragDB to other fragrance data sources to help you choose
 | Commercial License | Included | Prohibited | Unclear |
 | Support | Yes | No | No |
 | Long-term Viability | Guaranteed | Unknown | Fragile |
-| Total Cost (1 year) | $200-$2,000 | $0* | $5000+** |
+| Total Cost (1 year) | $500-$2,000 | $0* | $5000+** |
 
 *Legal costs if caught could be significant
 **Developer time for building and maintaining
@@ -126,9 +126,8 @@ This document compares FragDB to other fragrance data sources to help you choose
 
 | Plan | Cost | Value |
 |------|------|-------|
-| One-Time Purchase | $200 | Complete database, 6 downloads, 3-day access |
-| Annual Subscription | $1,000/year | 3 updates per month (36 total) |
-| Lifetime Access | $2,000 | Unlimited updates forever, priority support |
+| One-Time Purchase | $500 | Complete database download |
+| Annual Subscription | $2,000/year | Regular updates throughout the year |
 
 ### Alternative: Build Your Own
 
