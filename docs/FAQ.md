@@ -21,8 +21,9 @@ The free sample on GitHub includes:
 ### How do I get the full database?
 
 Visit [fragdb.net](https://fragdb.net) to purchase:
-- **One-Time Purchase**: $500 - Complete database download
-- **Annual Subscription**: $2,000/year - Regular updates throughout the year
+- **One-Time Purchase**: $200 - Complete database download
+- **Annual Subscription**: $1,000/year - Regular updates throughout the year
+- **Lifetime Access**: $2,000 - Unlimited updates forever
 
 ### What file format is the database?
 
