@@ -5,6 +5,22 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2026-03-03
+
+### Changed
+- Database updated with latest fragrance data
+
+### Database Statistics
+- **Total Records**: 136,919 (across 5 files)
+- **Fragrances**: 124,165 in `fragrances.csv` (+713)
+- **Brands**: 7,433 in `brands.csv` (+52)
+- **Perfumers**: 2,859 in `perfumers.csv` (+15)
+- **Notes**: 2,470 in `notes.csv` (+8)
+- **Accords**: 92 in `accords.csv`
+- **Total Data Fields**: 67 (30 + 10 + 11 + 11 + 5)
+
+---
+
 ## [4.3.0] - 2026-02-23
 
 ### Changed

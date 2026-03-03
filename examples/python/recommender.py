@@ -8,7 +8,7 @@ Demonstrates how to build a basic fragrance recommendation system.
 import pandas as pd
 from typing import List, Dict
 from load_database import load_fragdb
-from parse_fields import parse_accords, parse_percentage_field, parse_brand
+from parse_fields import parse_accords, parse_voting_field, parse_brand
 
 
 def get_fragrance_profile(row: pd.Series) -> Dict[str, float]:
@@ -21,11 +21,11 @@ def get_fragrance_profile(row: pd.Series) -> Dict[str, float]:
         profile[f"accord_{accord['name']}"] = accord["percentage"] / 100.0
 
     # Add characteristics
-    longevity = parse_percentage_field(row.get("longevity", ""))
+    longevity = parse_voting_field(row.get("longevity", ""))
     for cat, pct in longevity.items():
         profile[f"longevity_{cat}"] = pct / 100.0
 
-    sillage = parse_percentage_field(row.get("sillage", ""))
+    sillage = parse_voting_field(row.get("sillage", ""))
     for cat, pct in sillage.items():
         profile[f"sillage_{cat}"] = pct / 100.0
 
@@ -165,7 +165,7 @@ def main():
     fragrances = db["fragrances"]
     perfumers = db["perfumers"]
 
-    print("=== FragDB v4.3 Recommender ===\n")
+    print("=== FragDB v4.4 Recommender ===\n")
 
     # Find similar to a fragrance
     print("Fragrances similar to 'Light Blue':")

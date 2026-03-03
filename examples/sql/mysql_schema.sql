@@ -1,4 +1,4 @@
--- FragDB v4.3 MySQL Schema
+-- FragDB v4.4 MySQL Schema
 --
 -- This schema demonstrates how to import and structure the FragDB
 -- multi-file fragrance database in MySQL/MariaDB.

@@ -16,12 +16,13 @@ This guide explains how to integrate the FragDB fragrance database into various 
 
 ### File Format
 
-The FragDB database is provided as a pipe-delimited CSV file:
+The FragDB database is provided as 5 pipe-delimited CSV files:
 
 - **Delimiter**: `|` (pipe character)
 - **Encoding**: UTF-8
-- **Quote character**: None (fields containing delimiters are properly escaped)
+- **Quote character**: `"` (double quote)
 - **Header**: First row contains column names
+- **Files**: `fragrances.csv`, `brands.csv`, `perfumers.csv`, `notes.csv`, `accords.csv`
 
 ### Loading the Data
 
@@ -30,7 +31,11 @@ The FragDB database is provided as a pipe-delimited CSV file:
 ```python
 import pandas as pd
 
-df = pd.read_csv('fragdb.csv', sep='|', encoding='utf-8')
+fragrances = pd.read_csv('fragrances.csv', sep='|', encoding='utf-8')
+brands = pd.read_csv('brands.csv', sep='|', encoding='utf-8')
+perfumers = pd.read_csv('perfumers.csv', sep='|', encoding='utf-8')
+notes = pd.read_csv('notes.csv', sep='|', encoding='utf-8')
+accords = pd.read_csv('accords.csv', sep='|', encoding='utf-8')
 ```
 
 #### JavaScript (Node.js)
@@ -39,7 +44,7 @@ df = pd.read_csv('fragdb.csv', sep='|', encoding='utf-8')
 const { parse } = require('csv-parse/sync');
 const fs = require('fs');
 
-const records = parse(fs.readFileSync('fragdb.csv', 'utf-8'), {
+const fragrances = parse(fs.readFileSync('fragrances.csv', 'utf-8'), {
   columns: true,
   delimiter: '|',
   skip_empty_lines: true
@@ -50,7 +55,7 @@ const records = parse(fs.readFileSync('fragdb.csv', 'utf-8'), {
 
 ```r
 library(tidyverse)
-df <- read_delim('fragdb.csv', delim = '|', locale = locale(encoding = 'UTF-8'))
+fragrances <- read_delim('fragrances.csv', delim = '|', locale = locale(encoding = 'UTF-8'))
 ```
 
 #### SQL
@@ -142,7 +147,7 @@ For web applications, you may want to convert the CSV to JSON:
 import pandas as pd
 import json
 
-df = pd.read_csv('fragdb.csv', sep='|')
+df = pd.read_csv('fragrances.csv', sep='|')
 
 # Full conversion
 df.to_json('fragrances.json', orient='records')
@@ -219,7 +224,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load data
-df = pd.read_csv('fragdb.csv', sep='|')
+df = pd.read_csv('fragrances.csv', sep='|')
 
 # Parse rating
 df['rating_avg'] = df['rating'].str.split(';').str[0].astype(float)
@@ -246,7 +251,7 @@ plt.show()
 ### Google Sheets
 
 ```
-=IMPORTDATA("path/to/fragdb.csv")
+=IMPORTDATA("path/to/fragrances.csv")
 ```
 
 Then use `SPLIT()` function to parse complex fields:
@@ -426,7 +431,7 @@ type Query {
 1. **Parse complex fields once** - Store parsed data in separate columns/tables
 2. **Index frequently searched fields** - name, brand, year, gender, accords
 3. **Implement caching** - Cache parsed results and search queries
-4. **Use pagination** - Never load all 123,000+ records at once
+4. **Use pagination** - Never load all 124,000+ records at once
 5. **Validate data** - Some fields may be empty or malformed
 
 ## Support

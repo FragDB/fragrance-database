@@ -1,15 +1,15 @@
-# SQL Import Instructions (v4.3)
+# SQL Import Instructions (v4.4)
 
 This guide explains how to import the FragDB multi-file CSV database into PostgreSQL and MySQL.
 
 ## Database Structure
 
-FragDB v4.3 consists of **5 CSV files**:
+FragDB v4.4 consists of **5 CSV files**:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 123,000+ | 30 | Main fragrance database |
-| `brands.csv` | 7,300+ | 10 | Brand/designer profiles |
+| `fragrances.csv` | 124,000+ | 30 | Main fragrance database |
+| `brands.csv` | 7,400+ | 10 | Brand/designer profiles |
 | `perfumers.csv` | 2,800+ | 11 | Perfumer (nose) profiles |
 | `notes.csv` | 2,400+ | 11 | Fragrance notes reference |
 | `accords.csv` | 92 | 5 | Accords with colors |

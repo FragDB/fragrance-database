@@ -176,7 +176,7 @@ def main():
     accords = db["accords"]
 
     # Display basic info
-    print("=== FragDB v4.3 Database ===\n")
+    print("=== FragDB v4.4 Database ===\n")
     print(f"Fragrances: {len(fragrances)} records, {len(fragrances.columns)} fields")
     print(f"Brands: {len(brands)} records, {len(brands.columns)} fields")
     print(f"Perfumers: {len(perfumers)} records, {len(perfumers.columns)} fields")

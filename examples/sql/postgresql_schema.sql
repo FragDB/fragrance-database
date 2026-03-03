@@ -1,4 +1,4 @@
--- FragDB v4.3 PostgreSQL Schema
+-- FragDB v4.4 PostgreSQL Schema
 --
 -- This schema demonstrates how to import and structure the FragDB
 -- multi-file fragrance database in PostgreSQL.
