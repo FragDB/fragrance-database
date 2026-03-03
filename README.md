@@ -3,7 +3,7 @@
 The most comprehensive fragrance database available, containing **136,000+ records** across five interconnected CSV files.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-136%2C000%2B-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-136%2C900%2B-blue)](https://fragdb.net)
 [![Fields](https://img.shields.io/badge/Data%20Fields-67-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-5-orange)](docs/VERSION_3.0_RELEASE.md)
 
@@ -13,10 +13,10 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 123,452 | 30 | Main fragrance database |
-| `brands.csv` | 7,381 | 10 | Brand/designer profiles |
-| `perfumers.csv` | 2,844 | 11 | Perfumer (nose) profiles |
-| `notes.csv` | 2,462 | 11 | Fragrance notes reference |
+| `fragrances.csv` | 124,165 | 30 | Main fragrance database |
+| `brands.csv` | 7,433 | 10 | Brand/designer profiles |
+| `perfumers.csv` | 2,859 | 11 | Perfumer (nose) profiles |
+| `notes.csv` | 2,470 | 11 | Fragrance notes reference |
 | `accords.csv` | 92 | 5 | Accords with colors |
 
 ### Key Features
@@ -323,12 +323,12 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 123,452 |
-| Brands | 10 | 7,381 |
-| Perfumers | 10 | 2,844 |
-| Notes | 10 | 2,462 |
+| Fragrances | 10 | 124,165 |
+| Brands | 10 | 7,433 |
+| Perfumers | 10 | 2,859 |
+| Notes | 10 | 2,470 |
 | Accords | 10 | 92 |
-| Total Records | 50 | 136,231 |
+| Total Records | 50 | 136,919 |
 | Data Fields | 67 | 67 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
