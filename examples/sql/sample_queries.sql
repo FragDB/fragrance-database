@@ -1,4 +1,4 @@
--- FragDB v4.4 Sample SQL Queries
+-- FragDB v4.5 Sample SQL Queries
 --
 -- These queries work with both PostgreSQL and MySQL schemas.
 -- Adjust syntax as needed for your specific database.

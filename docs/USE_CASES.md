@@ -375,7 +375,7 @@ ORDER BY year;
 
 The free sample contains 10 rows. The full FragDB database includes:
 
-- **124,000+** fragrances
+- **124,700+** fragrances
 - **7,400+** brands
 - **67** data fields across 5 files
 - Regular updates

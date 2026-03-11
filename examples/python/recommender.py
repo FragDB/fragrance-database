@@ -165,7 +165,7 @@ def main():
     fragrances = db["fragrances"]
     perfumers = db["perfumers"]
 
-    print("=== FragDB v4.4 Recommender ===\n")
+    print("=== FragDB v4.5 Recommender ===\n")
 
     # Find similar to a fragrance
     print("Fragrances similar to 'Light Blue':")
