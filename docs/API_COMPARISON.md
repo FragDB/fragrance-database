@@ -6,7 +6,7 @@ This document compares FragDB to other fragrance data sources to help you choose
 
 | Feature | FragDB | Fragrantica API | Custom Scraping |
 |---------|--------|----------------|-----------------|
-| Data Volume | 124,700+ fragrances | Limited/Unofficial | Varies |
+| Data Volume | 125,600+ fragrances | Limited/Unofficial | Varies |
 | Data Ownership | Full ownership | Terms restricted | Legal concerns |
 | Offline Access | Yes | No | Limited |
 | Update Frequency | Regular updates | Real-time* | Manual |

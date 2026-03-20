@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FragDB - Load Database Example (v3.0)
+FragDB - Load Database Example (v4.6)
 
 Demonstrates how to load the FragDB multi-file database using pandas.
 Now includes 5 CSV files: fragrances, brands, perfumers, notes, accords.
@@ -176,7 +176,7 @@ def main():
     accords = db["accords"]
 
     # Display basic info
-    print("=== FragDB v4.5 Database ===\n")
+    print("=== FragDB v4.6 Database ===\n")
     print(f"Fragrances: {len(fragrances)} records, {len(fragrances.columns)} fields")
     print(f"Brands: {len(brands)} records, {len(brands.columns)} fields")
     print(f"Perfumers: {len(perfumers)} records, {len(perfumers.columns)} fields")

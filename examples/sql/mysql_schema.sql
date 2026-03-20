@@ -1,10 +1,10 @@
--- FragDB v4.5 MySQL Schema
+-- FragDB v4.6 MySQL Schema
 --
 -- This schema demonstrates how to import and structure the FragDB
 -- multi-file fragrance database in MySQL/MariaDB.
 --
 -- Files: fragrances.csv, brands.csv, perfumers.csv, notes.csv, accords.csv
--- For the full database with 137,600+ records, visit https://fragdb.net
+-- For the full database with 137,900+ records, visit https://fragdb.net
 
 -- =============================================================================
 -- REFERENCE TABLES (from CSV files)

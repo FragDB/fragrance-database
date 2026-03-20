@@ -1,5 +1,5 @@
 /**
- * FragDB - Simple REST API Example (v3.0)
+ * FragDB - Simple REST API Example (v4.6)
  *
  * Demonstrates how to create a basic fragrance API using Express.
  * Now includes 5 CSV files: fragrances, brands, perfumers, notes, accords.
@@ -504,7 +504,7 @@ app.get('/api/accords/:id', (req, res) => {
 // Start server
 loadDatabase();
 app.listen(PORT, () => {
-  console.log(`FragDB v4.5 API running at http://localhost:${PORT}`);
+  console.log(`FragDB v4.6 API running at http://localhost:${PORT}`);
   console.log('\nEndpoints:');
   console.log('  GET /api/fragrances      - List fragrances (with filters)');
   console.log('  GET /api/fragrances/:id  - Get single fragrance');

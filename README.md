@@ -1,9 +1,9 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **137,600+ records** across five interconnected CSV files.
+The most comprehensive fragrance database available, containing **137,900+ records** across five interconnected CSV files.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-137%2C600%2B-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-137%2C900%2B-blue)](https://fragdb.net)
 [![Fields](https://img.shields.io/badge/Data%20Fields-67-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-5-orange)](docs/VERSION_3.0_RELEASE.md)
 
@@ -13,10 +13,10 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 124,729 | 30 | Main fragrance database |
-| `brands.csv` | 7,466 | 10 | Brand/designer profiles |
-| `perfumers.csv` | 2,869 | 11 | Perfumer (nose) profiles |
-| `notes.csv` | 2,479 | 11 | Fragrance notes reference |
+| `fragrances.csv` | 125,698 | 30 | Main fragrance database |
+| `brands.csv` | 7,500 | 10 | Brand/designer profiles |
+| `perfumers.csv` | 2,881 | 11 | Perfumer (nose) profiles |
+| `notes.csv` | 1,826 | 11 | Fragrance notes reference |
 | `accords.csv` | 92 | 5 | Accords with colors |
 
 ### Key Features
@@ -323,12 +323,12 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 124,729 |
-| Brands | 10 | 7,466 |
-| Perfumers | 10 | 2,869 |
-| Notes | 10 | 2,479 |
+| Fragrances | 10 | 125,698 |
+| Brands | 10 | 7,500 |
+| Perfumers | 10 | 2,881 |
+| Notes | 10 | 1,826 |
 | Accords | 10 | 92 |
-| Total Records | 50 | 137,635 |
+| Total Records | 50 | 137,997 |
 | Data Fields | 67 | 67 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |

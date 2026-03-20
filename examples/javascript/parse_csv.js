@@ -1,5 +1,5 @@
 /**
- * FragDB - Parse CSV Example (v3.0)
+ * FragDB - Parse CSV Example (v4.6)
  *
  * Demonstrates how to load and parse the FragDB multi-file database in Node.js.
  * Now includes 5 CSV files: fragrances, brands, perfumers, notes, accords.
@@ -194,7 +194,7 @@ function main() {
   const { fragrances, brands, perfumers, notes, accords } = db;
   const { brandsMap, perfumersMap, notesMap, accordsMap } = createLookupMaps(db);
 
-  console.log('=== FragDB v4.5 Database ===\n');
+  console.log('=== FragDB v4.6 Database ===\n');
   console.log(`Fragrances: ${fragrances.length} records`);
   console.log(`Brands: ${brands.length} records`);
   console.log(`Perfumers: ${perfumers.length} records`);

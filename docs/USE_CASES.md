@@ -54,7 +54,7 @@ recommendations = df[df['pid'].isin(also_like_ids)]
 **Scenario**: Build an advanced search interface for fragrance discovery.
 
 **Filters to Implement**:
-- Brand (7,400+ brands)
+- Brand (7,500+ brands)
 - Gender (for women, for men, unisex)
 - Year of release (1900-2026+)
 - Price range (based on community votes)
@@ -375,8 +375,8 @@ ORDER BY year;
 
 The free sample contains 10 rows. The full FragDB database includes:
 
-- **124,700+** fragrances
-- **7,400+** brands
+- **125,600+** fragrances
+- **7,500+** brands
 - **67** data fields across 5 files
 - Regular updates
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FragDB - Parse Complex Fields Example (v3.0)
+FragDB - Parse Complex Fields Example (v4.6)
 
 Demonstrates how to parse complex fields like accords, notes_pyramid, voting fields, etc.
 Updated for v3.0 field formats.

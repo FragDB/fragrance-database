@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FragDB - Simple Recommender Example (v3.0)
+FragDB - Simple Recommender Example (v4.6)
 
 Demonstrates how to build a basic fragrance recommendation system.
 """
@@ -165,7 +165,7 @@ def main():
     fragrances = db["fragrances"]
     perfumers = db["perfumers"]
 
-    print("=== FragDB v4.5 Recommender ===\n")
+    print("=== FragDB v4.6 Recommender ===\n")
 
     # Find similar to a fragrance
     print("Fragrances similar to 'Light Blue':")
