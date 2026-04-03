@@ -6,20 +6,20 @@ Complete field documentation for all five database files.
 
 | File | Records | Fields | Primary Key |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 125,698 | 30 | `pid` |
-| `brands.csv` | 7,500 | 10 | `id` |
-| `perfumers.csv` | 2,881 | 11 | `id` |
-| `notes.csv` | 1,826 | 11 | `id` |
+| `fragrances.csv` | 126,858 | 30 | `pid` |
+| `brands.csv` | 7,573 | 10 | `id` |
+| `perfumers.csv` | 2,893 | 11 | `id` |
+| `notes.csv` | 2,494 | 11 | `id` |
 | `accords.csv` | 92 | 5 | `id` |
 
 ### Database Statistics
 
-- **Total Fragrances**: 125,698
-- **Unique Brands**: 7,500
-- **Unique Perfumers**: 2,881
-- **Unique Notes**: 1,826
+- **Total Fragrances**: 126,858
+- **Unique Brands**: 7,573
+- **Unique Perfumers**: 2,893
+- **Unique Notes**: 2,494
 - **Unique Accords**: 92
-- **Unique Collections**: 5,814
+- **Unique Collections**: 5,922
 - **Total Data Fields**: 67
 
 ## File Format
@@ -1041,6 +1041,7 @@ Accord reference table with 5 fields per record (92 accords).
 
 # Version History
 
+- **v4.7.0** (2026-04-03): Data update — 126,858 fragrances, 7,573 brands, 2,893 perfumers, 2,494 notes
 - **v4.6.0** (2026-03-20): Data update — 125,698 fragrances, 7,500 brands, 2,881 perfumers, 1,826 notes
 - **v4.5.0** (2026-03-11): Data update — 124,729 fragrances, 7,466 brands, 2,869 perfumers, 2,479 notes
 - **v4.4.0** (2026-03-03): Data update — 124,165 fragrances, 7,433 brands, 2,859 perfumers, 2,470 notes
