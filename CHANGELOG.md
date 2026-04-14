@@ -5,6 +5,40 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.0.0] - 2026-04-14
+
+### Breaking Changes
+- **New file: `translations.csv`** — vocabulary for gender values and voting labels in 23 languages (34 entries)
+- **`gender` field** now contains translation IDs (`gender_for_women`) instead of text (`for women`)
+- **All voting fields** (`appreciation`, `longevity`, `sillage`, `season`, `time_of_day`, `gender_votes`, `price_value`) now use translation IDs (`like_love:15500:59` instead of `love:15500:59`)
+- **`notes_pyramid` format** simplified to `note_id,opacity,weight` (was `name,note_id,img_url,opacity,weight`). Name and icon via notes.csv JOIN.
+
+### Added
+- **22 language translations** for note names, note groups, accord names, brand countries, brand activities, perfumer statuses
+- **Perfumer name transliterations** for Russian, Ukrainian, Japanese
+- **2,508 notes** — each name variant (Rose, Damask Rose) gets its own ID with translations (was ~1,834 by URL)
+- **Translation ID system** — readable prefixes: `like_`, `longevity_`, `sillage_`, `season_`, `price_`, `gvotes_`, `gender_`
+
+### Changed
+- `notes.csv`: 55 columns (was 11), 2,508 rows (was ~1,834)
+- `brands.csv`: 54 columns (was 10) — added `country_{lang}`, `main_activity_{lang}`
+- `perfumers.csv`: 36 columns (was 11) — added `status_{lang}`, `perfumer_name_ru/uk/ja`
+- `accords.csv`: 27 columns (was 5) — added `name_{lang}`
+- `notes.csv` `main_icon` now shows icon from perfume pyramid (was from note page)
+- `fragrances.csv` reduced from 336 MB to 284 MB (-15%) due to compact pyramid format
+
+### Database Statistics
+- **Total Records**: 140,727 (across 6 files)
+- **Fragrances**: 127,579 in `fragrances.csv` (+721)
+- **Brands**: 7,609 in `brands.csv` (+36)
+- **Perfumers**: 2,905 in `perfumers.csv` (+12)
+- **Notes**: 2,508 in `notes.csv` (+674)
+- **Accords**: 92 in `accords.csv`
+- **Translations**: 34 in `translations.csv` (NEW)
+- **Languages**: 23 (EN + 22)
+
+---
+
 ## [4.7.0] - 2026-04-03
 
 ### Changed

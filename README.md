@@ -1,11 +1,11 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **139,900+ records** across five interconnected CSV files.
+The most comprehensive fragrance database available, containing **140,700+ records** across six interconnected CSV files with **23 language translations**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-139%2C900%2B-blue)](https://fragdb.net)
-[![Fields](https://img.shields.io/badge/Data%20Fields-67-green)](DATA_DICTIONARY.md)
-[![Files](https://img.shields.io/badge/CSV%20Files-5-orange)](docs/VERSION_3.0_RELEASE.md)
+[![Records](https://img.shields.io/badge/Records-140%2C700%2B-blue)](https://fragdb.net)
+[![Fields](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
+[![Files](https://img.shields.io/badge/CSV%20Files-6-orange)](DATA_DICTIONARY.md)
 
 ## Overview
 
@@ -13,20 +13,23 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 126,858 | 30 | Main fragrance database |
-| `brands.csv` | 7,573 | 10 | Brand/designer profiles |
-| `perfumers.csv` | 2,893 | 11 | Perfumer (nose) profiles |
-| `notes.csv` | 2,494 | 11 | Fragrance notes reference |
-| `accords.csv` | 92 | 5 | Accords with colors |
+| `fragrances.csv` | 127,579 | 30 | Main fragrance database |
+| `brands.csv` | 7,609 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 2,905 | 36 | Perfumer profiles + translations |
+| `notes.csv` | 2,508 | 55 | Fragrance notes + translations |
+| `accords.csv` | 92 | 27 | Accords + translations |
+| `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
 ### Key Features
 
+- **23 languages** — English + 22 translations for all labels, note names, accords, countries, statuses
 - **Relational structure** — Files linked via unique IDs
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
-- **Brand profiles** — Logo, country, website, parent company
-- **Perfumer profiles** — Photo, status, company, education, biography
-- **Notes reference** — Latin names, groups, odor profiles, images
-- **Accords reference** — Display colors for visualizations
+- **Brand profiles** — Logo, country, website, parent company (country/activity translated)
+- **Perfumer profiles** — Photo, status, company, education, biography (status translated)
+- **Notes reference** — 2,508 notes with translations, Latin names, groups, odor profiles
+- **Accords reference** — Display colors + translated names
+- **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
 
 ## Preview
@@ -62,28 +65,22 @@ FragDB provides structured data for the fragrance industry:
 ```python
 import pandas as pd
 
-# Load all five files
+# Load all files
 fragrances = pd.read_csv('fragrances.csv', sep='|', encoding='utf-8')
 brands = pd.read_csv('brands.csv', sep='|', encoding='utf-8')
-perfumers = pd.read_csv('perfumers.csv', sep='|', encoding='utf-8')
 notes = pd.read_csv('notes.csv', sep='|', encoding='utf-8')
-accords = pd.read_csv('accords.csv', sep='|', encoding='utf-8')
+translations = pd.read_csv('translations.csv', sep='|', encoding='utf-8')
 
-# Extract brand_id from brand field
+# Join fragrances with brands
 fragrances['brand_id'] = fragrances['brand'].str.split(';').str[1]
-
-# Join with brand details
 df = fragrances.merge(brands, left_on='brand_id', right_on='id', suffixes=('', '_brand'))
 
-# Parse voting field (new format: category:votes:percent)
-def parse_votes(value):
-    if not value: return {}
-    return {p.split(':')[0]: {'votes': int(p.split(':')[1]), 'pct': float(p.split(':')[2])}
-            for p in value.split(';') if ':' in p}
+# Translate gender to any language
+trans = translations.set_index('id')
+df['gender_ru'] = df['gender'].map(lambda x: trans.loc[x, 'ru'] if x in trans.index else x)
 
-# Search by name
-results = df[df['name'].str.contains('Aventus', case=False, na=False)]
-print(results[['name', 'name_brand', 'country', 'year']])
+# Brand country in Japanese
+print(df[['name', 'name_brand', 'country_ja', 'gender_ru']].head())
 ```
 
 ### JavaScript
@@ -92,222 +89,70 @@ print(results[['name', 'name_brand', 'country', 'year']])
 const { parse } = require('csv-parse/sync');
 const fs = require('fs');
 
-// Load all five files
+// Load files
 const fragrances = parse(fs.readFileSync('fragrances.csv', 'utf-8'), { columns: true, delimiter: '|' });
 const brands = parse(fs.readFileSync('brands.csv', 'utf-8'), { columns: true, delimiter: '|' });
-const perfumers = parse(fs.readFileSync('perfumers.csv', 'utf-8'), { columns: true, delimiter: '|' });
-const notes = parse(fs.readFileSync('notes.csv', 'utf-8'), { columns: true, delimiter: '|' });
-const accords = parse(fs.readFileSync('accords.csv', 'utf-8'), { columns: true, delimiter: '|' });
+const translations = parse(fs.readFileSync('translations.csv', 'utf-8'), { columns: true, delimiter: '|' });
 
-// Create lookup maps
+// Build lookup maps
 const brandsMap = new Map(brands.map(b => [b.id, b]));
-const perfumersMap = new Map(perfumers.map(p => [p.id, p]));
-const notesMap = new Map(notes.map(n => [n.id, n]));
-const accordsMap = new Map(accords.map(a => [a.id, a]));
+const transMap = new Map(translations.map(t => [t.id, t]));
 
-// Parse voting field (new format: category:votes:percent)
-const parseVotes = (value) => Object.fromEntries(
-  (value || '').split(';').filter(p => p.includes(':')).map(p => {
-    const [cat, votes, pct] = p.split(':');
-    return [cat, { votes: +votes, pct: +pct }];
-  })
-);
+// Get fragrance with translated fields
+const frag = fragrances[0];
+const [brandName, brandId] = frag.brand.split(';');
+const brand = brandsMap.get(brandId);
+const genderRu = transMap.get(frag.gender)?.ru || frag.gender;
 
-// Get brand details for a fragrance
-const fragrance = fragrances[0];
-const [brandName, brandId] = fragrance.brand.split(';');
-const brandDetails = brandsMap.get(brandId);
-console.log(`${fragrance.name} by ${brandName} (${brandDetails?.country})`);
+console.log(`${frag.name} by ${brandName} (${brand?.country_ru}), ${genderRu}`);
 ```
 
-### SQL
+### SQL (PostgreSQL)
 
 ```sql
--- Create tables
-CREATE TABLE fragrances (
-    pid INTEGER PRIMARY KEY,
-    name VARCHAR(500),
-    brand VARCHAR(500),  -- format: brand_name;brand_id
-    reviews_count INTEGER,
-    -- ... see full schema in examples/sql/
-);
+-- Import
+COPY fragrances FROM 'fragrances.csv' DELIMITER '|' CSV HEADER ENCODING 'UTF8';
+COPY brands FROM 'brands.csv' DELIMITER '|' CSV HEADER ENCODING 'UTF8';
+COPY translations FROM 'translations.csv' DELIMITER '|' CSV HEADER ENCODING 'UTF8';
 
-CREATE TABLE brands (
-    id VARCHAR(20) PRIMARY KEY,  -- format: b1, b2, ...
-    name VARCHAR(500),
-    country VARCHAR(100)
-);
-
-CREATE TABLE perfumers (
-    id VARCHAR(20) PRIMARY KEY,  -- format: p1, p2, ...
-    name VARCHAR(500),
-    company VARCHAR(200)
-);
-
-CREATE TABLE notes (
-    id VARCHAR(20) PRIMARY KEY,  -- format: n1, n2, ...
-    name VARCHAR(200),
-    latin_name VARCHAR(200),
-    "group" VARCHAR(100)
-);
-
-CREATE TABLE accords (
-    id VARCHAR(20) PRIMARY KEY,  -- format: a1, a2, ...
-    name VARCHAR(100),
-    bar_color VARCHAR(10),
-    font_color VARCHAR(10)
-);
-
--- Join fragrances with brands
-SELECT f.name, b.name AS brand, b.country
+-- Join and translate gender to Russian
+SELECT f.name, b.name AS brand, b.country_ru, t.ru AS gender_ru
 FROM fragrances f
-JOIN brands b ON SPLIT_PART(f.brand, ';', 2) = b.id;
+JOIN brands b ON SPLIT_PART(f.brand, ';', 2) = b.id
+JOIN translations t ON f.gender = t.id;
 ```
 
-See [examples/](examples/) for complete code in Python, JavaScript, SQL, and R.
+See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation.
 
-## Data Structure
+## What's New in v5.0
 
-### fragrances.csv (30 fields)
+- **23 languages** — all labels, note names, accords, countries, statuses translated
+- **translations.csv** — new vocabulary file for gender values and voting labels
+- **Compact notes pyramid** — `note_id,opacity,weight` (name/icon via notes.csv JOIN)
+- **2,508 notes** — each name variant (Rose, Damask Rose, Turkish Rose) has its own ID
+- **Gender & voting fields** use translation IDs instead of English text
 
-#### Identity & Basic Info
-| Field | Description | Format |
-|-------|-------------|--------|
-| `pid` | Unique fragrance identifier | Integer: `9828` |
-| `url` | Direct link to fragrance page | URL |
-| `brand` | Brand name and ID reference | `Creed;b1` |
-| `name` | Fragrance name | Text: `Aventus` |
-| `year` | Release year | Integer: `2010` |
-| `gender` | Target gender | `for men`, `for women`, `for women and men` |
-| `collection` | Collection within brand | Text |
-
-#### Media
-| Field | Description | Format |
-|-------|-------------|--------|
-| `main_photo` | Main bottle photo URL | URL |
-| `info_card` | Perfume Card | URL |
-| `user_photoes` | Fragram Photos | Semicolon-separated URLs |
-| `video_url` | YouTube video URLs | Semicolon-separated URLs |
-
-#### Composition
-| Field | Description | Format |
-|-------|-------------|--------|
-| `accords` | Main accords | `a24:100;a34:64;a38:60` (join with accords.csv) |
-| `notes_pyramid` | Fragrance Notes | `top(name,id,img,opacity,weight;...)middle(...)base(...)` |
-| `perfumers` | Perfumer names and ID references | `Erwin Creed;p1;Olivier Creed;p2` |
-| `description` | Fragrance description | HTML text |
-
-#### Ratings & Votes (format: `category:votes:percent`)
-| Field | Description | Format |
-|-------|-------------|--------|
-| `rating` | Perfume rating | `4.33;24561` |
-| `reviews_count` | Total number of reviews | Integer: `793` |
-| `appreciation` | Rating votes with counts | `love:12:13;like:48:53;ok:1:1;...` |
-| `price_value` | Price value votes with counts | `way_overpriced:0:0;overpriced:2:29;...` |
-| `gender_votes` | Gender votes with counts | `female:5:63;unisex:2:25;male:0:0;...` |
-| `longevity` | Duration votes | `very_weak:4:18;moderate:8:36;long_lasting:3:14;...` |
-| `sillage` | Projection votes | `intimate:5:19;moderate:11:42;strong:5:19;...` |
-| `season` | Seasonal suitability | `winter:8:18;spring:15:33;summer:30:67;fall:12:27` |
-| `time_of_day` | Day/night suitability | `day:45:100;night:5:11` |
-
-#### Related & AI
-| Field | Description | Format |
-|-------|-------------|--------|
-| `pros_cons` | What People Say | `pros(text,likes,dislikes;...)cons(...)` |
-| `by_designer` | Same brand fragrances | Semicolon-separated PIDs |
-| `in_collection` | Same collection fragrances | Semicolon-separated PIDs |
-| `reminds_of` | This perfume reminds me of | `pid:likes:dislikes;...` |
-| `also_like` | People who like this also like | Semicolon-separated PIDs |
-| `news_ids` | Related news article IDs | Semicolon-separated IDs |
-
-### brands.csv (10 fields)
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `id` | Unique brand identifier | `b1` |
-| `name` | Brand name | `Creed` |
-| `url` | Fragrantica brand page | `https://www.fragrantica.com/designers/Creed.html` |
-| `logo_url` | Brand logo image | URL |
-| `country` | Country of origin | `France` |
-| `main_activity` | Primary business | `Fragrance house` |
-| `website` | Official website | `https://www.creed.com` |
-| `parent_company` | Parent company | `Kering` |
-| `description` | Brand description | HTML text |
-| `brand_count` | Number of fragrances | `847` |
-
-### perfumers.csv (11 fields)
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `id` | Unique perfumer identifier | `p1` |
-| `name` | Perfumer name | `Alberto Morillas` |
-| `url` | Fragrantica perfumer page | URL |
-| `photo_url` | Perfumer photo | URL |
-| `status` | Professional status | `Master Perfumer` |
-| `company` | Current company | `Firmenich` |
-| `also_worked` | Previous companies | `Quest International, Givaudan` |
-| `education` | Education | `ISIPCA` |
-| `web` | Personal website | URL |
-| `perfumes_count` | Number of fragrances | `538` |
-| `biography` | Biography | HTML text |
-
-### notes.csv (11 fields)
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `id` | Unique note identifier | `n80` |
-| `name` | Note name | `Orange` |
-| `url` | Fragrantica note page | URL |
-| `latin_name` | Latin/scientific name | `Citrus sinensis` |
-| `other_names` | Alternative names | `Sweet Orange, Naranja` |
-| `group` | Note category | `Citrus smells` |
-| `odor_profile` | Odor description | Text |
-| `main_icon` | Note icon URL | URL |
-| `alt_icons` | Alternative icons | Semicolon-separated URLs |
-| `fragrance_count` | Fragrances with this note | `12847` |
-
-### accords.csv (5 fields)
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| `id` | Unique accord identifier | `a24` |
-| `name` | Accord name | `fruity` |
-| `bar_color` | Background color (hex) | `#FC4B29` |
-| `font_color` | Text color (hex) | `#000000` |
-| `fragrance_count` | Fragrances with this accord | `45821` |
-
-**[View complete data dictionary with parsing examples →](DATA_DICTIONARY.md)**
+See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation with parsing examples.
 
 ## Sample Data
 
-The free sample includes **10 records per file** across all five CSV files:
+The free sample includes **10 records per file** across all six CSV files:
 
 | File | Records | Description |
 |------|---------|-------------|
-| [fragrances.csv](samples/fragrances.csv) | 10 | Iconic fragrances |
-| [brands.csv](samples/brands.csv) | 10 | Brand profiles |
-| [perfumers.csv](samples/perfumers.csv) | 10 | Perfumer profiles |
-| [notes.csv](samples/notes.csv) | 10 | Fragrance notes (11 fields) |
-| [accords.csv](samples/accords.csv) | 10 | Accords with colors |
+| [fragrances.csv](samples/fragrances.csv) | 10 | Iconic fragrances (30 fields) |
+| [brands.csv](samples/brands.csv) | 10 | Brand profiles (54 fields, 22 lang) |
+| [perfumers.csv](samples/perfumers.csv) | 10 | Perfumer profiles (36 fields, 22 lang) |
+| [notes.csv](samples/notes.csv) | 10 | Fragrance notes (55 fields, 22 lang) |
+| [accords.csv](samples/accords.csv) | 10 | Accords with colors (27 fields, 22 lang) |
+| [translations.csv](samples/translations.csv) | 34 | Gender & voting vocabulary (full, 25 fields) |
 
 Preview: [SAMPLE_PREVIEW.md](SAMPLE_PREVIEW.md)
 
-## Code Examples
-
-| Language | Files | Description |
-|----------|-------|-------------|
-| Python | [examples/python/](examples/python/) | Pandas loading, joining, search, recommendations |
-| JavaScript | [examples/javascript/](examples/javascript/) | Node.js parsing, Express API |
-| SQL | [examples/sql/](examples/sql/) | PostgreSQL/MySQL schemas with JOINs |
-| R | [examples/r/](examples/r/) | Analysis, visualization with tidyverse |
-
 ## Documentation
 
-- [DATA_DICTIONARY.md](DATA_DICTIONARY.md) - Complete field documentation
-- [docs/VERSION_2.0_RELEASE.md](docs/VERSION_2.0_RELEASE.md) - Version 2.0 release notes & migration guide
-- [docs/INTEGRATION_GUIDE.md](docs/INTEGRATION_GUIDE.md) - Platform integration guide
-- [docs/USE_CASES.md](docs/USE_CASES.md) - Industry use cases
-- [docs/FAQ.md](docs/FAQ.md) - Frequently asked questions
+- [DATA_DICTIONARY.md](DATA_DICTIONARY.md) — Complete field documentation with parsing examples
+- [CHANGELOG.md](CHANGELOG.md) — Version history
 
 ## Use Cases
 
@@ -323,13 +168,14 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 126,858 |
-| Brands | 10 | 7,573 |
-| Perfumers | 10 | 2,893 |
-| Notes | 10 | 2,494 |
+| Fragrances | 10 | 127,579 |
+| Brands | 10 | 7,609 |
+| Perfumers | 10 | 2,905 |
+| Notes | 10 | 2,508 |
 | Accords | 10 | 92 |
-| Total Records | 50 | 139,910 |
-| Data Fields | 67 | 67 |
+| Translations | 34 (full) | 34 |
+| Languages | 23 | 23 |
+| Total Records | 84 | 140,727 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
 
