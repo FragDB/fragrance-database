@@ -1,9 +1,9 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **140,700+ records** across six interconnected CSV files with **23 language translations**.
+The most comprehensive fragrance database available, containing **141,400+ records** across six interconnected CSV files with **23 language translations**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-140%2C700%2B-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-141%2C400%2B-blue)](https://fragdb.net)
 [![Fields](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-6-orange)](DATA_DICTIONARY.md)
 
@@ -13,10 +13,10 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 127,579 | 30 | Main fragrance database |
-| `brands.csv` | 7,609 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 2,905 | 36 | Perfumer profiles + translations |
-| `notes.csv` | 2,508 | 55 | Fragrance notes + translations |
+| `fragrances.csv` | 128,246 | 30 | Main fragrance database |
+| `brands.csv` | 7,661 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 2,920 | 36 | Perfumer profiles + translations |
+| `notes.csv` | 2,510 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
@@ -168,14 +168,14 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 127,579 |
-| Brands | 10 | 7,609 |
-| Perfumers | 10 | 2,905 |
-| Notes | 10 | 2,508 |
+| Fragrances | 10 | 128,246 |
+| Brands | 10 | 7,661 |
+| Perfumers | 10 | 2,920 |
+| Notes | 10 | 2,510 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
 | Languages | 23 | 23 |
-| Total Records | 84 | 140,727 |
+| Total Records | 84 | 141,463 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
 
