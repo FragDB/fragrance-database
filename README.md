@@ -27,7 +27,7 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company (country/activity translated)
 - **Perfumer profiles** — Photo, status, company, education, biography (status translated)
-- **Notes reference** — 2,508 notes with translations, Latin names, groups, odor profiles
+- **Notes reference** — 2,510 notes with translations, Latin names, groups, odor profiles
 - **Accords reference** — Display colors + translated names
 - **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
@@ -124,12 +124,12 @@ JOIN translations t ON f.gender = t.id;
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation.
 
-## What's New in v5.0
+## What's New in v5.1
 
 - **23 languages** — all labels, note names, accords, countries, statuses translated
 - **translations.csv** — new vocabulary file for gender values and voting labels
 - **Compact notes pyramid** — `note_id,opacity,weight` (name/icon via notes.csv JOIN)
-- **2,508 notes** — each name variant (Rose, Damask Rose, Turkish Rose) has its own ID
+- **2,510 notes** — each name variant (Rose, Damask Rose, Turkish Rose) has its own ID
 - **Gender & voting fields** use translation IDs instead of English text
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation with parsing examples.
