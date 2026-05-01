@@ -1,9 +1,9 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **141,400+ records** across six interconnected CSV files with **23 language translations**.
+The most comprehensive fragrance database available, containing **142,800+ records** across six interconnected CSV files with **23 language translations**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-141%2C400%2B-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-142%2C800%2B-blue)](https://fragdb.net)
 [![Fields](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-6-orange)](DATA_DICTIONARY.md)
 
@@ -13,10 +13,10 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 128,246 | 30 | Main fragrance database |
-| `brands.csv` | 7,661 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 2,920 | 36 | Perfumer profiles + translations |
-| `notes.csv` | 2,510 | 55 | Fragrance notes + translations |
+| `fragrances.csv` | 129,597 | 30 | Main fragrance database |
+| `brands.csv` | 7,739 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 2,942 | 39 | Perfumer profiles + translations |
+| `notes.csv` | 2,515 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
@@ -27,7 +27,7 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company (country/activity translated)
 - **Perfumer profiles** — Photo, status, company, education, biography (status translated)
-- **Notes reference** — 2,510 notes with translations, Latin names, groups, odor profiles
+- **Notes reference** — 2,515 notes with translations, Latin names, groups, odor profiles
 - **Accords reference** — Display colors + translated names
 - **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
@@ -124,12 +124,13 @@ JOIN translations t ON f.gender = t.id;
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation.
 
-## What's New in v5.1
+## What's New in v5.2
 
 - **23 languages** — all labels, note names, accords, countries, statuses translated
 - **translations.csv** — new vocabulary file for gender values and voting labels
 - **Compact notes pyramid** — `note_id,opacity,weight` (name/icon via notes.csv JOIN)
-- **2,510 notes** — each name variant (Rose, Damask Rose, Turkish Rose) has its own ID
+- **2,515 notes** — each name variant (Rose, Damask Rose, Turkish Rose) has its own ID
+- **Perfumer transliterations expanded to 6 languages** — added Chinese, Korean, Arabic (was: Russian, Ukrainian, Japanese)
 - **Gender & voting fields** use translation IDs instead of English text
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation with parsing examples.
@@ -168,14 +169,14 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 128,246 |
-| Brands | 10 | 7,661 |
-| Perfumers | 10 | 2,920 |
-| Notes | 10 | 2,510 |
+| Fragrances | 10 | 129,597 |
+| Brands | 10 | 7,739 |
+| Perfumers | 10 | 2,942 |
+| Notes | 10 | 2,515 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
 | Languages | 23 | 23 |
-| Total Records | 84 | 141,463 |
+| Total Records | 84 | 142,927 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
 

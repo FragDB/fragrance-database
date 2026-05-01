@@ -1,15 +1,15 @@
 # FragDB v5 — Data Dictionary
 
-Generated: 2026-04-19
+Generated: 2026-05-01
 
 ## Overview
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 128,246 | 30 |
-| brands.csv | 7,661 | 54 |
-| perfumers.csv | 2,920 | 36 |
-| notes.csv | 2,510 | 55 |
+| fragrances.csv | 129,597 | 30 |
+| brands.csv | 7,739 | 54 |
+| perfumers.csv | 2,942 | 39 |
+| notes.csv | 2,515 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |
 
@@ -168,6 +168,9 @@ Perfumer (nose) profiles with translations.
 | 34 | perfumer_name_ru | Name in Russian |
 | 35 | perfumer_name_uk | Name in Ukrainian |
 | 36 | perfumer_name_ja | Name in Japanese |
+| 37 | perfumer_name_zh | Name in Chinese |
+| 38 | perfumer_name_ko | Name in Korean |
+| 39 | perfumer_name_ar | Name in Arabic |
 
 ---
 

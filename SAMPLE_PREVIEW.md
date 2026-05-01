@@ -1,6 +1,6 @@
 # Sample Data Preview
 
-Preview of the FragDB v5.1 sample data. All files are interconnected via IDs. Includes 23 language translations.
+Preview of the FragDB v5.2 sample data. All files are interconnected via IDs. Includes 23 language translations.
 
 ## Files Overview
 
@@ -8,7 +8,7 @@ Preview of the FragDB v5.1 sample data. All files are interconnected via IDs. In
 |------|---------|--------|-------------|
 | [fragrances.csv](samples/fragrances.csv) | 10 | 30 | Top-rated fragrances |
 | [brands.csv](samples/brands.csv) | 10 | 54 | Brand profiles + 22 lang translations |
-| [perfumers.csv](samples/perfumers.csv) | 10 | 36 | Perfumer profiles + 22 lang translations |
+| [perfumers.csv](samples/perfumers.csv) | 10 | 39 | Perfumer profiles + 22 lang translations + 6 name transliterations |
 | [notes.csv](samples/notes.csv) | 10 | 55 | Fragrance notes + 22 lang translations |
 | [accords.csv](samples/accords.csv) | 10 | 27 | Accords + 22 lang translations |
 | [translations.csv](samples/translations.csv) | 34 | 25 | Gender & voting label vocabulary (full) |

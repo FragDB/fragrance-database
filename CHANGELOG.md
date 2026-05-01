@@ -5,6 +5,28 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.2.0] - 2026-05-01
+
+### Changed
+- Database updated with latest fragrance data
+- **perfumers.csv: 39 columns** (was 36) — added 3 new transliteration languages
+
+### Added
+- **Perfumer name transliterations**: zh, ko, ar (Chinese, Korean, Arabic)
+- Total perfumer transliteration languages: 6 (ru, uk, ja, zh, ko, ar)
+
+### Database Statistics
+- **Total Records**: 142,927 (across 6 files)
+- **Fragrances**: 129,597 in `fragrances.csv` (+1,351)
+- **Brands**: 7,739 in `brands.csv` (+78)
+- **Perfumers**: 2,942 in `perfumers.csv` (+22)
+- **Notes**: 2,515 in `notes.csv` (+5)
+- **Accords**: 92 in `accords.csv`
+- **Translations**: 34 in `translations.csv`
+- **Languages**: 23
+
+---
+
 ## [5.1.0] - 2026-04-19
 
 ### Changed
