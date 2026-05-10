@@ -1,6 +1,6 @@
 # Sample Data Preview
 
-Preview of the FragDB v5.2 sample data. All files are interconnected via IDs. Includes 23 language translations.
+Preview of the FragDB v5.3 sample data. All files are interconnected via IDs. Includes 23 language translations.
 
 ## Files Overview
 
