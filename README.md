@@ -1,11 +1,16 @@
 # FragDB - Fragrantica Fragrance Database
 
-The most comprehensive fragrance database available, containing **143,400+ records** across six interconnected CSV files with **23 language translations**.
+The most comprehensive fragrance database available — **143,400+ structured records** across six interconnected CSV files with **23 language translations**, plus **4.9M+ user-generated content rows** in Apache Parquet companion datasets covering **user reviews**, **editorial news articles**, and **community discussions**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 [![Records](https://img.shields.io/badge/Records-143%2C400%2B-blue)](https://fragdb.net)
-[![Fields](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
+[![Reviews](https://img.shields.io/badge/User%20Reviews-4.6M-red)](SPEC.md)
+[![News](https://img.shields.io/badge/News%20Articles-24K-purple)](SPEC.md)
+[![Languages](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
 [![Files](https://img.shields.io/badge/CSV%20Files-6-orange)](DATA_DICTIONARY.md)
+[![Parquet](https://img.shields.io/badge/Parquet%20Files-3-blueviolet)](SPEC.md)
+
+**Keywords:** fragrance database · perfume dataset · Fragrantica · user reviews · perfume reviews · fragrance news · perfumery articles · cosmetics dataset · multilingual perfume data · scent recommendation · fragrance recommender system · perfume sentiment analysis · perfumer profiles · accord taxonomy · notes pyramid · NLP fragrance corpus · 23 languages
 
 ## Overview
 
@@ -124,22 +129,105 @@ JOIN translations t ON f.gender = t.id;
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation.
 
-## Companion Parquet Datasets
+## Companion Parquet Datasets — User Reviews, News, and Community Comments
 
-The CSV core can be extended with three Apache Parquet datasets (available in all paid tiers except the $200 Core):
+FragDB ships with **three Apache Parquet datasets** containing **4.9 million rows** of user-generated content and editorial coverage — the largest publicly-organized corpus of fragrance reviews and perfumery journalism. Use them for NLP, sentiment analysis, recommendation systems, market research, or training language models on fragrance-specific text.
 
-| File | Rows | Description |
-|------|------|-------------|
-| `comments.parquet` | 4,643,851 | User reviews in 23 languages |
-| `news.parquet` | 24,440 | Editorial articles, 2008-2026 |
-| `news_comments.parquet` | 263,798 | Threaded news comments |
+### `comments.parquet` — 4.6 Million User Reviews in 23 Languages
 
-Schema documented in [SPEC.md](SPEC.md). Free **parquet samples** are in `samples/`:
-- `comments_sample.parquet` (25 rows)
-- `news_sample.parquet` (20 rows)
-- `news_comments_sample.parquet` (20 rows)
+The world's largest collection of structured fragrance reviews. Every entry includes the perfume ID (joinable with `fragrances.csv`), author username, posting date, full review text, avatar URL, and language code.
 
-See https://fragdb.net/#pricing for tier details.
+- **4,643,851 user reviews** spanning every major perfume on Fragrantica
+- **23 languages** — English (1.69M reviews), Russian, Portuguese, Spanish, Korean, Turkish, Japanese, Polish, Italian, Hungarian, Serbian, Swedish, German, Hebrew, Ukrainian, French, Arabic, Greek, Czech, Chinese, Romanian, Mongolian, Dutch
+- **Coverage:** 70.6% of all fragrances in the database have at least one review (93,305 of 132,160 PIDs)
+- **Deterministic global primary key** — stable comment IDs survive re-scrapes
+- **Zero duplicate rows**, **zero foreign key orphans** against `fragrances.csv.pid`
+- **Independent UGC per language** — each language is genuine localized content, not machine translation
+- **8 fields:** `pid`, `lang`, `comment_id`, `author`, `date`, `text`, `avatar_url`, `gradient_class`
+- **PyArrow large_string format** — combined corpus exceeds 32-bit string offset limit
+
+**Use cases:** sentiment analysis · review classification · recommendation systems · perfume similarity from text · language detection benchmark · multilingual NLP training corpus · fragrance market research · author network analysis · trend detection by language
+
+### `news.parquet` — 24,440 Editorial Articles (2008–2026)
+
+Two decades of professional fragrance journalism from Fragrantica's editorial team. Every article includes title, author, full text (plain + HTML), category, related perfumes/brands/perfumers, publication date, and main image. Foreign keys to fragrances, brands, and perfumers make this a powerful resource for content-based recommendation and knowledge graph construction.
+
+- **24,440 editorial articles** from 2008 to 2026 — the complete public archive
+- **30+ categories** — top: New Fragrances (34.9%), Fragrance Reviews (22.8%), Niche Perfumery (10.4%), Designer Brands, Interviews, History, Industry News, Niche Houses, and more
+- **Bilingual storage** — `text` (plain) for NLP / search, `text_html` (preserved markup) for rich display
+- **Linked entities** — `related_pids[]`, `related_brands[]`, `related_perfumers[]` as JSON arrays
+- **0% orphans** over 119,662 PID references — clean foreign keys
+- **Modern + archived** — 63.1% archived legacy articles, 36.9% modern fully-dated articles
+- **16 fields:** `nid`, `title`, `category`, `author`, `url`, `is_archived`, `date_unix`, `description`, `text`, `text_html`, `main_image`, `article_images`, `related_pids`, `related_brands`, `related_perfumers`, `comments_count`
+- **List fields stored as JSON-encoded strings** — never null (empty = `"[]"`)
+
+**Use cases:** content recommendation · article search engine · perfume knowledge graph · trend analysis · author influence study · category classification · entity linking · timeline analysis · industry research · niche perfumery research · fragrance journalism corpus
+
+### `news_comments.parquet` — 263,798 Threaded Community Comments
+
+Community discussions attached to editorial articles, with threading support for replies. Joinable with `news.parquet` via `nid`.
+
+- **263,798 threaded comments** across **21,820 articles** (89.3% of news articles have at least one comment)
+- **4.9% reply rate** — threaded conversations with reply detection (`is_reply` flag)
+- **100% populated timestamps** — `date_unix` parsed for every comment
+- **9 fields:** `nid`, `comment_id`, `is_reply`, `author`, `date`, `date_unix`, `text`, `avatar_url`, `gradient`
+- **Zero foreign key orphans** against `news.parquet.nid`
+
+**Use cases:** community engagement analysis · threaded discussion mining · reply network construction · comment sentiment · author activity profiles · temporal analysis of community responses
+
+### Tier Availability
+
+The parquet datasets ship with **all paid tiers except the $200 Core**:
+
+| Tier | CSV Core | Parquet Datasets |
+|------|----------|------------------|
+| **$200 One-Time Core** | ✓ | ✗ |
+| **$400 One-Time Full Database** | ✓ | ✓ |
+| **Annual Subscription** | ✓ | ✓ (always latest) |
+| **Lifetime Access** | ✓ | ✓ (always latest) |
+
+See https://fragdb.net/#pricing for complete tier comparison.
+
+### Free Parquet Samples Included
+
+This repository includes **free parquet preview samples** in `samples/`:
+
+- [`comments_sample.parquet`](samples/comments_sample.parquet) — 25 user reviews (8 fields)
+- [`news_sample.parquet`](samples/news_sample.parquet) — 20 editorial articles (16 fields)
+- [`news_comments_sample.parquet`](samples/news_comments_sample.parquet) — 20 threaded news comments (9 fields)
+- [`SPEC.md`](SPEC.md) — full field-by-field schema documentation (Apache Parquet)
+
+### Quick Start — Reading Parquet Datasets
+
+```python
+import pyarrow.parquet as pq
+import pandas as pd
+
+# Read user reviews
+reviews = pq.read_table('comments.parquet').to_pandas()
+print(reviews.head())
+print(f"Total reviews: {len(reviews):,}")
+print(f"Languages: {reviews['lang'].nunique()}")
+
+# Join with CSV fragrance metadata
+fragrances = pd.read_csv('fragrances.csv', sep='|')
+reviews_with_frag = reviews.merge(fragrances, on='pid', how='left')
+
+# Read news articles
+import json
+news = pq.read_table('news.parquet').to_pandas()
+# Parse JSON-encoded list fields
+news['related_pids_list'] = news['related_pids'].apply(json.loads)
+news['related_brands_list'] = news['related_brands'].apply(json.loads)
+print(news[['nid', 'title', 'category', 'date_unix']].head())
+
+# Read news comments and join with articles
+news_comments = pq.read_table('news_comments.parquet').to_pandas()
+discussion = news_comments.merge(news[['nid', 'title']], on='nid')
+print(discussion[['nid', 'title', 'author', 'text']].head())
+```
+
+Full schema, field types, and audit statistics are documented in [`SPEC.md`](SPEC.md).
 
 ## What's New in v5.3
 
@@ -183,11 +271,29 @@ Preview: [SAMPLE_PREVIEW.md](SAMPLE_PREVIEW.md)
 
 ## Use Cases
 
-- **E-commerce**: Enrich product listings with detailed fragrance data
-- **Mobile Apps**: Build fragrance collection managers or discovery apps
-- **Data Analysis**: Analyze fragrance industry trends by brand, country, perfumer
-- **Recommendations**: Build content-based or collaborative filtering systems
-- **Content Creation**: Power blogs, videos, and reviews with accurate data
+### CSV Core (all tiers)
+- **E-commerce** — Enrich product listings with detailed fragrance data, notes, accords
+- **Mobile Apps** — Build fragrance collection managers, scent discovery apps, perfume catalog apps
+- **Data Analysis** — Analyze fragrance industry trends by brand, country, perfumer, year
+- **Recommendations** — Content-based or collaborative filtering systems using accord/note vectors
+- **Content Creation** — Power blogs, videos, fragrance reviews with accurate data
+- **Multilingual UIs** — Localized perfume catalogs in 23 languages out of the box
+- **Knowledge Graphs** — Brand → Perfumer → Fragrance → Notes → Accords graph construction
+- **Market Research** — Country-of-origin analysis, parent company portfolios, perfumer productivity stats
+
+### Parquet Datasets ($400+ tiers)
+- **NLP & Sentiment Analysis** — Train models on 4.6M multilingual fragrance reviews
+- **Recommender Systems** — Hybrid models combining CSV structure with review text similarity
+- **Language Models** — Domain-specific corpus for fragrance/perfumery LLM fine-tuning
+- **Review Classification** — Identify positive/negative reviews, fake review detection
+- **Trend Detection** — News article timeline analysis, emerging fragrance trends
+- **Author Networks** — Identify influential reviewers, perfumery journalists, community leaders
+- **Content-Based Discovery** — "Articles about this perfume" — JOIN news.related_pids with fragrances.pid
+- **Community Analytics** — Reply networks, engagement metrics on editorial content
+- **Cross-Language Studies** — Compare review sentiment across 23 languages for the same fragrance
+- **Search Engines** — Full-text search across reviews, articles, and structured metadata
+- **Entity Resolution** — Match journalist's `related_brands[]` mentions with `brands.csv` IDs
+- **Knowledge Extraction** — Mine 24K editorial articles for perfume facts, launch dates, perfumer interviews
 
 ## Full Database
 
