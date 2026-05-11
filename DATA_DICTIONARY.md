@@ -210,3 +210,17 @@ Fragrance accord reference with display colors and translations.
 | 4 | font_color | Text color (#hex) |
 | 5 | fragrance_count | Fragrances with this accord |
 | 6-27 | name_de...name_hu | Accord name in 22 languages |
+
+---
+
+## Companion datasets (Full bundle only)
+
+The Full Database bundle (all tiers except $200 Core) includes three Apache Parquet datasets documented separately in `SPEC.md`:
+
+| File | Rows | Fields | Foreign key |
+|------|------|--------|-------------|
+| `comments.parquet` | 4,643,851 | 8 | `pid` → `fragrances.csv` |
+| `news.parquet` | 24,440 | 16 | `related_pids[]` → `fragrances.csv` |
+| `news_comments.parquet` | 263,798 | 9 | `nid` → `news.parquet` |
+
+These do not duplicate any CSV columns; they extend the catalog with user-generated content and editorial archive linked via PID.

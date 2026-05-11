@@ -13,6 +13,17 @@ Preview of the FragDB v5.3 sample data. All files are interconnected via IDs. In
 | [accords.csv](samples/accords.csv) | 10 | 27 | Accords + 22 lang translations |
 | [translations.csv](samples/translations.csv) | 34 | 25 | Gender & voting label vocabulary (full) |
 
+## Parquet samples (Full tier preview)
+
+| File | Records | Fields | Description |
+|------|---------|--------|-------------|
+| [comments_sample.parquet](samples/comments_sample.parquet) | 25 | 8 | User reviews preview |
+| [news_sample.parquet](samples/news_sample.parquet) | 20 | 16 | Editorial articles preview |
+| [news_comments_sample.parquet](samples/news_comments_sample.parquet) | 20 | 9 | News comments preview |
+| [SPEC.md](SPEC.md) | — | — | Parquet schema documentation |
+
+Parquet datasets ship in all paid tiers except $200 Core.
+
 ---
 
 ## fragrances.csv

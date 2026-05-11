@@ -5,6 +5,22 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.3.1] - 2026-05-11
+
+### Added
+- **Companion Parquet datasets** mentioned in README/DATA_DICTIONARY:
+  - `comments.parquet` — 4.6M user reviews in 23 languages
+  - `news.parquet` — 24,440 editorial articles
+  - `news_comments.parquet` — 263,798 threaded news comments
+- **Parquet samples** in `samples/` (25 / 20 / 20 records)
+- `SPEC.md` — Apache Parquet schema documentation
+- Note: parquet datasets ship in all paid tiers except $200 Core
+
+### Changed
+- No CSV data changes (v5.3 data is identical)
+
+---
+
 ## [5.3.0] - 2026-05-10
 
 ### Changed

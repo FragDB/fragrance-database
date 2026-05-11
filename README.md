@@ -124,6 +124,23 @@ JOIN translations t ON f.gender = t.id;
 
 See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation.
 
+## Companion Parquet Datasets
+
+The CSV core can be extended with three Apache Parquet datasets (available in all paid tiers except the $200 Core):
+
+| File | Rows | Description |
+|------|------|-------------|
+| `comments.parquet` | 4,643,851 | User reviews in 23 languages |
+| `news.parquet` | 24,440 | Editorial articles, 2008-2026 |
+| `news_comments.parquet` | 263,798 | Threaded news comments |
+
+Schema documented in [SPEC.md](SPEC.md). Free **parquet samples** are in `samples/`:
+- `comments_sample.parquet` (25 rows)
+- `news_sample.parquet` (20 rows)
+- `news_comments_sample.parquet` (20 rows)
+
+See https://fragdb.net/#pricing for tier details.
+
 ## What's New in v5.3
 
 - **23 languages** — all labels, note names, accords, countries, statuses translated
@@ -137,16 +154,25 @@ See [DATA_DICTIONARY.md](DATA_DICTIONARY.md) for complete field documentation wi
 
 ## Sample Data
 
-The free sample includes **10 records per file** across all six CSV files:
+The free sample includes **10 records per file** across all six CSV files, plus **parquet samples** and `SPEC.md`:
 
+### CSV samples
 | File | Records | Description |
 |------|---------|-------------|
 | [fragrances.csv](samples/fragrances.csv) | 10 | Iconic fragrances (30 fields) |
 | [brands.csv](samples/brands.csv) | 10 | Brand profiles (54 fields, 22 lang) |
-| [perfumers.csv](samples/perfumers.csv) | 10 | Perfumer profiles (36 fields, 22 lang) |
+| [perfumers.csv](samples/perfumers.csv) | 10 | Perfumer profiles (39 fields, 22 lang) |
 | [notes.csv](samples/notes.csv) | 10 | Fragrance notes (55 fields, 22 lang) |
 | [accords.csv](samples/accords.csv) | 10 | Accords with colors (27 fields, 22 lang) |
 | [translations.csv](samples/translations.csv) | 34 | Gender & voting vocabulary (full, 25 fields) |
+
+### Parquet samples (Full tier preview)
+| File | Records | Description |
+|------|---------|-------------|
+| [comments_sample.parquet](samples/comments_sample.parquet) | 25 | User reviews preview (8 fields) |
+| [news_sample.parquet](samples/news_sample.parquet) | 20 | Editorial articles preview (16 fields) |
+| [news_comments_sample.parquet](samples/news_comments_sample.parquet) | 20 | News comments preview (9 fields) |
+| [SPEC.md](SPEC.md) | — | Parquet schema documentation |
 
 Preview: [SAMPLE_PREVIEW.md](SAMPLE_PREVIEW.md)
 
