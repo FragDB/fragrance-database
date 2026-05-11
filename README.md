@@ -181,10 +181,10 @@ The parquet datasets ship with **all paid tiers except the $200 Core**:
 
 | Tier | CSV Core | Parquet Datasets |
 |------|----------|------------------|
-| **$200 One-Time Core** | ✓ | ✗ |
-| **$400 One-Time Full Database** | ✓ | ✓ |
-| **Annual Subscription** | ✓ | ✓ (always latest) |
-| **Lifetime Access** | ✓ | ✓ (always latest) |
+| **$200 One-Time Core** | ✅ | ❌ |
+| **$400 One-Time Full Database** | ✅ | ✅ |
+| **Annual Subscription** | ✅ | ✅ (always latest) |
+| **Lifetime Access** | ✅ | ✅ (always latest) |
 
 See https://fragdb.net/#pricing for complete tier comparison.
 
