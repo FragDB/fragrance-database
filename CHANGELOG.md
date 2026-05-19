@@ -5,6 +5,33 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.4.0] - 2026-05-19
+
+### Changed
+- Database updated with latest fragrance data
+- **perfumers.csv: 42 columns** (was 39) — added 3 new transliteration languages
+
+### Added
+- **Perfumer name transliterations**: he, el, mn (Hebrew, Greek, Mongolian)
+- Total perfumer transliteration languages: 9 (ru, uk, ja, zh, ko, ar, he, el, mn)
+
+### Database Statistics
+- **Total Records**: 144,280 (across 6 files)
+- **Fragrances**: 130,949 in `fragrances.csv` (+863)
+- **Brands**: 7,815 in `brands.csv` (+39)
+- **Perfumers**: 2,968 in `perfumers.csv` (+8)
+- **Notes**: 2,522 in `notes.csv` (+5)
+- **Accords**: 92 in `accords.csv`
+- **Translations**: 34 in `translations.csv`
+- **Languages**: 23
+
+### Companion Parquet Datasets (unchanged)
+- `comments.parquet` — 4,643,851 user reviews × 23 languages
+- `news.parquet` — 24,440 editorial articles
+- `news_comments.parquet` — 263,798 threaded news comments
+
+---
+
 ## [5.3.1] - 2026-05-11
 
 ### Added

@@ -6,10 +6,10 @@ Generated: 2026-05-10
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 130,086 | 30 |
-| brands.csv | 7,776 | 54 |
-| perfumers.csv | 2,960 | 39 |
-| notes.csv | 2,517 | 55 |
+| fragrances.csv | 130,949 | 30 |
+| brands.csv | 7,815 | 54 |
+| perfumers.csv | 2,968 | 42 |
+| notes.csv | 2,522 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |
 
@@ -171,6 +171,9 @@ Perfumer (nose) profiles with translations.
 | 37 | perfumer_name_zh | Name in Chinese |
 | 38 | perfumer_name_ko | Name in Korean |
 | 39 | perfumer_name_ar | Name in Arabic |
+| 40 | perfumer_name_he | Name in Hebrew |
+| 41 | perfumer_name_el | Name in Greek |
+| 42 | perfumer_name_mn | Name in Mongolian |
 
 ---
 
