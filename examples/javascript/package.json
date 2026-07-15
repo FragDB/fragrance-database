@@ -1,0 +1,22 @@
+{
+  "name": "fragdb-examples",
+  "version": "1.0.0",
+  "description": "Example code for working with FragDB fragrance database",
+  "main": "parse_csv.js",
+  "scripts": {
+    "parse": "node parse_csv.js",
+    "search": "node search_example.js",
+    "api": "node fragrance_api.js"
+  },
+  "keywords": [
+    "fragrance",
+    "perfume",
+    "database",
+    "fragdb"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "csv-parse": "^5.5.3",
+    "express": "^4.18.2"
+  }
+}
