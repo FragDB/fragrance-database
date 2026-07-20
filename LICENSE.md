@@ -18,7 +18,7 @@ The sample data files in `samples/` are provided under the [Creative Commons Att
 
 ### Data sources
 
-Sample data is derived from public web sources (134,577 perfumes in v5.9).
+Sample data is derived from public web sources (135,308 perfumes in v5.10).
 
 All sample content is provided for educational and research use. For commercial use or full dataset access, contact via [fragdb.net](https://fragdb.net).
 
