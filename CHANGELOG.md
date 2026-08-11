@@ -5,16 +5,17 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [5.10.0] - 2026-07-20
+## [5.12.0] - 2026-08-11
 
 ### Changed
-- Data update from full source recrawl (parser run 260719)
-- Fragrances: 134,577 → **135,308** (+731)
-- Brands: 8,036 → **8,093** (+57)
-- Perfumers: 3,046 → **3,057** (+11)
-- Notes: 2,567 → **2,573** (+6)
-- **Notes multilingual 100%** — 2 late-added notes back-filled across all 22 languages
-- Free sample refreshed: 10-record CSV samples in `samples/` rebuilt from v5.10 data
+- Data update from a full source recrawl (parser run 260809)
+- Fragrances: 135,308 → **136,682** (+1,374)
+- Brands: 8,093 → **8,175** (+82)
+- Perfumers: 3,057 → **3,090** (+33)
+- Notes: 2,573 → **2,586** (+13)
+- Covers two upstream releases (v5.11, v5.12) — the previous public snapshot was v5.10
+- 784 records restored: a resume-scan defect had marked them done since May, so they carried a three-month drift in votes, ratings and note pyramids
+- Free sample refreshed: 10-record CSV samples in `samples/` rebuilt from v5.12 data
 
 ### Unchanged
 - CSV + Parquet schema (column counts 30/54/42/55/27/25 identical)

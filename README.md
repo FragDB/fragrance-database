@@ -18,16 +18,16 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 135,308 | 30 | Main fragrance database |
-| `brands.csv` | 8,093 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 3,057 | 42 | Perfumer profiles + translations |
-| `notes.csv` | 2,573 | 55 | Fragrance notes + translations |
+| `fragrances.csv` | 136,682 | 30 | Main fragrance database |
+| `brands.csv` | 8,175 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 3,090 | 42 | Perfumer profiles + translations |
+| `notes.csv` | 2,586 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
 ### Snapshot freshness
 
-- **Data refreshed**: 2026-07-20 (v5.10)
+- **Data refreshed**: 2026-08-11 (v5.12)
 
 ### Key Features
 
@@ -36,7 +36,7 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company (country/activity translated)
 - **Perfumer profiles** — Photo, status, company, education, biography (status translated)
-- **Notes reference** — 2,573 notes with translations, Latin names, groups, odor profiles
+- **Notes reference** — 2,586 notes with translations, Latin names, groups, odor profiles
 - **Accords reference** — Display colors + translated names
 - **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
@@ -233,12 +233,13 @@ print(discussion[['nid', 'title', 'author', 'text']].head())
 
 Full schema, field types, and audit statistics are documented in [`SPEC.md`](SPEC.md).
 
-## What's New in v5.10
+## What's New in v5.12
 
-- Data update: 134,577 → **135,308** fragrances (+731), **8,093** brands, **3,057** perfumers, **2,573** notes
-- **Full source refresh** — data rebuilt from a complete recrawl; every field class current as of mid-July 2026
-- **Notes multilingual 100%** — every note fully translated across 22 languages (2 late-added notes back-filled)
-- **Free sample refreshed** — the 10-record CSV samples in `samples/` rebuilt from v5.10 data
+- Data update: 135,308 → **136,682** fragrances (+1,374), **8,175** brands (+82), **3,090** perfumers (+33), **2,586** notes (+13)
+- Covers two upstream releases (v5.11 and v5.12); the previous public snapshot was v5.10
+- **Full source recrawl** (9 Aug 2026) — every field class re-read, not just the new tail; 784 records that a resume-scan bug had frozen since May are current again
+- **Notes multilingual 100%** — every note translated across all 22 languages, verified with a strict per-language check
+- **Free sample refreshed** — the 10-record CSV samples in `samples/` rebuilt from v5.12 data
 
 ## What's New in v5.9
 
@@ -320,10 +321,10 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 135,308 |
-| Brands | 10 | 8,093 |
-| Perfumers | 10 | 3,057 |
-| Notes | 10 | 2,573 |
+| Fragrances | 10 | 136,682 |
+| Brands | 10 | 8,175 |
+| Perfumers | 10 | 3,090 |
+| Notes | 10 | 2,586 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
 | Languages | 23 | 23 |

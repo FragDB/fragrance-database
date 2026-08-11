@@ -6,10 +6,10 @@ Generated: 2026-07-10
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 135,308 | 30 |
-| brands.csv | 8,093 | 54 |
-| perfumers.csv | 3,057 | 42 |
-| notes.csv | 2,573 | 55 |
+| fragrances.csv | 136,682 | 30 |
+| brands.csv | 8,175 | 54 |
+| perfumers.csv | 3,090 | 42 |
+| notes.csv | 2,586 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |
 
