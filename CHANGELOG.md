@@ -5,6 +5,23 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.13.0] - 2026-08-20
+
+### Changed
+- Data update from an incremental delta (parser run 260819)
+- Fragrances: 136,682 → **137,147** (+465)
+- Brands: 8,175 → **8,210** (+35)
+- Perfumers: 3,090 → **3,102** (+12)
+- Notes: 2,586 → **2,588** (+2)
+- Clean delta: 0 canonical-URL changes, 0 records removed (the 9 Aug full recrawl had 59 URL moves)
+- New note `Kiwano` arrived with all 22 translations in the same cycle
+- Free sample refreshed: 10-record CSV samples in `samples/` rebuilt from v5.13 data
+
+### Unchanged
+- CSV + Parquet schema (column counts 30/54/42/55/27/25 identical)
+- Accords: 92 · Languages: 23
+- Field coverage flat across all 30 columns (max movement 0.22 pp)
+
 ## [5.12.0] - 2026-08-11
 
 ### Changed
