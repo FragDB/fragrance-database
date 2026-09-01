@@ -6,9 +6,9 @@ Generated: 2026-07-10
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 137,147 | 30 |
-| brands.csv | 8,210 | 54 |
-| perfumers.csv | 3,102 | 42 |
+| fragrances.csv | 137,789 | 30 |
+| brands.csv | 8,247 | 54 |
+| perfumers.csv | 3,110 | 42 |
 | notes.csv | 2,588 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |

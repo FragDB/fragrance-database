@@ -5,6 +5,19 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.14.0] - 2026-09-01
+
+### Changed
+- Fragrances: 137,147 → **137,789** (+642)
+- Brands: 8,210 → **8,247** (+37)
+- Perfumers: 3,102 → **3,110** (+8)
+- Unique note names: **2,586** (unchanged — the notes reference only moves on a full crawl)
+- Photos: 613,933 → **615,066**
+
+### Unchanged
+- Sample files: the schema is identical to v5.13, so the 10-record previews in `samples/`
+  were not rebuilt. A sample shows structure, not freshness.
+
 ## [5.13.0] - 2026-08-20
 
 ### Changed

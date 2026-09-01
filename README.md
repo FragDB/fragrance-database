@@ -18,16 +18,16 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 137,147 | 30 | Main fragrance database |
-| `brands.csv` | 8,210 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 3,102 | 42 | Perfumer profiles + translations |
+| `fragrances.csv` | 137,789 | 30 | Main fragrance database |
+| `brands.csv` | 8,247 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 3,110 | 42 | Perfumer profiles + translations |
 | `notes.csv` | 2,588 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
 ### Snapshot freshness
 
-- **Data refreshed**: 2026-08-20 (v5.13)
+- **Data refreshed**: 2026-09-01 (v5.14)
 
 ### Key Features
 
@@ -233,6 +233,12 @@ print(discussion[['nid', 'title', 'author', 'text']].head())
 
 Full schema, field types, and audit statistics are documented in [`SPEC.md`](SPEC.md).
 
+## What's New in v5.14
+
+- Data update: 137,147 → **137,789** fragrances (+642), **8,247** brands (+37), **3,110** perfumers (+8), **2,586** unique note names (unchanged — the notes reference only moves on a full crawl)
+- Photos: 613,933 → **615,066**
+- Sample files unchanged: the schema did not move between v5.13 and v5.14, so the 10-record previews in `samples/` are byte-identical. They show structure, not freshness.
+
 ## What's New in v5.13
 
 - Data update: 136,682 → **137,147** fragrances (+465), **8,210** brands (+35), **3,102** perfumers (+12), **2,588** notes (+2)
@@ -329,9 +335,9 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 137,147 |
-| Brands | 10 | 8,210 |
-| Perfumers | 10 | 3,102 |
+| Fragrances | 10 | 137,789 |
+| Brands | 10 | 8,247 |
+| Perfumers | 10 | 3,110 |
 | Notes | 10 | 2,588 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
