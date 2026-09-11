@@ -1,15 +1,15 @@
 # FragDB v5 — Data Dictionary
 
-Generated: 2026-07-10
+Generated: 2026-07-10 · record counts: v5.15 (2026-09-10)
 
 ## Overview
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 137,789 | 30 |
-| brands.csv | 8,247 | 54 |
-| perfumers.csv | 3,110 | 42 |
-| notes.csv | 2,588 | 55 |
+| fragrances.csv | 139,501 | 30 |
+| brands.csv | 8,272 | 54 |
+| perfumers.csv | 3,116 | 42 |
+| notes.csv | 2,596 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |
 

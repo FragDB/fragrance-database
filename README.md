@@ -1,9 +1,9 @@
 # FragDB - Fragrance Database (Multilingual)
 
-The most comprehensive fragrance database available — **148,300+ structured records** across six interconnected CSV files with **23 language translations**, plus **4.9M+ user-generated content rows** in Apache Parquet companion datasets covering **user reviews**, **editorial news articles**, and **community discussions**.
+The most comprehensive fragrance database available — **153,600+ structured records** across six interconnected CSV files with **23 language translations**, plus **4.9M+ user-generated content rows** in Apache Parquet companion datasets covering **user reviews**, **editorial news articles**, and **community discussions**.
 
 [![License: CC-BY-NC-4.0](https://img.shields.io/badge/License-CC--BY--NC--4.0-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-135%2C308-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-139%2C501-blue)](https://fragdb.net)
 [![Reviews](https://img.shields.io/badge/User%20Reviews-4.6M-red)](SPEC.md)
 [![News](https://img.shields.io/badge/News%20Articles-24K-purple)](SPEC.md)
 [![Languages](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
@@ -18,16 +18,17 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 137,789 | 30 | Main fragrance database |
-| `brands.csv` | 8,247 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 3,110 | 42 | Perfumer profiles + translations |
-| `notes.csv` | 2,588 | 55 | Fragrance notes + translations |
+| `fragrances.csv` | 139,501 | 30 | Main fragrance database |
+| `brands.csv` | 8,272 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 3,116 | 42 | Perfumer profiles + translations |
+| `notes.csv` | 2,596 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
 ### Snapshot freshness
 
-- **Data refreshed**: 2026-09-01 (v5.14)
+- **Data refreshed**: 2026-09-10 (v5.15)
+- **Reviews, news, news comments** (parquet): unchanged in this release — latest review 2026-05-02, latest article 2026-04-28
 
 ### Key Features
 
@@ -36,7 +37,7 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company (country/activity translated)
 - **Perfumer profiles** — Photo, status, company, education, biography (status translated)
-- **Notes reference** — 2,588 notes with translations, Latin names, groups, odor profiles
+- **Notes reference** — 2,596 notes with translations, Latin names, groups, odor profiles
 - **Accords reference** — Display colors + translated names
 - **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
@@ -143,9 +144,9 @@ The world's largest collection of structured fragrance reviews. Every entry incl
 
 - **4,643,851 user reviews** covering every major perfume in the database
 - **23 languages** — English (1.69M reviews), Russian, Portuguese, Spanish, Korean, Turkish, Japanese, Polish, Italian, Hungarian, Serbian, Swedish, German, Hebrew, Ukrainian, French, Arabic, Greek, Czech, Chinese, Romanian, Mongolian, Dutch
-- **Coverage:** 70.6% of all fragrances in the database have at least one review (93,305 of 132,160 PIDs)
+- **Coverage:** 66.9% of all fragrances in the database have at least one review (93,296 of 139,501 PIDs)
 - **Deterministic global primary key** — stable comment IDs survive re-scrapes
-- **Zero duplicate rows**, **zero foreign key orphans** against `fragrances.csv.pid`
+- **Zero duplicate rows**; every `pid` joins `fragrances.csv` except 46 reviews (0.001%) on 9 perfumes no longer in the catalogue
 - **Independent UGC per language** — each language is genuine localized content, not machine translation
 - **8 fields:** `pid`, `lang`, `comment_id`, `author`, `date`, `text`, `avatar_url`, `gradient_class`
 - **PyArrow large_string format** — combined corpus exceeds 32-bit string offset limit
@@ -160,7 +161,7 @@ Two decades of professional fragrance journalism. Every article includes title, 
 - **30+ categories** — top: New Fragrances (34.9%), Fragrance Reviews (22.8%), Niche Perfumery (10.4%), Designer Brands, Interviews, History, Industry News, Niche Houses, and more
 - **Bilingual storage** — `text` (plain) for NLP / search, `text_html` (preserved markup) for rich display
 - **Linked entities** — `related_pids[]`, `related_brands[]`, `related_perfumers[]` as JSON arrays
-- **0% orphans** over 119,662 PID references — clean foreign keys
+- **119,662 PID references** — all but 174 (0.15%) resolve; those point to perfumes no longer in the catalogue
 - **Modern + archived** — 63.1% archived legacy articles, 36.9% modern fully-dated articles
 - **16 fields:** `nid`, `title`, `category`, `author`, `url`, `is_archived`, `date_unix`, `description`, `text`, `text_html`, `main_image`, `article_images`, `related_pids`, `related_brands`, `related_perfumers`, `comments_count`
 - **List fields stored as JSON-encoded strings** — never null (empty = `"[]"`)
@@ -232,6 +233,16 @@ print(discussion[['nid', 'title', 'author', 'text']].head())
 ```
 
 Full schema, field types, and audit statistics are documented in [`SPEC.md`](SPEC.md).
+
+## What's New in v5.15
+
+- Data update: 137,789 → **139,501** fragrances (+1,712), **8,272** brands (+25), **3,116** perfumers (+6), **2,596** notes (+4: 7 new, 3 retired)
+- **Full source recrawl** (10 Sep 2026) — every field class re-read, not only the new tail
+- **Three note IDs retired** — the source merged case duplicates: `n473` → `n2661` (Heather), `n653` → `n2646` (Icing Pink), `n813` → `n2660` (Hazelnut Cocoa Spread). No fragrance references the retired IDs
+- Photos: 615,066 → **622,513**
+- **Figures on this page restated from the release files.** The records badge and the full-database totals had stayed at v5.10, and the notes row showed 2,588 while v5.14 shipped 2,592. The notes figure is now the row count of `notes.csv` — the number fragdb.net shows. Review coverage and foreign-key figures are measured against this catalogue
+- Reviews, news and news comments: the same parquet files as v5.14
+- Sample files unchanged: the schema did not move between v5.14 and v5.15, so the 10-record previews in `samples/` are byte-identical
 
 ## What's New in v5.14
 
@@ -335,14 +346,14 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 137,789 |
-| Brands | 10 | 8,247 |
-| Perfumers | 10 | 3,110 |
-| Notes | 10 | 2,588 |
+| Fragrances | 10 | 139,501 |
+| Brands | 10 | 8,272 |
+| Perfumers | 10 | 3,116 |
+| Notes | 10 | 2,596 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
 | Languages | 23 | 23 |
-| Total Records | ~84 | 149,157 |
+| Total Records | ~84 | 153,611 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
 
