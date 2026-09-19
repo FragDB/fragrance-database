@@ -5,6 +5,24 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.16.0] - 2026-09-19
+
+### Added
+- **Data API** — per-record HTTP access to the same catalogue, priced per record. Endpoints, detail levels and limits are described in the README.
+
+### Changed
+- Fragrances: 139,501 → **140,230** (+729)
+- Brands: 8,272 → **8,316** (+44)
+- Perfumers: 3,116 → **3,126** (+10)
+- Notes: 2,596 → **2,606** (+10)
+- Photos: 622,513 → **623,790**
+- **Companion parquet refreshed for the first time since June.** User reviews 4,643,851 → **4,986,774** (+342,923); editorial articles 24,440 → **25,619** (+1,179); news comments 263,798 → **276,483** (+12,685)
+- Derived figures re-measured against the new parquet: review coverage 66.9% → **69.8%**, English share 1.69M → **1.88M**, PID references 119,662 → **125,890**, archived article share 63.1% → **60.3%**, reply rate 4.9% → **5.5%**
+- NID range restated as 1 — 26,129 with 510 ids absent from the source. The previous wording called them "truly deleted"; absence from our file is all that can be verified
+
+### Unchanged
+- Schema: no column moved between v5.15 and v5.16, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.15.0] - 2026-09-10
 
 ### Changed

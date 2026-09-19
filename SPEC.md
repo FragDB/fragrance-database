@@ -23,9 +23,9 @@ existing perfume/brand/perfumer DBs via primary keys.
 
 | Dataset | Rows | Compressed Size | Distinct entities |
 |---|---:|---:|---:|
-| `comments.parquet` | 4,643,851 | 1.23 GB | 93,305 perfumes, 23 languages |
-| `news.parquet` | 24,440 articles | 101 MB | NID 1..25000 |
-| `news_comments.parquet` | 263,798 | 33 MB | 21,820 articles with comments |
+| `comments.parquet` | 4,986,774 | 1.23 GB | 93,305 perfumes, 23 languages |
+| `news.parquet` | 25,619 articles | 101 MB | NID 1..25000 |
+| `news_comments.parquet` | 276,483 | 33 MB | 22,891 articles with comments |
 
 All three datasets share the same identifier conventions used by the
 existing perfume/brand/perfumer databases:
@@ -59,7 +59,7 @@ or syndication.
 
 ### 2.2 Volumetrics
 
-- **Total rows:** 4,643,851
+- **Total rows:** 4,986,774
 - **Distinct PIDs covered:** 93,305 (70.6% of the 132,160 perfumes in `merged_database`; remaining 38,855 perfumes have zero reviews — verified against Fragrantika's `reviews_count` field)
 - **PID range:** 1 — 130,121
 - **Languages:** 23 (full list in §2.3)
@@ -137,11 +137,11 @@ articles and modern editorial content.
 
 ### 3.2 Volumetrics
 
-- **Total rows:** 24,440 articles
-- **NID range:** 1 — 25,000 (560 NIDs missing — Fragrantika returns HTTP 301 redirect for these — represents truly deleted articles)
-- **Archived:** 15,427 / 24,440 (63.1%)
-- **Non-archived:** 9,013 / 24,440 (36.9%)
-- **With publication date (`date_unix > 0`):** 13,687 (56.0%)
+- **Total rows:** 25,619 articles
+- **NID range:** 1 — 26,129 (510 NIDs in that range are absent from the source)
+- **Archived:** 15,458 / 25,619 (60.3%)
+- **Non-archived:** 10,161 / 25,619 (39.7%)
+- **With publication date (`date_unix > 0`):** 14,789 (57.7%)
 
 ### 3.3 List-fields format note
 
@@ -161,9 +161,9 @@ the int `704`). Cast as needed when joining.
 
 | Category | Articles | % |
 |---|---:|---:|
-| New Fragrances | 8,534 | 34.9% |
-| Fragrance Reviews | 5,583 | 22.8% |
-| Niche Perfumery | 2,537 | 10.4% |
+| New Fragrances | 8,724 | 34.1% |
+| Fragrance Reviews | 6,128 | 23.9% |
+| Niche Perfumery | 2,604 | 10.2% |
 | Art Books Events | 1,570 | 6.4% |
 | Columns | 1,346 | 5.5% |
 | Fragrant Horoscope | 851 | 3.5% |
@@ -214,13 +214,13 @@ Fragrantika uses on perfume pages.
 | 6 | `text` | `string` | NO | Comment body, plain text. |
 | 7 | `avatar_url` | `string` | NO | Full URL to author avatar (Fragrantika CDN). |
 | 8 | `gradient` | `string` | NO | CSS class for color badge (same scheme as `comments.parquet.gradient_class`). |
-| 9 | `is_reply` | `bool` | NO | `True` if this comment is a reply to another comment (threaded discussion); `False` for root comments. 4.9% of rows are replies (12,898 / 263,798). |
+| 9 | `is_reply` | `bool` | NO | `True` if this comment is a reply to another comment (threaded discussion); `False` for root comments. 5.5% of rows are replies (15,128 / 276,483). |
 
 ### 4.2 Volumetrics
 
-- **Total rows:** 263,798
-- **Distinct NIDs:** 21,820 (89.3% of articles have at least one comment)
-- **Replies:** 12,898 (4.9%)
+- **Total rows:** 276,483
+- **Distinct NIDs:** 22,891 (89.4% of articles have at least one comment)
+- **Replies:** 15,128 (5.5%)
 - **Average comments per article (in articles with comments):** 12.1
 
 ---
@@ -292,7 +292,7 @@ angel_reviews = c.filter(pc.and_(pc.equal(c['pid'], 704),
 ### 5.3 Linking news to perfumes (related_pids)
 
 Foreign key: **`news.related_pids → merged_database.PID`** — JSON-array
-field, 0% orphan rate over 119,662 references.
+field, 0% orphan rate over 125,890 references.
 
 ```sql
 -- All news mentioning Aventus (PID 9828):
@@ -468,7 +468,7 @@ The datasets passed a multi-track validation audit (full report:
 |---|:---:|
 | Duplicate rows by primary key (all 3 datasets) | 0 |
 | FK integrity (`comments.pid → PID`) | 0 orphans |
-| FK integrity (`news.related_pids → PID`) | 0 orphans (over 119,662 refs) |
+| FK integrity (`news.related_pids → PID`) | 0 orphans (over 125,890 refs) |
 | FK integrity (`news_comments.nid → nid`) | 0 orphans |
 | `comment_id` global uniqueness (`comments.parquet`) | 0 collisions over 4.6M rows |
 | HTML/CSS pollution in text fields | 0 |
@@ -490,7 +490,7 @@ to deterministic comment IDs (§2.4).
 
 ## 8. Known limitations (transparent disclosure)
 
-1. **Archived news articles without dates (10,753 / 24,440 = 44%).**
+1. **Archived news articles without dates (10,753 / 25,619 = 44%).**
    Fragrantika's archived HTML template does not embed any date marker
    (`<time>`, meta tag, or visible string). For these articles, `date_unix`
    is `0`. The no-date subset is concentrated in NIDs 1–15,000: 9,685 of
