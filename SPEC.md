@@ -1,9 +1,9 @@
 # Fragrantika News & Comments Datasets — Technical Specification
 
-**Snapshot date:** 2026-05-05
+**Snapshot date:** 2026-09-30 (v5.17)
 **Source:** `fragrantica.com` and 22 localized domains (`fragrantica.de`, `fragrantica.ru`, etc.)
 **Format:** Apache Parquet (Zstandard compression)
-**Total combined size:** ~1.36 GB on disk
+**Total combined size:** ~1.55 GB on disk
 
 This document specifies three datasets that complement the existing
 Fragrantika perfume database (`merged_database`, `brands_database_v2`,
@@ -23,9 +23,9 @@ existing perfume/brand/perfumer DBs via primary keys.
 
 | Dataset | Rows | Compressed Size | Distinct entities |
 |---|---:|---:|---:|
-| `comments.parquet` | 4,986,774 | 1.23 GB | 93,305 perfumes, 23 languages |
-| `news.parquet` | 25,619 articles | 101 MB | NID 1..25000 |
-| `news_comments.parquet` | 276,483 | 33 MB | 22,891 articles with comments |
+| `comments.parquet` | 4,988,692 | 1.40 GB | 97,859 perfumes, 23 languages |
+| `news.parquet` | 25,709 articles | 114 MB | NID 1..26219 |
+| `news_comments.parquet` | 277,446 | 37 MB | 22,974 articles with comments |
 
 All three datasets share the same identifier conventions used by the
 existing perfume/brand/perfumer databases:
@@ -59,38 +59,38 @@ or syndication.
 
 ### 2.2 Volumetrics
 
-- **Total rows:** 4,986,774
-- **Distinct PIDs covered:** 93,305 (70.6% of the 132,160 perfumes in `merged_database`; remaining 38,855 perfumes have zero reviews — verified against Fragrantika's `reviews_count` field)
-- **PID range:** 1 — 130,121
+- **Total rows:** 4,988,692
+- **Distinct PIDs covered:** 97,859 — 97,849 of the 140,946 perfumes in `fragrances.csv` (69.4%), plus 10 perfumes no longer in the catalogue; the remaining 43,097 perfumes have zero reviews
+- **PID range:** 1 — 143,475
 - **Languages:** 23 (full list in §2.3)
 
 ### 2.3 Language distribution
 
 | Lang | Code | Comments | Distinct PIDs |
 |---|---|---:|---:|
-| English | `en` | 1,690,055 | 78,715 (60% of perfumes) |
-| Russian | `ru` | 889,893 | 52,650 |
-| Portuguese (Brazilian) | `pt` | 247,511 | 21,258 |
-| Spanish | `es` | 226,451 | 26,586 |
-| Korean | `ko` | 214,674 | 11,696 |
-| Turkish | `tr` | 191,945 | 11,722 |
-| Japanese | `ja` | 186,836 | 10,767 |
-| Polish | `pl` | 141,242 | 25,350 |
-| Italian | `it` | 115,972 | 22,100 |
-| Hungarian | `hu` | 109,204 | 11,565 |
-| Serbian | `sr` | 108,945 | 15,048 |
-| Swedish | `sv` | 107,666 | 11,155 |
-| German | `de` | 100,218 | 15,505 |
-| Hebrew | `he` | 81,981 | 10,165 |
-| Ukrainian | `uk` | 50,203 | 15,917 |
-| French | `fr` | 42,256 | 13,379 |
-| Arabic | `ar` | 33,077 | 9,071 |
-| Greek | `el` | 28,208 | 8,512 |
-| Czech | `cs` | 24,269 | 3,424 |
-| Chinese (Simplified) | `zh` | 15,843 | 4,466 |
-| Romanian | `ro` | 13,906 | 6,451 |
-| Mongolian | `mn` | 12,100 | 2,056 |
-| Dutch | `nl` | 11,396 | 5,045 |
+| English | `en` | 1,879,532 | 81,148 (58% of perfumes) |
+| Russian | `ru` | 938,870 | 55,094 |
+| Portuguese (Brazilian) | `pt` | 283,681 | 23,258 |
+| Spanish | `es` | 245,951 | 28,294 |
+| Korean | `ko` | 215,074 | 11,707 |
+| Turkish | `tr` | 192,846 | 11,820 |
+| Japanese | `ja` | 188,341 | 10,846 |
+| Polish | `pl` | 154,223 | 27,026 |
+| Italian | `it` | 126,169 | 23,488 |
+| Serbian | `sr` | 110,402 | 15,348 |
+| Hungarian | `hu` | 109,532 | 11,568 |
+| Swedish | `sv` | 108,006 | 11,166 |
+| German | `de` | 101,525 | 15,749 |
+| Hebrew | `he` | 83,236 | 10,257 |
+| Ukrainian | `uk` | 53,175 | 16,523 |
+| French | `fr` | 48,534 | 14,510 |
+| Arabic | `ar` | 37,302 | 9,818 |
+| Greek | `el` | 29,626 | 8,838 |
+| Czech | `cs` | 24,435 | 3,468 |
+| Chinese (Simplified) | `zh` | 16,017 | 4,585 |
+| Dutch | `nl` | 15,442 | 6,682 |
+| Romanian | `ro` | 14,632 | 6,648 |
+| Mongolian | `mn` | 12,141 | 2,062 |
 
 Each `lang` represents an independent set of user reviews from the
 corresponding national Fragrantika domain. A user reviewing the same
@@ -129,7 +129,7 @@ articles and modern editorial content.
 | 9 | `article_images` | `string` | NO | **JSON-encoded array** of all image URLs in the article body. Use `json.loads(field)` → `list[str]`. Empty array `'[]'` if none. |
 | 10 | `url` | `string` | NO | Canonical article URL (e.g., `https://www.fragrantica.com/news/x-12345.html`). |
 | 11 | `is_archived` | `bool` | NO | `True` if article is in Fragrantika's legacy/archived corpus (older HTML template, often missing publication date — see §3.5). |
-| 12 | `related_pids` | `string` | NO | **JSON-encoded array** of PIDs (as decimal strings) referenced in the article. Foreign key → `merged_database.PID`. 0% orphan rate (FK-validated). |
+| 12 | `related_pids` | `string` | NO | **JSON-encoded array** of PIDs (as decimal strings) referenced in the article. Foreign key → `merged_database.PID`. 175 of 126,428 references (0.14%) point to perfumes no longer in the catalogue. |
 | 13 | `related_brands` | `string` | NO | **JSON-encoded array** of brand names. Informational metadata; see §5.4 for canonical resolution. |
 | 14 | `related_perfumers` | `string` | NO | **JSON-encoded array** of perfumer names with diacritics preserved (e.g., `François Demachy`, `Carlos Benaïm`). Informational; see §5.5. |
 | 15 | `comments_count` | `int32` | NO | Count of comments in `news_comments.parquet` matching this NID. |
@@ -137,11 +137,11 @@ articles and modern editorial content.
 
 ### 3.2 Volumetrics
 
-- **Total rows:** 25,619 articles
-- **NID range:** 1 — 26,129 (510 NIDs in that range are absent from the source)
-- **Archived:** 15,458 / 25,619 (60.3%)
-- **Non-archived:** 10,161 / 25,619 (39.7%)
-- **With publication date (`date_unix > 0`):** 14,789 (57.7%)
+- **Total rows:** 25,709 articles
+- **NID range:** 1 — 26,219 (510 NIDs in that range are absent from the source)
+- **Archived:** 15,458 / 25,709 (60.1%)
+- **Non-archived:** 10,251 / 25,709 (39.9%)
+- **With publication date (`date_unix > 0`):** 14,858 (57.8%)
 
 ### 3.3 List-fields format note
 
@@ -161,39 +161,41 @@ the int `704`). Cast as needed when joining.
 
 | Category | Articles | % |
 |---|---:|---:|
-| New Fragrances | 8,724 | 34.1% |
-| Fragrance Reviews | 6,128 | 23.9% |
-| Niche Perfumery | 2,604 | 10.2% |
-| Art Books Events | 1,570 | 6.4% |
-| Columns | 1,346 | 5.5% |
-| Fragrant Horoscope | 851 | 3.5% |
-| Fragrance News | 760 | 3.1% |
-| Interviews | 682 | 2.8% |
-| Vintages | 437 | 1.8% |
-| Raw Materials | 384 | 1.6% |
+| New Fragrances | 8,747 | 34.0% |
+| Fragrance Reviews | 6,161 | 24.0% |
+| Niche Perfumery | 2,610 | 10.2% |
+| Art Books Events | 1,638 | 6.4% |
+| Columns | 1,485 | 5.8% |
+| Fragrant Horoscope | 874 | 3.4% |
+| Fragrance News | 801 | 3.1% |
+| Interviews | 691 | 2.7% |
+| Vintages | 453 | 1.8% |
+| Raw Materials | 396 | 1.5% |
 
-Remaining 1,756 articles span 33 smaller categories.
+Remaining 1,853 articles span 35 smaller categories.
 
 ### 3.5 Date coverage
 
-`date_unix == 0` for 10,753 articles (44%). Distribution by NID range:
+`date_unix == 0` for 10,851 articles (42.2%). Distribution by NID range:
 
 | NID range | Articles | with date | % | archived % |
 |---|---:|---:|---:|---:|
-| 1 — 5,000 | 4,888 | 2 | 0.0% | 100% |
-| 5,001 — 10,000 | 4,799 | 0 | 0.0% | 100% |
-| 10,001 — 15,000 | 4,890 | 3,822 | 78.2% | 100% |
-| 15,001 — 20,000 | 4,900 | 4,900 | 100% | 17.3% |
-| 20,001 — 25,000 | 4,963 | 4,963 | 100% | 0% |
+| 1 — 5,000 | 4,898 | 2 | 0.0% | 100% |
+| 5,001 — 10,000 | 4,803 | 0 | 0.0% | 100% |
+| 10,001 — 15,000 | 4,905 | 3,837 | 78.2% | 100% |
+| 15,001 — 20,000 | 4,915 | 4,915 | 100% | 17.3% |
+| 20,001 — 25,000 | 4,971 | 4,971 | 100% | 0% |
+| 25,001 — 26,219 | 1,217 | 1,133 | 93.1% | 0% |
 
-The 10,753 articles without date come entirely from the archived legacy
-template: 9,685 in NIDs 1–10,000 (effectively all of them) and 1,068 in
+Of the 10,851 articles without date, 10,767 come from the archived legacy
+template: 9,699 in NIDs 1–10,000 (all but 2 of the 9,701 there) and 1,068 in
 NIDs 10,001–15,000 (the remaining 22% of that range — the other 78% have
 recoverable visible-text dates). Fragrantika's old archived HTML does not
 embed any date marker (no `<time>`, no `<meta>`, no visible date string)
 for these. This is an upstream HTML limitation, not a parser issue.
-**For all non-archived articles (9,013 of them), `date_unix` is 100%
-populated.**
+The other 84 are recent non-archived articles (84 of the 250 with NID 25,970 and above) whose
+date was not captured at collection time — a gap on our side, not an upstream limitation.
+**Of the 10,251 non-archived articles, 10,167 have `date_unix` populated.**
 
 ---
 
@@ -214,13 +216,13 @@ Fragrantika uses on perfume pages.
 | 6 | `text` | `string` | NO | Comment body, plain text. |
 | 7 | `avatar_url` | `string` | NO | Full URL to author avatar (Fragrantika CDN). |
 | 8 | `gradient` | `string` | NO | CSS class for color badge (same scheme as `comments.parquet.gradient_class`). |
-| 9 | `is_reply` | `bool` | NO | `True` if this comment is a reply to another comment (threaded discussion); `False` for root comments. 5.5% of rows are replies (15,128 / 276,483). |
+| 9 | `is_reply` | `bool` | NO | `True` if this comment is a reply to another comment (threaded discussion); `False` for root comments. 5.5% of rows are replies (15,312 / 277,446). |
 
 ### 4.2 Volumetrics
 
-- **Total rows:** 276,483
-- **Distinct NIDs:** 22,891 (89.4% of articles have at least one comment)
-- **Replies:** 15,128 (5.5%)
+- **Total rows:** 277,446
+- **Distinct NIDs:** 22,974 (89.4% of articles have at least one comment)
+- **Replies:** 15,312 (5.5%)
 - **Average comments per article (in articles with comments):** 12.1
 
 ---
@@ -234,7 +236,7 @@ existing perfume/brand/perfumer DBs.
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│   merged_database.csv  (existing, 132,160 perfumes)   │
+│   merged_database.csv  (existing, 140,946 perfumes)   │
 │   ─────────────────────                                │
 │   PID   ←──────────────────────┐                       │
 │   Brand                        │                       │
@@ -269,7 +271,7 @@ existing perfume/brand/perfumer DBs.
 
 ### 5.2 Linking comments to perfumes (PID)
 
-Foreign key: **`comments.pid → merged_database.PID`** — verified 0% orphan rate.
+Foreign key: **`comments.pid → merged_database.PID`** — every row joins except 48 reviews on 10 perfumes no longer in the catalogue.
 
 ```sql
 -- All English reviews for the perfume "Mugler Angel" (PID 704):
@@ -292,7 +294,7 @@ angel_reviews = c.filter(pc.and_(pc.equal(c['pid'], 704),
 ### 5.3 Linking news to perfumes (related_pids)
 
 Foreign key: **`news.related_pids → merged_database.PID`** — JSON-array
-field, 0% orphan rate over 125,890 references.
+field; 126,428 references, of which 175 (0.14%) point to perfumes no longer in the catalogue.
 
 ```sql
 -- All news mentioning Aventus (PID 9828):
@@ -467,16 +469,16 @@ The datasets passed a multi-track validation audit (full report:
 | Check | Result |
 |---|:---:|
 | Duplicate rows by primary key (all 3 datasets) | 0 |
-| FK integrity (`comments.pid → PID`) | 0 orphans |
-| FK integrity (`news.related_pids → PID`) | 0 orphans (over 125,890 refs) |
+| FK integrity (`comments.pid → PID`) | 48 rows on 10 perfumes no longer in the catalogue |
+| FK integrity (`news.related_pids → PID`) | 175 of 126,428 refs point to perfumes no longer in the catalogue |
 | FK integrity (`news_comments.nid → nid`) | 0 orphans |
-| `comment_id` global uniqueness (`comments.parquet`) | 0 collisions over 4.6M rows |
+| `comment_id` global uniqueness (`comments.parquet`) | 0 collisions over 5.0M rows |
 | HTML/CSS pollution in text fields | 0 |
 | Cloudflare challenge pages in data | 0 |
 | Mojibake / replacement char (U+FFFD) | 0 |
 | Language attribution accuracy (langdetect on sample) | >95% per language |
 | `news_comments.date_unix > 0` populated | 100% |
-| `news.date_unix > 0` populated (non-archived) | 100% |
+| `news.date_unix > 0` populated (non-archived) | 99.2% (10,167 / 10,251) |
 
 ### 7.1 Provenance
 
@@ -490,14 +492,15 @@ to deterministic comment IDs (§2.4).
 
 ## 8. Known limitations (transparent disclosure)
 
-1. **Archived news articles without dates (10,753 / 25,619 = 44%).**
+1. **News articles without dates (10,851 / 25,709 = 42.2%).**
    Fragrantika's archived HTML template does not embed any date marker
    (`<time>`, meta tag, or visible string). For these articles, `date_unix`
-   is `0`. The no-date subset is concentrated in NIDs 1–15,000: 9,685 of
-   9,687 archived articles in NIDs 1–10,000 and 1,068 of 4,890 in NIDs
-   10,001–15,000. (850 archived articles in NIDs 15,001–20,000 do have
-   dates.) **All non-archived articles (9,013 of them) have 100% date
-   coverage.**
+   is `0`. The archived no-date subset is concentrated in NIDs 1–15,000: 9,699 of
+   9,701 archived articles in NIDs 1–10,000 and 1,068 of 4,905 in NIDs
+   10,001–15,000. (852 archived articles in NIDs 15,001–20,000 do have
+   dates.) In addition, 84 of the 250 newest non-archived articles (NID 25,970 and above)
+   were collected without their date; the remaining 10,167 of 10,251 non-archived
+   articles are dated.
 
 2. **`related_brands` matching gap (~12%).** Fragrantika has renamed
    ~50 brands over the years (e.g., `Christian Dior → Dior`); the captured
@@ -517,9 +520,9 @@ to deterministic comment IDs (§2.4).
    (e.g., a "5/10" rating posted by the same author on multiple subdomains).
    These are real (Fragrantika's display behavior), not parser duplicates.
 
-5. **Comments PID coverage gap.** 38,855 perfumes (29%) have zero comments
-   in any language. Verified against Fragrantika's `reviews_count` field:
-   99.8% of these perfumes truly have zero reviews on the platform. A
+5. **Comments PID coverage gap.** 43,097 perfumes (30.6%) have zero comments
+   in any language. In the May 2026 audit, checked against Fragrantika's `reviews_count` field,
+   99.8% of zero-comment perfumes truly had zero reviews on the platform. A
    targeted re-collection of the 73 PIDs flagged as `reviews_count > 0`
    yet missing comments recovered 68 of them (305 new comments added);
    the remaining 5 PIDs have `reviews_count > 0` in Fragrantika's metadata
@@ -624,9 +627,9 @@ trace and confirm relational integrity.
 
 | Field | Value |
 |---|---|
-| Snapshot date | 2026-05-05 |
-| Comments PID range | 1 — 130,121 |
-| News NID range | 1 — 25,000 |
+| Snapshot date | 2026-09-30 (v5.17) |
+| Comments PID range | 1 — 143,475 |
+| News NID range | 1 — 26,219 |
 | Schema version | v1 (8 / 16 / 9 fields respectively) |
 | Compression | zstd |
 | Format | Parquet 2.x |

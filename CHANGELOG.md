@@ -5,6 +5,25 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.17.0] - 2026-09-30
+
+### Changed
+- Fragrances: 140,230 → **140,946** (+716)
+- Brands: 8,316 → **8,359** (+43)
+- Perfumers: 3,126 → **3,144** (+18)
+- Notes: 2,606 → **2,610** (+4)
+- Photos: 623,790 → **625,052**
+- Companion parquet refreshed: user reviews 4,986,774 → **4,988,692** (+1,918); editorial articles 25,619 → **25,709** (+90); news comments 276,483 → **277,446** (+963)
+- Derived figures re-measured against the v5.17 files: review coverage 69.8% → **69.4%**, PID references 125,890 → **126,428**, archived article share 60.3% → **60.1%**
+- `SPEC.md` restated from the v5.17 files where it still carried its May 2026 snapshot: language table, perfume coverage, category table, date coverage by NID range, sizes and ranges
+
+### Fixed
+- `SPEC.md` said every non-archived article has a publication date. In v5.17, 84 of the 250 newest articles (NID 25,970 and above) have `date_unix = 0`; the specification now states this
+- `SPEC.md` reported 0 orphans for `comments.pid` and `news.related_pids`; it now gives the measured counts (48 reviews on 10 perfumes, 175 references) that the README already showed
+
+### Unchanged
+- Schema: no column moved between v5.16 and v5.17, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.16.0] - 2026-09-19
 
 ### Added
