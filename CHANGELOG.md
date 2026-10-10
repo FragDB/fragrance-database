@@ -5,6 +5,37 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.18.0] - 2026-10-08
+
+### Changed
+- Fragrances: 140,946 → **141,541** (+595: 601 added, 6 removed)
+- Brands: 8,359 → **8,384** (+25)
+- Perfumers: 3,144 → **3,154** (+10)
+- Notes: 2,610 → **2,615** (+5)
+- Photos: 625,052 → **631,816**
+- Companion parquet refreshed: user reviews 4,988,692 → **5,022,398** (+33,706, all English; the other 22 languages keep their v5.17 row counts); editorial articles 25,709 → **25,780** (+71); news comments 277,446 → **278,905** (+1,459)
+- Derived figures re-measured against the v5.18 files: review coverage **69.4%** (unchanged), PID references 126,428 → **126,749**, archived article share 60.1% → **60.0%**, reply rate 5.5% → **5.6%**
+- **Brand identity continuity (new policy).** When the source renames a brand page, or folds one brand page into another, the brand keeps its existing id and takes the new name and page URL. Every perfume keeps its `brand_id`, so joins on `brand_id` are unaffected
+- Renamed: `b7118` Saleel → **Saleel Parfums** (27 perfumes); `b4760` Aromatic Families → **Aromatic** (14). Spelling only: `b3656` Mesonsol → **MÉSONSOL** (3); `b8130` L'Affair → **L'AFFAIR** (21)
+- Folded pages — each of these brands now carries the same name and page URL as a second id. Grouping by brand name or URL merges each pair; group by `id` to keep them apart:
+  - `b532` (417 perfumes) alongside `b8330` (15) — Novaya Zarya, The New Dawn. The name is stored in Cyrillic with "(Novaya Zarya – The New Dawn)" in brackets; `b532` previously had "(The New Dawn)" only
+  - `b8124` (13, formerly "Dream Brand Collection") alongside `b8293` (17) — Brand Collection
+  - `b7999` (3, formerly "Zhiwuzhi") alongside `b8353` (17) — Zhiwuzhi 挚物志
+  - `b4599` (1, formerly "Mobius Fragrances 莫比乌斯") alongside `b8259` (11) — L'Atelier Mobius 莫比乌斯
+  - `b8043` (1, formerly "Shaikh Saeed Perfumes") alongside `b5121` (29) — Shaikh Mohd Saeed
+  - `brands.csv` now has 10 names carried by two ids (5 in v5.17)
+- 2 perfumes moved to another brand because the source moved them: PID 115180 (Brucia In Me) Maison Incens `b2089` → **Rocco d'Orazio** `b8322`; PID 141384 (Illuminati Red) Opula Perfumes `b6072` → **Opal Perfumes** `b6816`
+
+### Removed
+- 6 perfumes whose pages were deleted at the source: PIDs 122906, 123027, 134700, 138184, 138572, 142797
+
+### Fixed
+- The 84 articles that v5.17 shipped without a publication date (NID 25,970–26,219) are now dated. In v5.18, 23 of the 29 newest articles (NID 26,262 and above) have `date_unix = 0`; 10,299 of 10,322 non-archived articles (99.8%) are dated
+- `SPEC.md` still quoted May 2026 figures in a few places: the NID range (1..25000, now 1..26290) and the row count behind the comment-ID uniqueness check (4.6M, now 5.0M)
+
+### Unchanged
+- Schema: every CSV header and parquet schema is identical between v5.17 and v5.18, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.17.0] - 2026-09-30
 
 ### Changed
