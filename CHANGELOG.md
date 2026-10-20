@@ -5,6 +5,25 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.19.0] - 2026-10-19
+
+### Changed
+- Fragrances: 141,541 → **142,676** (+1,135 added, none removed)
+- Brands: 8,384 → **8,433** (+49)
+- Perfumers: 3,154 → **3,171** (+17)
+- Notes: 2,615 → **2,618** (+3)
+- Photos: 631,816 → **633,541**
+- Incremental release: the source was crawled for new pages on 2026-10-19 and the 1,135 new fragrances were added. The 141,541 existing records are carried over unchanged from the 2026-10-08 snapshot (v5.18), so their ratings and votes are as of that date
+- Companion parquet refreshed: user reviews 5,022,398 → **5,024,093** (+1,695, all English; the other 22 languages keep their v5.18 row counts); editorial articles 25,780 → **25,875** (+95); news comments 278,905 → **279,843** (+938)
+- Derived figures re-measured against the v5.19 files: review coverage 69.4% → **68.9%** (most of the new fragrances are recent launches without reviews), PID references 126,749 → **127,137**, archived article share 60.0% → **59.7%**, reply rate **5.6%** (unchanged)
+- Brand identity: no renames or folded brand pages at the source in this release, and no perfume changed brand. `brands.csv` still has 10 names carried by two ids
+
+### Fixed
+- The 23 articles that v5.18 shipped without a publication date (NID 26,262 and above) are now dated. In v5.19, 19 of the 23 newest articles (NID 26,363 and above) have `date_unix = 0`; 10,398 of 10,417 non-archived articles (99.8%) are dated
+
+### Unchanged
+- Schema: every CSV header and parquet schema is identical between v5.18 and v5.19, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.18.0] - 2026-10-08
 
 ### Changed

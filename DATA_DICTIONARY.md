@@ -1,15 +1,15 @@
 # FragDB v5 — Data Dictionary
 
-Generated: 2026-07-10 · record counts: v5.18 (2026-10-08)
+Generated: 2026-07-10 · record counts: v5.19 (2026-10-19)
 
 ## Overview
 
 | File | Records | Fields |
 |------|---------|--------|
-| fragrances.csv | 141,541 | 30 |
-| brands.csv | 8,384 | 54 |
-| perfumers.csv | 3,154 | 42 |
-| notes.csv | 2,615 | 55 |
+| fragrances.csv | 142,676 | 30 |
+| brands.csv | 8,433 | 54 |
+| perfumers.csv | 3,171 | 42 |
+| notes.csv | 2,618 | 55 |
 | accords.csv | 92 | 27 |
 | translations.csv | 34 | 25 |
 
@@ -222,8 +222,8 @@ The Full Database bundle (all tiers except $200 Core) includes three Apache Parq
 
 | File | Rows | Fields | Foreign key |
 |------|------|--------|-------------|
-| `comments.parquet` | 5,022,398 | 8 | `pid` → `fragrances.csv` |
-| `news.parquet` | 25,780 | 16 | `related_pids[]` → `fragrances.csv` |
-| `news_comments.parquet` | 278,905 | 9 | `nid` → `news.parquet` |
+| `comments.parquet` | 5,024,093 | 8 | `pid` → `fragrances.csv` |
+| `news.parquet` | 25,875 | 16 | `related_pids[]` → `fragrances.csv` |
+| `news_comments.parquet` | 279,843 | 9 | `nid` → `news.parquet` |
 
 These do not duplicate any CSV columns; they extend the catalog with user-generated content and editorial archive linked via PID.

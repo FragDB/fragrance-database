@@ -1,9 +1,9 @@
 # FragDB - Fragrance Database (Multilingual)
 
-The most comprehensive fragrance database available — **155,800+ structured records** across six interconnected CSV files with **23 language translations**, plus **5.3M+ user-generated content rows** in Apache Parquet companion datasets covering **user reviews**, **editorial news articles**, and **community discussions**.
+The most comprehensive fragrance database available — **157,000+ structured records** across six interconnected CSV files with **23 language translations**, plus **5.3M+ user-generated content rows** in Apache Parquet companion datasets covering **user reviews**, **editorial news articles**, and **community discussions**.
 
 [![License: CC-BY-NC-4.0](https://img.shields.io/badge/License-CC--BY--NC--4.0-yellow.svg)](LICENSE.md)
-[![Records](https://img.shields.io/badge/Records-141%2C541-blue)](https://fragdb.net)
+[![Records](https://img.shields.io/badge/Records-142%2C676-blue)](https://fragdb.net)
 [![Reviews](https://img.shields.io/badge/User%20Reviews-5.0M-red)](SPEC.md)
 [![News](https://img.shields.io/badge/News%20Articles-26K-purple)](SPEC.md)
 [![Languages](https://img.shields.io/badge/Languages-23-green)](DATA_DICTIONARY.md)
@@ -18,17 +18,17 @@ FragDB provides structured data for the fragrance industry:
 
 | File | Records | Fields | Description |
 |------|---------|--------|-------------|
-| `fragrances.csv` | 141,541 | 30 | Main fragrance database |
-| `brands.csv` | 8,384 | 54 | Brand profiles + translations |
-| `perfumers.csv` | 3,154 | 42 | Perfumer profiles + translations |
-| `notes.csv` | 2,615 | 55 | Fragrance notes + translations |
+| `fragrances.csv` | 142,676 | 30 | Main fragrance database |
+| `brands.csv` | 8,433 | 54 | Brand profiles + translations |
+| `perfumers.csv` | 3,171 | 42 | Perfumer profiles + translations |
+| `notes.csv` | 2,618 | 55 | Fragrance notes + translations |
 | `accords.csv` | 92 | 27 | Accords + translations |
 | `translations.csv` | 34 | 25 | Vocabulary: gender & voting labels × 23 languages |
 
 ### Snapshot freshness
 
-- **Data refreshed**: 2026-10-08 (v5.18)
-- **Reviews, news, news comments** (parquet): refreshed in this release — latest review 2026-10-08, latest article 2026-10-06, latest news comment 2026-10-08
+- **Data refreshed**: 2026-10-19 (v5.19) — an incremental update: the 1,135 fragrances new at the source were added on 2026-10-19; the existing records are as captured on 2026-10-08 (v5.18)
+- **Reviews, news, news comments** (parquet): refreshed in this release — latest review 2026-10-18, latest article 2026-10-16, latest news comment 2026-10-19
 
 ### Key Features
 
@@ -37,7 +37,7 @@ FragDB provides structured data for the fragrance industry:
 - **Rich fragrance data** — Notes pyramid, accords, ratings, votes
 - **Brand profiles** — Logo, country, website, parent company (country/activity translated)
 - **Perfumer profiles** — Photo, status, company, education, biography (status translated)
-- **Notes reference** — 2,615 notes with translations, Latin names, groups, odor profiles
+- **Notes reference** — 2,618 notes with translations, Latin names, groups, odor profiles
 - **Accords reference** — Display colors + translated names
 - **Translation vocabulary** — 34 entries for gender and voting labels
 - **Pipe-delimited CSV** — Easy parsing, UTF-8 encoded
@@ -142,9 +142,9 @@ FragDB ships with **three Apache Parquet datasets** containing **5.3 million row
 
 The world's largest collection of structured fragrance reviews. Every entry includes the perfume ID (joinable with `fragrances.csv`), author username, posting date, full review text, avatar URL, and language code.
 
-- **5,022,398 user reviews** covering every major perfume in the database
+- **5,024,093 user reviews** covering every major perfume in the database
 - **23 languages** — English (1.91M reviews), Russian, Portuguese, Spanish, Korean, Turkish, Japanese, Polish, Italian, Hungarian, Serbian, Swedish, German, Hebrew, Ukrainian, French, Arabic, Greek, Czech, Chinese, Romanian, Mongolian, Dutch
-- **Coverage:** 69.4% of all fragrances in the database have at least one review (98,214 of 141,541 PIDs)
+- **Coverage:** 68.9% of all fragrances in the database have at least one review (98,240 of 142,676 PIDs)
 - **Deterministic global primary key** — stable comment IDs survive re-scrapes
 - **Zero duplicate rows**; every `pid` joins `fragrances.csv` except 62 reviews (0.001%) on 12 perfumes no longer in the catalogue
 - **Independent UGC per language** — each language is genuine localized content, not machine translation
@@ -153,26 +153,26 @@ The world's largest collection of structured fragrance reviews. Every entry incl
 
 **Use cases:** sentiment analysis · review classification · recommendation systems · perfume similarity from text · language detection benchmark · multilingual NLP training corpus · fragrance market research · author network analysis · trend detection by language
 
-### `news.parquet` — 25,780 Editorial Articles (2008–2026)
+### `news.parquet` — 25,875 Editorial Articles (2008–2026)
 
 Two decades of professional fragrance journalism. Every article includes title, author, full text (plain + HTML), category, related perfumes/brands/perfumers, publication date, and main image. Foreign keys to fragrances, brands, and perfumers make this a powerful resource for content-based recommendation and knowledge graph construction.
 
-- **25,780 editorial articles** from 2008 to 2026 — the complete public archive
-- **30+ categories** — top: New Fragrances (34.0%), Fragrance Reviews (24.0%), Niche Perfumery (10.2%), Designer Brands, Interviews, History, Industry News, Niche Houses, and more
+- **25,875 editorial articles** from 2008 to 2026 — the complete public archive
+- **30+ categories** — top: New Fragrances (33.9%), Fragrance Reviews (24.1%), Niche Perfumery (10.1%), Designer Brands, Interviews, History, Industry News, Niche Houses, and more
 - **Bilingual storage** — `text` (plain) for NLP / search, `text_html` (preserved markup) for rich display
 - **Linked entities** — `related_pids[]`, `related_brands[]`, `related_perfumers[]` as JSON arrays
-- **126,749 PID references** — all but 176 (0.14%) resolve; those point to perfumes no longer in the catalogue
-- **Modern + archived** — 60.0% archived legacy articles, 40.0% modern articles, all dated except 23 of the 29 newest (NID 26,262 and above)
+- **127,137 PID references** — all but 176 (0.14%) resolve; those point to perfumes no longer in the catalogue
+- **Modern + archived** — 59.7% archived legacy articles, 40.3% modern articles, all dated except 19 of the 23 newest (NID 26,363 and above)
 - **16 fields:** `nid`, `title`, `category`, `author`, `url`, `is_archived`, `date_unix`, `description`, `text`, `text_html`, `main_image`, `article_images`, `related_pids`, `related_brands`, `related_perfumers`, `comments_count`
 - **List fields stored as JSON-encoded strings** — never null (empty = `"[]"`)
 
 **Use cases:** content recommendation · article search engine · perfume knowledge graph · trend analysis · author influence study · category classification · entity linking · timeline analysis · industry research · niche perfumery research · fragrance journalism corpus
 
-### `news_comments.parquet` — 278,905 Threaded Community Comments
+### `news_comments.parquet` — 279,843 Threaded Community Comments
 
 Community discussions attached to editorial articles, with threading support for replies. Joinable with `news.parquet` via `nid`.
 
-- **278,905 threaded comments** across **23,031 articles** (89.3% of news articles have at least one comment)
+- **279,843 threaded comments** across **23,117 articles** (89.3% of news articles have at least one comment)
 - **5.6% reply rate** — threaded conversations with reply detection (`is_reply` flag)
 - **100% populated timestamps** — `date_unix` parsed for every comment
 - **9 fields:** `nid`, `comment_id`, `is_reply`, `author`, `date`, `date_unix`, `text`, `avatar_url`, `gradient`
@@ -309,6 +309,17 @@ content and a status flag.
 
 Reviews, news articles and community comments are **not** in the API — those stay in the
 downloadable files described in this README.
+
+## What's New in v5.19
+
+- Data update: 141,541 → **142,676** fragrances (+1,135 added, none removed), **8,433** brands (+49), **3,171** perfumers (+17), **2,618** notes (+3)
+- An incremental release: the source was crawled for new pages on 2026-10-19 and the 1,135 new fragrances were added; the existing 141,541 records are carried over unchanged from the 2026-10-08 snapshot (v5.18)
+- Reviews, news and news comments refreshed: reviews 5,022,398 → **5,024,093** (+1,695, all English; the other 22 languages keep their v5.18 row counts), editorial articles 25,780 → **25,875** (+95), news comments 278,905 → **279,843** (+938)
+- Photos: 631,816 → **633,541**
+- Review coverage is 68.9% (98,240 of 142,676 perfumes): most of the fragrances added in this release are new launches with no reviews yet
+- No brand renames or folded brand pages in this release; no perfume changed brand. Every id carried over from v5.18 keeps its record
+- The 23 articles that v5.18 shipped without a publication date are now dated. In v5.19, 19 of the 23 newest articles (NID 26,363 and above) have `date_unix = 0`
+- Sample files unchanged: the schema did not move between v5.18 and v5.19, so the 10-record previews in `samples/` are byte-identical
 
 ## What's New in v5.18
 
@@ -450,14 +461,14 @@ The free sample contains 10 records per file. The full FragDB database includes:
 
 | Feature | Free Sample | Full Database |
 |---------|-------------|---------------|
-| Fragrances | 10 | 141,541 |
-| Brands | 10 | 8,384 |
-| Perfumers | 10 | 3,154 |
-| Notes | 10 | 2,615 |
+| Fragrances | 10 | 142,676 |
+| Brands | 10 | 8,433 |
+| Perfumers | 10 | 3,171 |
+| Notes | 10 | 2,618 |
 | Accords | 10 | 92 |
 | Translations | 34 (full) | 34 |
 | Languages | 23 | 23 |
-| Total Records | ~84 | 155,820 |
+| Total Records | ~84 | 157,024 |
 | Updates | None | Regular |
 | Commercial Use | Yes (sample) | Yes (licensed) |
 
