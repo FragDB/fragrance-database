@@ -5,6 +5,29 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.20.0] - 2026-11-01
+
+### Changed
+- Fragrances: 142,676 → **143,855** (+1,179 added, none removed)
+- Brands: 8,433 → **8,501** (+68)
+- Perfumers: 3,171 → **3,198** (+27)
+- Notes: 2,618 → **2,626** (+8)
+- Photos: 633,541 → **635,680**
+- Incremental release: the source was crawled for new pages on 2026-11-01 and the 1,179 new fragrances were added. The 142,676 existing fragrance records are carried over unchanged from v5.19, so their ratings and votes are as of their capture dates (2026-10-08, and 2026-10-19 for the 1,135 added in v5.19)
+- Companion parquet refreshed: user reviews 5,024,093 → **5,026,322** (+2,229, all English; the other 22 languages keep their v5.19 row counts); editorial articles 25,875 → **25,981** (+106); news comments 279,843 → **280,874** (+1,031)
+- Perfumers: 52 existing perfumers gained a `photo_url`. Portraits are now read from the fragrance pages on every crawl, so a photo added at the source after the perfumer first appeared is picked up. Perfumers with a photo: 1,363 → **1,418** (52 existing + 3 new). No other column of an existing perfumer changed
+- Notes: 2 of the 8 new rows are new names the source now shows on existing note pages — `n2707` Schisandra (the page of `n1290` Chinese Magnolia) and `n2702` Cocoa Shell (the page of `n1553` cocoa shell). The old ids keep their names. Three existing translations were updated at the source: `n1229` Balsamic Notes and `n2067` Floral Notes (Turkish), `n1070` Timur (Italian)
+- Count columns (`brand_count`, `perfumes_count`, `fragrance_count`) re-counted with the new fragrances
+- Derived figures re-measured against the v5.20 files: review coverage 68.9% → **68.3%** (most of the new fragrances are recent launches without reviews), PID references 127,137 → **127,609** (177 point to perfumes no longer in the catalogue), archived article share 59.7% → **59.5%**, reply rate 5.6% → **5.7%**
+- Brand identity: no renames or folded brand pages at the source in this release, and no perfume changed brand. `brands.csv` still has 10 names carried by two ids
+
+### Known gaps
+- 27 of the 30 newest articles (NID 26,464 and above) have `date_unix = 0`: the source adds the date to the article page a few days after publication, and the next news refresh picks it up. 10,496 of 10,523 non-archived articles (99.7%) are dated
+- Two new articles (NID 26,404 and 26,462) did not respond during collection; they will be added with the next news refresh
+
+### Unchanged
+- Schema: every CSV header and parquet schema is identical between v5.19 and v5.20, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.19.0] - 2026-10-19
 
 ### Changed
