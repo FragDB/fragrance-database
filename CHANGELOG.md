@@ -5,6 +5,43 @@ All notable changes to the FragDB database will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.21.0] - 2026-11-09
+
+### Changed
+- Fragrances: 143,855 → **144,452** (+597: 603 added, 6 removed)
+- Brands: 8,501 → **8,537** (+36)
+- Perfumers: 3,198 → **3,209** (+11)
+- Notes: 2,626 → **2,633** (+7)
+- Photos: 635,680 → **643,197**
+- Full crawl: every page of the source was re-read on 2026-11-09, not only the new ones. The 143,849 fragrance records carried over from v5.20 were all re-captured on that date, so their ratings, votes, notes and accords are as of 2026-11-09 (in v5.20 they were as of 2026-10-08 and 2026-10-19)
+- Companion parquet refreshed: user reviews 5,026,322 → **5,064,371** (+38,049, all English; the other 22 languages keep their v5.20 row counts); editorial articles 25,981 → **26,048** (+67); news comments 280,874 → **281,566** (+692)
+- Perfumers: 11 existing perfumers gained a `photo_url`. Perfumers with a photo: 1,418 → **1,433** (11 existing + 4 new). No other column of an existing perfumer changed
+- Notes: 7 new notes — `n2708` Blowout Accord, `n2709` Bubble Bath, `n2710` Charred Pineapple, `n2711` Grapefruit Flare, `n2712` Pink Paloma Cocktail, `n2713` Roasted Pineapple, `n2714` Solar Flowers. Existing translations updated at the source: `n2224` Madagascar Vanilla in 19 languages (the localized pages now call it Bourbon vanilla), `n2450` Terebinth Tree in 5 languages that previously showed the English name (Czech, Greek, Serbian, Romanian, Turkish), `n132` Black Currant (Turkish), `n2044` Ebony Wood and `n2480` Vanilla (Dutch)
+- Count columns (`brand_count`, `perfumes_count`, `fragrance_count`) re-counted
+- Derived figures re-measured against the v5.21 files: review coverage 68.3% → **68.4%**, PID references 127,609 → **127,938** (180 point to perfumes no longer in the catalogue), archived article share 59.5% → **59.3%**, reply rate **5.7%** (unchanged)
+- Brand identity (the continuity policy of v5.18: when the source renames a brand page or folds one brand page into another, the brand keeps its id and takes the new name and page URL):
+  - Renamed at the source: `b7452` Al Fares → **Al Fares by Emper** (27 perfumes); `b5941` Jillian Switzerland → **Jillian** (15); `b7363` Nu Wilds → **NuWilds** (8); `b8072` Stallion 53 → **Stallion 53 by Emper** (3)
+  - Folded pages — each of these ids now carries the same name and page URL as the brand it was folded into. Perfumes already published under the old id keep it; group by `id` to keep them apart:
+    - `b2228` (121 perfumes, formerly "Le Chameau") alongside `b8490` (3) — Le Chameau by Emper
+    - `b6816` (49, formerly "Opal Perfumes") and `b8233` (1, formerly "LAMAR") alongside `b8451` (9) — Opal Perfume
+    - `b4433` (1, formerly "Laura Tonatto") alongside `b792` (41) — Tonatto Profumi
+    - `b8441` (1, formerly "ATRAILA") alongside `b6050` (27) — Atralia
+  - `brands.csv` now has 14 names carried by more than one id (10 in v5.20); Opal Perfume is carried by three
+- 33 previously published perfumes moved to another brand because the source moved them: 20 from Khadlaj Perfumes `b4465` → **La Fede** `b6897`; 6 from Lolita Lempicka `b64` → **Lempicka Paris** `b8513` (a brand new in this release); 4 from HANOK `b8232` → **Opal Perfume** `b8451`; 2 from French Avenue `b5698` → **Fragrance World** `b5589`; 1 from Vivace `b7063` → **By Islamov** `b8502`
+
+### Removed
+- 6 perfumes whose pages were deleted at the source: PIDs 90751, 120557, 145109, 145311, 146511, 146512
+
+### Fixed
+- The 27 articles that v5.20 shipped without a publication date (NID 26,464 and above) are now dated
+- The two articles that did not respond during the v5.20 collection (NID 26,404 and 26,462) are now included
+
+### Known gaps
+- 16 of the 17 newest articles (NID 26,542 and above) have `date_unix = 0`: the source adds the date to the article page a few days after publication, and the next news refresh picks it up. 10,574 of 10,590 non-archived articles (99.8%) are dated
+
+### Unchanged
+- Schema: every CSV header and parquet schema is identical between v5.20 and v5.21, so the 10-record previews in `samples/` are byte-identical
+
 ## [5.20.0] - 2026-11-01
 
 ### Changed
